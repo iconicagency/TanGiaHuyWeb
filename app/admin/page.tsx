@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebase';
+import { auth, db, storage } from '@/lib/firebase';
 import { 
   signInWithPopup, 
   GoogleAuthProvider, 
@@ -19,6 +19,7 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { LogIn, LogOut, Plus, Trash2, Save, Image as ImageIcon, Layout, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -204,17 +205,46 @@ const AdminPage = () => {
 // --- Sub-components ---
 
 const HeroSettingsManager = ({ data }: any) => {
+  const [uploading, setUploading] = useState(false);
+
   const updateSettings = async (field: string, value: string) => {
     try { await setDoc(doc(db, 'settings', 'hero'), { [field]: value }, { merge: true }); }
     catch (e) { handleFirestoreError(e, OperationType.WRITE, 'settings/hero'); }
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      alert("Video quá lớn. Vui lòng chọn file dưới 50MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const storageRef = ref(storage, `videos/hero-${Date.now()}.mp4`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      await updateSettings('videoUrl', url);
+      alert("Tải lên thành công!");
+    } catch (error: any) {
+      console.error("Upload failed:", error);
+      alert("Tải lên thất bại: " + error.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   if (!data) return <button onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4')} className="bg-white/10 px-4 py-2 rounded">Initialize Hero Settings</button>;
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
-      <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
+        {uploading && <div className="text-xs text-white animate-pulse">Đang tải lên video...</div>}
+      </div>
+      <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-6">
         <div className="space-y-2">
           <label className="text-xs uppercase tracking-widest text-zinc-500">Video Source URL (.mp4)</label>
           <input 
@@ -223,7 +253,18 @@ const HeroSettingsManager = ({ data }: any) => {
             placeholder="e.g. /videos/hero-video.mp4 or external URL"
             className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
           />
-          <p className="text-[10px] text-zinc-500 mt-1">Lưu ý: Mọi text ở Hero đã được xoá theo yêu cầu.</p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest text-zinc-500">Hoặc Tải Lên Video Mới</label>
+          <input 
+            type="file" 
+            accept="video/mp4" 
+            onChange={handleVideoUpload}
+            disabled={uploading}
+            className="block w-full text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer disabled:opacity-50"
+          />
+          <p className="text-[10px] text-zinc-500 mt-1">Hỗ trợ file .mp4. Sau khi tải lên, video sẽ tự động cập nhật ngoài trang chủ.</p>
         </div>
       </div>
     </div>

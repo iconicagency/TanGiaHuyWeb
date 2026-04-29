@@ -6,19 +6,6 @@ import { ChevronDown } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { onSnapshot, doc } from 'firebase/firestore';
 
-const DEFAULT_SLIDES = [
-  {
-    image: 'https://picsum.photos/seed/tiles1/1920/1080',
-    title: 'Vũ điệu xanh',
-    description: 'Bản hòa ca của thiên nhiên và nghệ thuật kiến trúc',
-  },
-  {
-    image: 'https://picsum.photos/seed/tiles2/1920/1080',
-    title: 'Mộc Trà',
-    description: 'Vẻ đẹp ấm áp của gỗ trong không gian hiện đại',
-  },
-];
-
 interface HeroProps {
   isActive?: boolean;
 }
@@ -43,7 +30,7 @@ const Hero: React.FC<HeroProps> = () => {
     if (videoRef.current) {
       videoRef.current.load();
       videoRef.current.play().catch(error => {
-        console.log("Autoplay blocked or video missing:", error);
+        console.warn("Autoplay blocked or video missing:", error);
       });
     }
   }, [videoUrl]);
@@ -60,7 +47,11 @@ const Hero: React.FC<HeroProps> = () => {
           playsInline
           key={videoUrl}
           preload="auto"
-          className="h-full w-full object-cover grayscale-[10%] brightness-[0.7]"
+          className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
+          onCanPlay={() => {
+            if (videoRef.current) videoRef.current.style.opacity = '1';
+          }}
+          style={{ opacity: 0 }}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>

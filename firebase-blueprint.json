@@ -36,9 +36,22 @@
         "background": { "type": "string", "description": "Background image for contact section" }
       },
       "required": ["address", "phone", "email", "background"]
+    },
+    "HeroSettings": {
+      "title": "Hero Settings",
+      "description": "General settings for the Hero section",
+      "type": "object",
+      "properties": {
+        "videoUrl": { "type": "string", "description": "URL of the background video" }
+      },
+      "required": ["videoUrl"]
     }
   },
   "firestore": {
+    "/settings/hero": {
+      "schema": "HeroSettings",
+      "description": "Settings for the Hero section"
+    },
     "/hero_slides/{slideId}": {
       "schema": "Slide",
       "description": "Slides for the Hero section"

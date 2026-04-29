@@ -54,6 +54,7 @@ const AdminPage = () => {
   
   // Data states
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
+  const [heroSettings, setHeroSettings] = useState<any>(null);
   const [collectionSlides, setCollectionSlides] = useState<any[]>([]);
   const [projectSlides, setProjectSlides] = useState<any[]>([]);
   const [newsItems, setNewsItems] = useState<any[]>([]);
@@ -69,12 +70,15 @@ const AdminPage = () => {
   }, []);
 
   useEffect(() => {
-    // We allow reading even if !user because rules allow read: if true
-    
     // Real-time listeners
     const unsubHero = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), 
       (snap) => setHeroSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
       (err) => handleFirestoreError(err, OperationType.LIST, 'hero_slides')
+    );
+
+    const unsubHeroSettings = onSnapshot(doc(db, 'settings', 'hero'), 
+      (snap) => setHeroSettings(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, 'settings/hero')
     );
 
     const unsubCollections = onSnapshot(query(collection(db, 'collection_slides'), orderBy('order')), 
@@ -99,6 +103,7 @@ const AdminPage = () => {
 
     return () => {
       unsubHero();
+      unsubHeroSettings();
       unsubCollections();
       unsubProjects();
       unsubNews();
@@ -118,8 +123,6 @@ const AdminPage = () => {
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-zinc-950 text-white">Loading...</div>;
 
-  // Removed the !user blocking check per user request "vào luôn admin"
-
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
       {/* Sidebar */}
@@ -131,7 +134,7 @@ const AdminPage = () => {
         
         <nav className="flex-1 space-y-2">
           {[
-            { id: 'hero', label: 'Hero Slides', icon: Layout },
+            { id: 'hero', label: 'Hero (Video/Slides)', icon: Layout },
             { id: 'collections', label: 'Collections', icon: ImageIcon },
             { id: 'projects', label: 'Projects', icon: Layout },
             { id: 'news', label: 'News Items', icon: ImageIcon },
@@ -183,7 +186,12 @@ const AdminPage = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-10 overflow-auto">
-        {activeTab === 'hero' && <SlideManager type="hero" items={heroSlides} collectionName="hero_slides" />}
+        {activeTab === 'hero' && (
+          <div className="space-y-12">
+            <HeroSettingsManager data={heroSettings} />
+            <SlideManager type="hero" items={heroSlides} collectionName="hero_slides" />
+          </div>
+        )}
         {activeTab === 'collections' && <SlideManager type="collection" items={collectionSlides} collectionName="collection_slides" />}
         {activeTab === 'projects' && <SlideManager type="project" items={projectSlides} collectionName="project_slides" description />}
         {activeTab === 'news' && <NewsManager items={newsItems} />}
@@ -194,6 +202,33 @@ const AdminPage = () => {
 };
 
 // --- Sub-components ---
+
+const HeroSettingsManager = ({ data }: any) => {
+  const updateSettings = async (field: string, value: string) => {
+    try { await setDoc(doc(db, 'settings', 'hero'), { [field]: value }, { merge: true }); }
+    catch (e) { handleFirestoreError(e, OperationType.WRITE, 'settings/hero'); }
+  };
+
+  if (!data) return <button onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4')} className="bg-white/10 px-4 py-2 rounded">Initialize Hero Settings</button>;
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
+      <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-4">
+        <div className="space-y-2">
+          <label className="text-xs uppercase tracking-widest text-zinc-500">Video Source URL (.mp4)</label>
+          <input 
+            defaultValue={data.videoUrl} 
+            onBlur={(e) => updateSettings('videoUrl', e.target.value)}
+            placeholder="e.g. /videos/hero-video.mp4 or external URL"
+            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+          />
+          <p className="text-[10px] text-zinc-500 mt-1">Lưu ý: Mọi text ở Hero đã được xoá theo yêu cầu.</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const SlideManager = ({ items, collectionName, description = false }: any) => {
   const addSlide = async () => {

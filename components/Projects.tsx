@@ -60,6 +60,14 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
 
+  useEffect(() => {
+    if (slides.length > 0 && current >= slides.length) {
+      setCurrent(0);
+    }
+  }, [slides.length, current]);
+
+  if (slides.length === 0) return null;
+
   return (
     <section className="relative h-full w-full bg-black overflow-hidden flex items-center justify-center">
       {/* Blurred Background */}
@@ -74,7 +82,7 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
             className="absolute inset-0"
           >
             <img
-              src={slides[current].image}
+              src={slides[current]?.image}
               alt=""
               className={cn(
                 "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
@@ -122,8 +130,8 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
                 className="absolute inset-0"
               >
                 <img
-                  src={slides[current].image}
-                  alt={slides[current].title}
+                  src={slides[current]?.image}
+                  alt={slides[current]?.title}
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -147,10 +155,10 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
               <div>
                 <span className="text-[14px] font-bold tracking-[0.1em] text-white block mb-3">Sản Phẩm Mới</span>
                 <h2 className="text-white text-3xl md:text-5xl font-sans font-light mb-6 leading-tight">
-                  {slides[current].title}
+                  {slides[current]?.title}
                 </h2>
                 <p className="text-white/90 text-sm leading-relaxed font-light tracking-wide line-clamp-3">
-                  {slides[current].description}
+                  {slides[current]?.description}
                 </p>
               </div>
               <button className="group self-start flex items-center space-x-2 text-[11px] text-white font-bold tracking-[0.2em] uppercase border border-white px-8 py-3.5 hover:bg-white hover:text-black transition-all duration-500 mt-4">

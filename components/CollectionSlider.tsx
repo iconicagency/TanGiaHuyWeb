@@ -64,6 +64,14 @@ const CollectionSlider: React.FC<CollectionSliderProps> = () => {
     return () => clearInterval(timer);
   }, [slides.length]);
 
+  useEffect(() => {
+    if (slides.length > 0 && current >= slides.length) {
+      setCurrent(0);
+    }
+  }, [slides.length, current]);
+
+  if (slides.length === 0) return null;
+
   return (
     <section className="relative h-full w-full bg-black overflow-hidden">
       {/* Main Image Slider */}
@@ -77,8 +85,8 @@ const CollectionSlider: React.FC<CollectionSliderProps> = () => {
           className="absolute inset-0"
         >
           <img
-            src={slides[current].image}
-            alt={slides[current].title}
+            src={slides[current]?.image}
+            alt={slides[current]?.title}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />

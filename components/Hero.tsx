@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { db } from '@/lib/firebase';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { onSnapshot, doc } from 'firebase/firestore';
 
 const DEFAULT_SLIDES = [
   {
@@ -24,47 +24,47 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [slides, setSlides] = useState(DEFAULT_SLIDES);
+  const [videoUrl, setVideoUrl] = useState('/videos/hero-video.mp4');
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const unsub = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), (snap) => {
-      if (!snap.empty) {
-        setSlides(snap.docs.map(d => d.data() as any));
+    const unsubSettings = onSnapshot(doc(db, 'settings', 'hero'), (snap) => {
+      if (snap.exists() && snap.data().videoUrl) {
+        setVideoUrl(snap.data().videoUrl);
       }
     });
-    return () => unsub();
+
+    return () => {
+      unsubSettings();
+    };
   }, []);
 
   useEffect(() => {
-    if (slides.length === 0) return;
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
-    return () => clearInterval(timer);
-  }, [slides.length]);
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(error => {
+        console.log("Autoplay blocked or video missing:", error);
+      });
+    }
+  }, [videoUrl]);
 
   return (
     <section className="relative h-full w-full overflow-hidden bg-black">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
+          key={videoUrl}
           preload="auto"
           className="h-full w-full object-cover grayscale-[10%] brightness-[0.7]"
-          poster={slides[currentSlide].image}
         >
-          <source src="/videos/hero-video.mp4" type="video/mp4" />
-          <img
-            src={slides[currentSlide].image}
-            alt={slides[currentSlide].title}
-            className="h-full w-full object-cover"
-          />
+          <source src={videoUrl} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/30 z-10" />
+        <div className="absolute inset-0 bg-black/40 z-10" />
       </div>
 
       <div className="absolute bottom-10 left-12 z-30 animate-bounce cursor-pointer flex items-center space-x-4">

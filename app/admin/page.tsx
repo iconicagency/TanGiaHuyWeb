@@ -114,15 +114,57 @@ const AdminPage = () => {
 
   const login = async () => {
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-    } catch (error) {
-      console.error(error);
+      const provider = new GoogleAuthProvider();
+      // Force account selection to avoid auto-login with wrong account
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await signInWithPopup(auth, provider);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      let message = "Đã có lỗi xảy ra khi đăng nhập.";
+      if (error.code === 'auth/unauthorized-domain') {
+        message = "Tên miền hiện tại (" + window.location.hostname + ") chưa được ủy quyền trong Firebase Auth Console. Hãy thêm nó vào phần 'Authorized Domains'.";
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        message = "Cửa sổ đăng nhập đã bị đóng. Vui lòng thử lại.";
+      } else if (error.code === 'auth/popup-blocked') {
+        message = "Trình duyệt đã chặn cửa sổ Popup. Vui lòng cho phép hiện Popup để đăng nhập.";
+      }
+      alert(message);
     }
   };
 
   const logout = () => signOut(auth);
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-zinc-950 text-white">Loading...</div>;
+  if (loading) return <div className="h-screen flex items-center justify-center bg-zinc-950 text-white font-light tracking-widest">ĐANG TẢI...</div>;
+
+  if (!user) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 text-white p-6">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div className="space-y-4">
+            <div className="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-brand-red/20">
+              <Settings className="w-10 h-10 text-white animate-spin-slow" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-[0.2em] uppercase">Hệ Thống Quản Trị</h1>
+            <p className="text-zinc-500 font-light tracking-wide">Vui lòng đăng nhập bằng tài khoản Google để tiếp tục.</p>
+          </div>
+
+          <button 
+            onClick={login}
+            className="w-full group relative flex items-center justify-center space-x-4 bg-white text-black py-4 px-8 rounded-full font-bold uppercase tracking-wider hover:bg-brand-red hover:text-white transition-all duration-500 shadow-xl"
+          >
+            <LogIn className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <span>Đăng nhập với Google</span>
+          </button>
+
+          <div className="pt-8 text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed">
+            <p>Lưu ý: Nếu gặp lỗi "Unauthorized domain", hãy đảm bảo bạn đã thêm tên miền</p>
+            <p className="text-zinc-400 mt-1">{typeof window !== 'undefined' ? window.location.hostname : ''}</p>
+            <p className="mt-1">vào danh sách "Authorized Domains" trong Firebase Console.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
@@ -234,8 +276,12 @@ const HeroSettingsManager = ({ data }: any) => {
           setProgress(p);
         }, 
         (error) => {
-          console.error("Upload failed:", error);
-          alert("Lỗi tải lên: " + error.message + "\n\nHãy đảm bảo bạn đã cấp quyền cho Storage trong Firebase Console.");
+          console.error("Upload failed details:", error);
+          let customMsg = error.message;
+          if (error.code === 'storage/unauthorized') {
+            customMsg = "Lỗi phân quyền! Hãy đảm bảo bạn đã: \n1. Nhấn nút 'Publish' trong Storage Rules.\n2. Thêm tên miền " + window.location.hostname + " vào 'Authorized Domains' trong Firebase Auth.";
+          }
+          alert("Tải lên thất bại: \n" + customMsg);
           setUploading(false);
         }, 
         async () => {

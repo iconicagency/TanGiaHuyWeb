@@ -28,9 +28,10 @@ const Hero: React.FC<HeroProps> = () => {
 
   useEffect(() => {
     if (videoRef.current) {
+      console.log("[Hero Video] Attempting to load video:", videoUrl);
       videoRef.current.load();
       videoRef.current.play().catch(error => {
-        console.warn("Autoplay blocked or video missing:", error);
+        console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
       });
     }
   }, [videoUrl]);
@@ -49,7 +50,16 @@ const Hero: React.FC<HeroProps> = () => {
           preload="auto"
           className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
           onCanPlay={() => {
+            console.log("[Hero Video] Video is ready to play");
             if (videoRef.current) videoRef.current.style.opacity = '1';
+          }}
+          onError={(e) => {
+            const videoElement = e.target as HTMLVideoElement;
+            console.error("[Hero Video] Detailed Error:", {
+              code: videoElement.error?.code,
+              message: videoElement.error?.message,
+              url: videoUrl
+            });
           }}
           style={{ opacity: 0 }}
         >

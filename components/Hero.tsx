@@ -53,17 +53,18 @@ const Hero: React.FC<HeroProps> = () => {
             console.log("[Hero Video] Video is ready to play");
             if (videoRef.current) videoRef.current.style.opacity = '1';
           }}
-          onError={(e) => {
-            const videoElement = e.target as HTMLVideoElement;
-            console.error("[Hero Video] Detailed Error:", {
-              code: videoElement.error?.code,
-              message: videoElement.error?.message,
-              url: videoUrl
-            });
+          onError={(e: any) => {
+            console.error("[Hero Video] Video tag error:", e);
           }}
           style={{ opacity: 0 }}
         >
-          <source src={videoUrl} type="video/mp4" />
+          <source 
+            src={videoUrl} 
+            type="video/mp4" 
+            onError={() => {
+              console.error("[Hero Video] Source error - check if file exists at:", videoUrl);
+            }}
+          />
         </video>
         <div className="absolute inset-0 bg-black/40 z-10" />
       </div>

@@ -9,14 +9,14 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Eurotile - Kiệt tác gạch men',
-  description: 'Eurotile là thương hiệu dẫn đầu về phong cách thiết kế và xu hướng thẩm mỹ trong ngành gạch kiến trúc tại Việt Nam.',
+  title: 'Mayao Windows | Tinh hoa cửa nhôm',
+  description: 'Mayao Windows - Giải pháp cửa nhôm cao cấp, sang trọng và bền bỉ cho không gian sống hiện đại.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="vi" className={`${montserrat.variable}`}>
-      <body suppressHydrationWarning className="font-sans antialiased bg-white text-stone-900">
+      <body suppressHydrationWarning className="font-sans antialiased bg-black text-white">
         {children}
       </body>
     </html>

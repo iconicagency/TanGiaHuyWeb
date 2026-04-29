@@ -19,8 +19,8 @@ import {
   orderBy,
   onSnapshot
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { LogIn, LogOut, Plus, Trash2, Save, Image as ImageIcon, Layout, Settings } from 'lucide-react';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { LogIn, LogOut, Plus, Trash2, Save, Image as ImageIcon, Layout, Settings, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 // Helper for handleFirestoreError is required by instructions
@@ -206,6 +206,7 @@ const AdminPage = () => {
 
 const HeroSettingsManager = ({ data }: any) => {
   const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const updateSettings = async (field: string, value: string) => {
     try { await setDoc(doc(db, 'settings', 'hero'), { [field]: value }, { merge: true }); }
@@ -216,22 +217,37 @@ const HeroSettingsManager = ({ data }: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 50 * 1024 * 1024) {
-      alert("Video quá lớn. Vui lòng chọn file dưới 50MB.");
+    if (file.size > 200 * 1024 * 1024) {
+      alert("Video quá lớn. Vui lòng chọn file dưới 200MB.");
       return;
     }
 
     setUploading(true);
+    setProgress(0);
     try {
-      const storageRef = ref(storage, `videos/hero-${Date.now()}.mp4`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      await updateSettings('videoUrl', url);
-      alert("Tải lên thành công!");
+      const storageRef = ref(storage, `hero-videos/video-${Date.now()}-${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(p);
+        }, 
+        (error) => {
+          console.error("Upload failed:", error);
+          alert("Lỗi tải lên: " + error.message + "\n\nHãy đảm bảo bạn đã cấp quyền cho Storage trong Firebase Console.");
+          setUploading(false);
+        }, 
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          await updateSettings('videoUrl', url);
+          alert("Tải lên video thành công!");
+          setUploading(false);
+        }
+      );
     } catch (error: any) {
-      console.error("Upload failed:", error);
-      alert("Tải lên thất bại: " + error.message);
-    } finally {
+      console.error("Upload start failed:", error);
+      alert("Khởi tạo tải lên thất bại: " + error.message);
       setUploading(false);
     }
   };
@@ -242,7 +258,17 @@ const HeroSettingsManager = ({ data }: any) => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
-        {uploading && <div className="text-xs text-white animate-pulse">Đang tải lên video...</div>}
+        {uploading && (
+          <div className="flex flex-col items-end space-y-1">
+            <div className="text-[10px] text-white/60 uppercase tracking-widest">Đang tải: {Math.round(progress)}%</div>
+            <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-brand-red transition-all duration-300" 
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
       <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-6">
         <div className="space-y-2">

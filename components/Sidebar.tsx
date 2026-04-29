@@ -39,12 +39,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSect
           {/* Section Marker */}
           <div className="group relative flex items-center">
             {/* Hover Label */}
-            <div className="absolute right-full mr-4 pointer-events-none overflow-hidden">
-              <div className="opacity-0 group-hover:opacity-100 translate-x-10 group-hover:translate-x-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex items-center">
-                <div className="bg-brand-red text-white text-[10px] font-bold tracking-[0.1em] px-4 py-2 rounded-l-md rounded-r-sm whitespace-nowrap relative">
+            <div className="absolute right-full mr-3 pointer-events-none">
+              <div className="opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500 ease-out flex items-center">
+                <div className="bg-brand-red text-white text-[10px] font-bold tracking-[0.1em] px-4 py-2 rounded-sm whitespace-nowrap relative shadow-xl">
                   {SECTION_LABELS[index] || `SECTION ${index + 1}`}
-                  {/* Arrow pointer */}
-                  <div className="absolute top-1/2 -translate-y-1/2 -right-1 w-2.5 h-2.5 bg-brand-red rotate-45" />
+                  {/* Sharp Arrow Pointer */}
+                  <div 
+                    className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[8px] border-l-brand-red" 
+                  />
                 </div>
               </div>
             </div>

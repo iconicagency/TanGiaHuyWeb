@@ -53,11 +53,11 @@ const Hero: React.FC<HeroProps> = () => {
           muted
           loop
           playsInline
+          preload="auto"
           className="h-full w-full object-cover grayscale-[10%] brightness-[0.7]"
           poster={slides[currentSlide].image}
         >
           <source src="/videos/hero-video.mp4" type="video/mp4" />
-          {/* Fallback to image if video fails or not found */}
           <img
             src={slides[currentSlide].image}
             alt={slides[currentSlide].title}

@@ -64,12 +64,13 @@ const AdminPage = () => {
       setUser(u);
       setLoading(false);
     });
+    // Auto-login or just stay as is. User wants "vào luôn"
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-
+    // We allow reading even if !user because rules allow read: if true
+    
     // Real-time listeners
     const unsubHero = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), 
       (snap) => setHeroSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
@@ -117,20 +118,7 @@ const AdminPage = () => {
 
   if (loading) return <div className="h-screen flex items-center justify-center bg-zinc-950 text-white">Loading...</div>;
 
-  if (!user) {
-    return (
-      <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 text-white p-6">
-        <h1 className="text-4xl font-bold mb-8 tracking-tighter">Eurotile Admin</h1>
-        <button 
-          onClick={login}
-          className="flex items-center space-x-3 bg-white text-black px-8 py-4 rounded-full font-bold hover:scale-105 transition-all"
-        >
-          <LogIn className="w-5 h-5" />
-          <span>Login with Google</span>
-        </button>
-      </div>
-    );
-  }
+  // Removed the !user blocking check per user request "vào luôn admin"
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex">
@@ -164,20 +152,32 @@ const AdminPage = () => {
         </nav>
 
         <div className="mt-auto border-t border-zinc-800 pt-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <img src={user.photoURL || ''} className="w-8 h-8 rounded-full" alt="" />
-            <div className="text-xs truncate max-w-[120px]">
-              <p className="font-bold">{user.displayName}</p>
-              <p className="opacity-50">{user.email}</p>
-            </div>
-          </div>
-          <button 
-            onClick={logout}
-            className="flex items-center space-x-2 text-zinc-500 hover:text-white transition-colors text-sm"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
+          {user ? (
+            <>
+              <div className="flex items-center space-x-3 mb-4">
+                <img src={user.photoURL || ''} className="w-8 h-8 rounded-full" alt="" />
+                <div className="text-xs truncate max-w-[120px]">
+                  <p className="font-bold">{user.displayName}</p>
+                  <p className="opacity-50">{user.email}</p>
+                </div>
+              </div>
+              <button 
+                onClick={logout}
+                className="flex items-center space-x-2 text-zinc-500 hover:text-white transition-colors text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <button 
+              onClick={login}
+              className="flex items-center space-x-2 text-zinc-500 hover:text-white transition-colors text-sm"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Login for full access</span>
+            </button>
+          )}
         </div>
       </div>
 

@@ -28,30 +28,30 @@ service cloud.firestore {
       allow write: if false; // Only manageable through console or seed
     }
 
-    // Generic rule for manageable content: Everyone can read, only Admins can write
+    // Generic rule for manageable content: Everyone can read and write (per user request to remove login)
     match /hero_slides/{slideId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
     
     match /collection_slides/{slideId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
     
     match /project_slides/{slideId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
     
     match /news_items/{itemId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
     
     match /contact/info {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if true;
     }
   }
 }

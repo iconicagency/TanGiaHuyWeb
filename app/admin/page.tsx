@@ -234,6 +234,7 @@ const AdminPage = () => {
           <div className="space-y-4">
             <button 
               onClick={async () => {
+                if (!user) return;
                 try {
                   await setDoc(doc(db, 'admins', user.uid), {
                     email: user.email,
@@ -325,6 +326,14 @@ const AdminPage = () => {
               <span>Login for full access</span>
             </button>
           )}
+
+          <div className="mt-8 p-4 bg-zinc-900 rounded-xl border border-white/5 space-y-3">
+            <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">Trợ giúp Video</h4>
+            <p className="text-[8px] text-zinc-500 leading-relaxed font-light">
+              Nếu dùng Google Drive, hãy sử dụng link dạng: <br/>
+              <code className="text-brand-red bg-brand-red/10 px-1 rounded break-all">drive.google.com/uc?export=download&id=...</code>
+            </p>
+          </div>
         </div>
       </div>
 

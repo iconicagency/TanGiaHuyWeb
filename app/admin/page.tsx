@@ -168,9 +168,23 @@ const AdminPage = () => {
           </button>
 
           <footer className="pt-8 border-t border-white/5 space-y-4">
-            <div className="text-[9px] text-zinc-600 uppercase tracking-widest">
-              <p className="mb-2">Authorized Hostname:</p>
-              <code className="text-zinc-400 block bg-black/40 py-2 rounded">{typeof window !== 'undefined' ? window.location.hostname : '...'}</code>
+            <div className="text-[9px] text-zinc-600 uppercase tracking-widest text-left">
+              <p className="mb-2">Firebase Project ID:</p>
+              <code className="text-zinc-400 block bg-zinc-800/50 py-2 px-3 rounded mb-4 selection:bg-brand-red selection:text-white">tangiahuyweb</code>
+              
+              <p className="mb-2">Action Required:</p>
+              <div className="bg-brand-red/10 border border-brand-red/20 p-3 rounded-lg text-[10px] text-zinc-300 normal-case leading-relaxed">
+                Hãy copy tên miền <span className="font-bold text-white underline selection:bg-brand-red selection:text-white">{typeof window !== 'undefined' ? window.location.hostname : '...'}</span> và thêm vào 
+                <a 
+                  href="https://console.firebase.google.com/project/tangiahuyweb/authentication/settings" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="mx-1 text-brand-red hover:underline font-bold"
+                >
+                  Authorized Domains
+                </a> 
+                trong Firebase Console.
+              </div>
             </div>
           </footer>
         </div>

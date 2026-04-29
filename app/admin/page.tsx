@@ -62,9 +62,11 @@ const AdminPage = () => {
   const [contactInfo, setContactInfo] = useState<any>(null);
 
   useEffect(() => {
+    console.log("Auth checking...");
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       setLoading(false);
+      console.log("User detected:", u ? u.email : "none");
     });
     // Auto-login or just stay as is. User wants "vào luôn"
     return () => unsubscribe();
@@ -134,33 +136,43 @@ const AdminPage = () => {
 
   const logout = () => signOut(auth);
 
-  if (loading) return <div className="h-screen flex items-center justify-center bg-zinc-950 text-white font-light tracking-widest">ĐANG TẢI...</div>;
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 text-white font-light tracking-[0.3em]">
+        <div className="w-10 h-10 border-2 border-zinc-800 border-t-white rounded-full animate-spin mb-4" />
+        <span>INITIALIZING...</span>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 text-white p-6">
-        <div className="max-w-md w-full space-y-8 text-center">
+      <div className="h-screen flex items-center justify-center bg-zinc-950 text-white overflow-hidden relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-sm bg-zinc-900 border border-white/5 p-12 rounded-3xl shadow-2xl text-center space-y-10">
           <div className="space-y-4">
-            <div className="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-brand-red/20">
-              <Settings className="w-10 h-10 text-white animate-spin-slow" />
+            <div className="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-brand-red/20 mb-6">
+              <Settings className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold tracking-[0.2em] uppercase">Hệ Thống Quản Trị</h1>
-            <p className="text-zinc-500 font-light tracking-wide">Vui lòng đăng nhập bằng tài khoản Google để tiếp tục.</p>
+            <h1 className="text-2xl font-bold tracking-[0.2em] uppercase">Private Access</h1>
+            <p className="text-zinc-500 font-light text-xs tracking-wide">Vui lòng đăng nhập để quản lý nội dung website.</p>
           </div>
 
           <button 
             onClick={login}
-            className="w-full group relative flex items-center justify-center space-x-4 bg-white text-black py-4 px-8 rounded-full font-bold uppercase tracking-wider hover:bg-brand-red hover:text-white transition-all duration-500 shadow-xl"
+            className="w-full flex items-center justify-center space-x-4 bg-white text-black py-4 px-8 rounded-full font-bold uppercase tracking-widest text-[11px] hover:bg-brand-red hover:text-white transition-all duration-300 shadow-xl"
           >
-            <LogIn className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+            <LogIn className="w-4 h-4" />
             <span>Đăng nhập với Google</span>
           </button>
 
-          <div className="pt-8 text-[10px] text-zinc-600 uppercase tracking-widest leading-relaxed">
-            <p>Lưu ý: Nếu gặp lỗi "Unauthorized domain", hãy đảm bảo bạn đã thêm tên miền</p>
-            <p className="text-zinc-400 mt-1">{typeof window !== 'undefined' ? window.location.hostname : ''}</p>
-            <p className="mt-1">vào danh sách "Authorized Domains" trong Firebase Console.</p>
-          </div>
+          <footer className="pt-8 border-t border-white/5 space-y-4">
+            <div className="text-[9px] text-zinc-600 uppercase tracking-widest">
+              <p className="mb-2">Authorized Hostname:</p>
+              <code className="text-zinc-400 block bg-black/40 py-2 rounded">{typeof window !== 'undefined' ? window.location.hostname : '...'}</code>
+            </div>
+          </footer>
         </div>
       </div>
     );

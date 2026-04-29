@@ -53,9 +53,10 @@ const AdminPage = () => {
   const [user, setUser] = useState<User | null>(null);
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'hero' | 'collections' | 'projects' | 'news' | 'contact'>('hero');
+  const [activeTab, setActiveTab] = useState<'general' | 'hero' | 'collections' | 'projects' | 'news' | 'contact'>('general');
   
   // Data states
+  const [generalSettings, setGeneralSettings] = useState<any>(null);
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [heroSettings, setHeroSettings] = useState<any>(null);
   const [collectionSlides, setCollectionSlides] = useState<any[]>([]);
@@ -97,6 +98,11 @@ const AdminPage = () => {
     if (!isAdmin) return;
 
     // Real-time listeners
+    const unsubGeneral = onSnapshot(doc(db, 'settings', 'general'), 
+      (snap) => setGeneralSettings(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, 'settings/general')
+    );
+
     const unsubHero = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), 
       (snap) => setHeroSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
       (err) => handleFirestoreError(err, OperationType.LIST, 'hero_slides')
@@ -128,6 +134,7 @@ const AdminPage = () => {
     );
 
     return () => {
+      unsubGeneral();
       unsubHero();
       unsubHeroSettings();
       unsubCollections();
@@ -275,6 +282,7 @@ const AdminPage = () => {
         
         <nav className="flex-1 space-y-2">
           {[
+            { id: 'general', label: 'Global (Logo/BG)', icon: Settings },
             { id: 'hero', label: 'Hero (Video/Slides)', icon: Layout },
             { id: 'collections', label: 'Collections', icon: ImageIcon },
             { id: 'projects', label: 'Projects', icon: Layout },
@@ -327,18 +335,30 @@ const AdminPage = () => {
             </button>
           )}
 
-          <div className="mt-8 p-4 bg-zinc-900 rounded-xl border border-white/5 space-y-3">
+          <div className="mt-8 p-4 bg-zinc-900 rounded-xl border border-white/5 space-y-4">
             <h4 className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">Trợ giúp Video</h4>
-            <p className="text-[8px] text-zinc-500 leading-relaxed font-light">
-              Nếu dùng Google Drive, hãy sử dụng link dạng: <br/>
-              <code className="text-brand-red bg-brand-red/10 px-1 rounded break-all">drive.google.com/uc?export=download&id=...</code>
-            </p>
+            
+            <div className="space-y-2">
+              <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Google Drive:</p>
+              <p className="text-[8px] text-zinc-500 leading-relaxed font-light">
+                Chỉ cần dán link chia sẻ, hệ thống sẽ tự chuyển sang dạng link trực tiếp.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Pexels / Khác:</p>
+              <p className="text-[8px] text-zinc-500 leading-relaxed font-light">
+                KHÔNG sử dụng link trang web. Bạn cần link trực tiếp kết thúc bằng <code className="text-brand-red">.mp4</code>.<br/>
+                Cách lấy: Click chuột phải vào video trên Pexels {'>'} <span className="text-white font-medium">Copy video address</span> (Sao chép địa chỉ video).
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <main className="flex-1 p-10 overflow-auto">
+        {activeTab === 'general' && <GeneralSettingsManager data={generalSettings} />}
         {activeTab === 'hero' && (
           <div className="space-y-12">
             <HeroSettingsManager data={heroSettings} />
@@ -356,12 +376,81 @@ const AdminPage = () => {
 
 // --- Sub-components ---
 
+const GeneralSettingsManager = ({ data }: any) => {
+  const updateSettings = async (field: string, value: string) => {
+    try { await setDoc(doc(db, 'settings', 'general'), { [field]: value }, { merge: true }); }
+    catch (e) { handleFirestoreError(e, OperationType.WRITE, 'settings/general'); }
+  };
+
+  const sections = [
+    { id: 'logoUrl', label: 'Logo Image URL' },
+    { id: 'section2Bg', label: 'Section 2 (About) Background' },
+    { id: 'section3Bg', label: 'Section 3 (Projects) Background' },
+    { id: 'section4Bg', label: 'Section 4 (Collections) Background' },
+    { id: 'section5Bg', label: 'Section 5 (News) Background' },
+    { id: 'section6Bg', label: 'Section 6 (Contact) Background' },
+  ];
+
+  if (!data) return (
+    <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 text-center">
+      <p className="mb-4 text-zinc-500 uppercase tracking-widest text-xs">Cài đặt chung chưa được khởi tạo</p>
+      <button onClick={() => updateSettings('logoUrl', '')} className="bg-white text-black px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs">
+        Khởi tạo ngay
+      </button>
+    </div>
+  );
+
+  return (
+    <div className="space-y-8 max-w-4xl">
+      <h2 className="text-2xl font-bold uppercase tracking-widest">Global Settings</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {sections.map(s => (
+          <div key={s.id} className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 space-y-4">
+            <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">{s.label}</label>
+            <input 
+              defaultValue={data[s.id]} 
+              onBlur={(e) => updateSettings(s.id, e.target.value)}
+              placeholder="https://..."
+              className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+            />
+            {data[s.id] && (
+              <div className="aspect-video rounded-lg overflow-hidden border border-white/5">
+                <img src={data[s.id]} className="w-full h-full object-cover" alt={s.label} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const HeroSettingsManager = ({ data }: any) => {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  const formatVideoUrl = (url: string) => {
+    if (!url) return '';
+    
+    // Warn if it looks like a Pexels page link instead of a file link
+    if (url.includes('pexels.com') && url.includes('/video/') && !url.includes('.mp4')) {
+      alert("CẢNH BÁO: Link Pexels bạn vừa nhập có vẻ là link TRANG WEB, không phải link VIDEO trực tiếp. Video sẽ không chạy được.\n\nHãy chuột phải vào video và chọn 'Copy video address' để lấy link đúng.");
+    }
+
+    // Fix Google Drive links automatically
+    if (url.includes('drive.google.com')) {
+      const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+      }
+      return url; // Return original if no ID found
+    }
+    return url;
+  };
+
   const updateSettings = async (field: string, value: string) => {
-    try { await setDoc(doc(db, 'settings', 'hero'), { [field]: value }, { merge: true }); }
+    const finalValue = field === 'videoUrl' ? formatVideoUrl(value) : value;
+    try { await setDoc(doc(db, 'settings', 'hero'), { [field]: finalValue }, { merge: true }); }
     catch (e) { handleFirestoreError(e, OperationType.WRITE, 'settings/hero'); }
   };
 
@@ -677,17 +766,6 @@ const ContactManager = ({ data }: any) => {
             onBlur={(e) => updateInfo('email', e.target.value)}
             className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
           />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Contact Background Image</label>
-          <input 
-            defaultValue={data.background} 
-            onBlur={(e) => updateInfo('background', e.target.value)}
-            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-          />
-          <div className="mt-2 w-full h-32 rounded-lg overflow-hidden">
-            <img src={data.background} className="w-full h-full object-cover" alt="" />
-          </div>
         </div>
       </div>
     </div>

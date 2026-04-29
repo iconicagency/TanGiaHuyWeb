@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { db } from '@/lib/firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, doc } from 'firebase/firestore';
 
 const DEFAULT_NEWS: any = {
   'left': {
       image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80",
-      title: "[DỰ ÁN EUROTILE] TN HOME - KHÔNG GIAN SỐNG MANG HƠI THỞ INDOCHINE GIỮA LÒNG HỘI AN",
+      title: "[DỰ ÁN TÂN GIA HUY] TN HOME - KHÔNG GIAN SỐNG MANG HƠI THỞ INDOCHINE GIỮA LÒNG HỘI AN",
       description: "Nằm tại thành phố Hội An, tỉnh Quảng Nam, TN Home là một công trình nhà ở có diện tích hơn 300m²...",
       category: "TIN DỰ ÁN"
   },
@@ -32,6 +32,7 @@ interface NewsProps {
 const News: React.FC<NewsProps> = ({ isActive }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [news, setNews] = useState<any>(DEFAULT_NEWS);
+  const [bgImage, setBgImage] = useState("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80");
   const [prevActive, setPrevActive] = useState(isActive);
 
   if (prevActive !== isActive) {
@@ -40,6 +41,12 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
   }
 
   useEffect(() => {
+    const unsubGen = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+      if (snap.exists() && snap.data().section5Bg) {
+        setBgImage(snap.data().section5Bg);
+      }
+    });
+
     const unsub = onSnapshot(collection(db, 'news_items'), (snap) => {
       if (!snap.empty) {
         const data: any = {};
@@ -52,7 +59,10 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
     }, (err) => {
       console.error("[News] Snapshot error:", err);
     });
-    return () => unsub();
+    return () => {
+      unsubGen();
+      unsub();
+    };
   }, []);
 
   const getItem = (pos: string) => news[pos] || DEFAULT_NEWS[pos];
@@ -62,7 +72,7 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
 
     const timer = setTimeout(() => {
       setIsRevealed(true);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [isActive]);
 
@@ -71,7 +81,7 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
       {/* Dynamic Background with reveal animation like Section 3 */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80"
+          src={bgImage}
           alt=""
           className={cn(
             "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
@@ -100,7 +110,7 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
         <div className="flex gap-[10px] items-center justify-center h-[429px] shadow-2xl">
           
           {/* Left Large Card - 315 x 429 */}
-          <div className="w-[315px] h-[429px] bg-white group cursor-pointer transition-all duration-500 flex flex-col flex-shrink-0">
+          <div className="w-[315px] h-[429px] bg-gradient-to-b from-[#004d33]/95 to-[#C5A059]/95 group cursor-pointer transition-all duration-500 flex flex-col flex-shrink-0 border border-white/10">
             <div className="relative h-[250px] overflow-hidden">
               <img
                 src={getItem('left').image}
@@ -113,10 +123,10 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
               </div>
             </div>
             <div className="p-8 flex-1 flex flex-col justify-center">
-              <h3 className="text-[#333333] text-sm md:text-[15px] font-bold leading-tight mb-4 tracking-tight uppercase">
+              <h3 className="text-white text-sm md:text-[15px] font-bold leading-tight mb-4 tracking-tight uppercase">
                 {getItem('left').title}
               </h3>
-              <p className="text-[#666666] text-[10px] leading-relaxed font-normal">
+              <p className="text-white/80 text-[10px] leading-relaxed font-normal">
                 {getItem('left').description}
               </p>
             </div>
@@ -126,15 +136,15 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
           <div className="w-[585px] h-[429px] flex flex-col gap-[10px] flex-shrink-0">
             
             {/* Top Right Item - 585 x 209.5 */}
-            <div className="h-[209.5px] w-full flex bg-[#cccccc] group cursor-pointer hover:bg-[#d4d4d4] transition-all">
+            <div className="h-[209.5px] w-full flex bg-gradient-to-r from-[#004d33]/95 to-[#C5A059]/95 group cursor-pointer hover:brightness-110 transition-all border border-white/10">
                <div className="flex-[3] p-8 flex flex-col justify-center">
-                  <h4 className="text-[#333333] text-sm md:text-[16px] font-bold leading-snug mb-3 uppercase tracking-tight">
+                  <h4 className="text-white text-sm md:text-[16px] font-bold leading-snug mb-3 uppercase tracking-tight">
                     {getItem('top-right').title}
                   </h4>
-                  <p className="text-[#666666] text-[10px] leading-relaxed line-clamp-2 font-medium opacity-80">
+                  <p className="text-white/80 text-[10px] leading-relaxed line-clamp-2 font-medium">
                     {getItem('top-right').description}
                   </p>
-                  <span className="text-[10px] text-black/30 mt-3">[...]</span>
+                  <span className="text-[10px] text-white/30 mt-3">[...]</span>
                </div>
                <div className="flex-[2] overflow-hidden">
                   <img
@@ -147,7 +157,7 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
             </div>
 
             {/* Bottom Right Item - 585 x 209.5 */}
-            <div className="h-[209.5px] w-full flex bg-white group cursor-pointer hover:brightness-105 transition-all">
+            <div className="h-[209.5px] w-full flex bg-gradient-to-r from-[#C5A059]/95 to-[#004d33]/95 group cursor-pointer hover:brightness-110 transition-all border border-white/10">
                <div className="flex-[2] overflow-hidden relative">
                   <img
                     src={getItem('bottom-right').image}
@@ -156,17 +166,17 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute top-4 left-4 bg-black/5 backdrop-blur-sm px-2 py-1">
-                    <span className="text-[#333333] text-[9px] font-bold tracking-widest italic opacity-60">eurotile</span>
+                    <span className="text-white text-[9px] font-bold tracking-widest italic opacity-60">tân gia huy</span>
                   </div>
                </div>
                <div className="flex-[3] p-8 flex flex-col justify-center">
-                  <h4 className="text-[#333333] text-sm md:text-[16px] font-bold leading-snug mb-3 uppercase tracking-tight">
+                  <h4 className="text-white text-sm md:text-[16px] font-bold leading-snug mb-3 uppercase tracking-tight">
                     {getItem('bottom-right').title}
                   </h4>
-                  <p className="text-[#666666] text-[10px] leading-relaxed line-clamp-2 font-medium opacity-80">
+                  <p className="text-white/80 text-[10px] leading-relaxed line-clamp-2 font-medium">
                     {getItem('bottom-right').description}
                   </p>
-                  <span className="text-[10px] text-black/30 mt-3">[...]</span>
+                  <span className="text-[10px] text-white/30 mt-3">[...]</span>
                </div>
             </div>
           </div>

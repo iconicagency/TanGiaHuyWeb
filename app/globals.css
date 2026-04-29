@@ -3,7 +3,8 @@
 @theme {
   --font-sans: var(--font-sans);
   
-  --color-brand-red: #A11E22;
+  --color-brand-gold: #C5A059;
+  --color-brand-red: #C5A059; /* Redefine red to gold for backward compatibility with existing components */
   --color-brand-dark: #000000;
   --color-brand-gray: #1A1A1A;
 }

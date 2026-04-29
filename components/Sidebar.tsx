@@ -13,9 +13,9 @@ interface SidebarProps {
 
 const SECTION_LABELS = [
   'TRANG CHỦ',
-  'BỘ SƯU TẬP',
+  'GIỚI THIỆU',
   'SẢN PHẨM MỚI',
-  'CẢM HỨNG',
+  'BỘ SƯU TẬP',
   'TIN TỨC',
   'LIÊN HỆ'
 ];
@@ -41,11 +41,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSect
             {/* Hover Label */}
             <div className="absolute right-full mr-3 pointer-events-none">
               <div className="opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500 ease-out flex items-center">
-                <div className="bg-brand-red text-white text-[10px] font-bold tracking-[0.1em] px-4 py-2 rounded-sm whitespace-nowrap relative shadow-xl">
+                <div className="bg-brand-gold text-white text-[10px] font-bold tracking-[0.1em] px-4 py-2 rounded-sm whitespace-nowrap relative shadow-xl">
                   {SECTION_LABELS[index] || `SECTION ${index + 1}`}
                   {/* Sharp Arrow Pointer */}
                   <div 
-                    className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[8px] border-l-brand-red" 
+                    className="absolute top-1/2 -translate-y-1/2 -right-[6px] w-0 h-0 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent border-l-[8px] border-l-brand-gold" 
                   />
                 </div>
               </div>
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSect
               <div className={cn(
                 "w-10 h-10 rounded-full border flex items-center justify-center text-[10px] font-bold transition-all duration-500",
                 currentSection === index 
-                  ? "border-brand-red text-brand-red bg-brand-red/5 shadow-[0_0_15px_rgba(220,38,38,0.3)]" 
+                  ? "border-brand-gold text-brand-gold bg-brand-gold/5 shadow-[0_0_15px_rgba(197,160,89,0.3)]" 
                   : "border-white/20 text-white/40 hover:border-white/60 hover:text-white"
               )}>
                 {(index + 1).toString().padStart(2, '0')}

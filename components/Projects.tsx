@@ -2,27 +2,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight, Facebook, Youtube, Phone, Mail, PenTool } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Facebook, Youtube, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db } from '@/lib/firebase';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
 
 const DEFAULT_SLIDES = [
   {
     id: 1,
-    image: 'https://picsum.photos/seed/large1/1920/1080',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80',
     title: 'Large Format Thạch An',
     description: 'Là biểu tượng của sự yên ổn và vững chắc. Thạch An tựa như những ngọn núi sừng sững đã chứng kiến bao đổi thay, thăng trầm của thiên nhiên vẫn hiện ngang đứng giữa đất trời bao la.',
   },
   {
     id: 2,
-    image: 'https://picsum.photos/seed/large2/1920/1080',
+    image: 'https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80',
     title: 'Large Format Mộc Trà',
     description: 'Mang hơi thở của những cánh rừng già, Mộc Trà là sự kết tinh của thời gian và hơi ấm tự nhiên, mang lại cảm giác bình yên, thư thái cho mọi không gian sống.',
   },
   {
     id: 3,
-    image: 'https://picsum.photos/seed/large3/1920/1080',
+    image: 'https://images.unsplash.com/photo-1600607687940-c52af096999a?auto=format&fit=crop&q=80',
     title: 'Large Format Vũ điệu xanh',
     description: 'Những đường vân uốn lượn như dải lụa mềm mại, Vũ điệu xanh khơi gợi trí tưởng tượng và khát vọng tự do, biến mỗi gian phòng thành một tác phẩm nghệ thuật sống động.',
   },
@@ -32,10 +32,11 @@ interface NewProductsProps {
   isActive?: boolean;
 }
 
-const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
+const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
   const [current, setCurrent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
+  const [bgImage, setBgImage] = useState("");
   const [prevConfig, setPrevConfig] = useState({ current, isActive });
 
   if (prevConfig.current !== current || prevConfig.isActive !== isActive) {
@@ -48,6 +49,12 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
   }
 
   useEffect(() => {
+    const unsubGen = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+      if (snap.exists() && snap.data().section3Bg) {
+        setBgImage(snap.data().section3Bg);
+      }
+    });
+
     const unsub = onSnapshot(query(collection(db, 'project_slides'), orderBy('order')), (snap) => {
       if (!snap.empty) {
         setSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }) as any));
@@ -55,7 +62,10 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
     }, (err) => {
       console.error("[Projects] Snapshot error:", err);
     });
-    return () => unsub();
+    return () => {
+      unsubGen();
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
@@ -63,7 +73,7 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
 
     const timer = setTimeout(() => {
       setIsRevealed(true);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [current, isActive]);
 
@@ -86,7 +96,7 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
             className="absolute inset-0"
           >
             <img
-              src={slides[current]?.image}
+              src={bgImage || slides[current]?.image}
               alt=""
               className={cn(
                 "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
@@ -108,7 +118,7 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
         className="relative z-10 w-[900px] h-[506.25px] mx-auto"
       >
         <div className="relative w-full h-full">
-          {/* External Controls - Positioned relative to the 900px frame */}
+          {/* External Controls */}
           <button
             onClick={prevSlide}
             className="absolute -left-20 top-1/2 -translate-y-1/2 z-30 text-white/30 hover:text-white transition-all p-2"
@@ -143,9 +153,9 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
             </AnimatePresence>
           </div>
   
-          {/* Protruding Content Box & White Decorative Frame */}
+          {/* Protruding Content Box */}
           <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[10%] z-20 flex justify-center w-[420px]">
-            {/* The white outer decorative border line frame */}
+            {/* White outer frame line */}
             <div className="absolute -inset-4 border border-white/40 pointer-events-none" />
 
             <motion.div 
@@ -154,10 +164,10 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
               style={{ width: '420px', height: '321.61px' }}
-              className="relative bg-gradient-to-b from-[#1a3a4a]/90 via-[#2a4a5a]/80 to-[#8a7b5a]/90 backdrop-blur-md p-8 md:p-10 border border-white/20 pointer-events-auto shadow-2xl flex flex-col justify-between"
+              className="relative bg-gradient-to-b from-[#004d33]/95 via-[#004d33]/85 to-[#C5A059]/95 backdrop-blur-md p-8 md:p-10 border border-white/20 pointer-events-auto shadow-2xl flex flex-col justify-between"
             >
               <div>
-                <span className="text-[14px] font-bold tracking-[0.1em] text-white block mb-3">Sản Phẩm Mới</span>
+                <span className="text-[14px] font-bold tracking-[0.1em] text-white block mb-3 uppercase">Sản Phẩm Mới</span>
                 <h2 className="text-white text-3xl md:text-5xl font-sans font-light mb-6 leading-tight">
                   {slides[current]?.title}
                 </h2>
@@ -184,43 +194,33 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
           >
             <div className={cn(
               "absolute w-5 h-5 rounded-full border transition-all duration-300",
-              current === index ? "border-brand-red scale-100 opacity-100" : "border-white/0 scale-0 opacity-0"
+              current === index ? "border-brand-gold scale-100 opacity-100" : "border-white/0 scale-0 opacity-0"
             )} />
             <div className={cn(
               "w-1.5 h-1.5 rounded-full transition-all duration-300",
-              current === index ? "bg-brand-red" : "bg-white/40 hover:bg-white"
+              current === index ? "bg-brand-gold" : "bg-white/40 hover:bg-white"
             )} />
           </button>
         ))}
       </div>
 
-      {/* Footer Elements (Shared across sections) */}
-      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/60">
-        <span className="text-[9px] font-bold tracking-widest hidden md:inline">2018 EUROTILE. ALL RIGHTS RESERVED.</span>
-        <div className="flex items-center space-x-4">
-          <a href="#" className="hover:text-white transition-colors"><Facebook className="w-4 h-4 fill-current" /></a>
-          <a href="#" className="hover:text-white transition-colors"><Youtube className="w-4 h-4" /></a>
-          <a href="#" className="hover:text-white transition-colors text-[10px] font-bold">Zalo</a>
-        </div>
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/50">
+        <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
       </div>
 
-      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/80">
-        <div className="flex items-center space-x-2 text-[10px] font-bold tracking-wider">
-          <span className="opacity-60 cursor-pointer hover:opacity-100 uppercase">Site map</span>
+      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">
+        <div className="flex items-center space-x-8 text-[10px] font-bold tracking-wider mr-4">
+          <span className="opacity-60 uppercase">hotline: 0971.325.658</span>
         </div>
-        <div className="flex items-center space-x-2 text-[10px] font-bold tracking-wider">
-          <span className="opacity-60 uppercase">hotline:</span>
-          <span>0902.798.538</span>
-        </div>
-        <div className="flex items-center space-x-3 bg-brand-red/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-red/20 transition-all">
-          <div className="w-7 h-7 flex items-center justify-center bg-brand-red rounded-full text-white">
-            <PenTool className="w-3.5 h-3.5" />
+        <div className="flex items-center space-x-3 bg-brand-gold/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-gold/20 transition-all">
+          <div className="w-7 h-7 flex items-center justify-center bg-brand-gold rounded-full text-white">
+            <Mail className="w-3.5 h-3.5" />
           </div>
-          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-red transition-colors">tuvanthietke@eurotile.vn</span>
+          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-gold transition-colors">tangiahuy.nd@gmail.com</span>
         </div>
       </div>
     </section>
   );
 };
 
-export default NewProducts;
+export default Projects;

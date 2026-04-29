@@ -9,9 +9,9 @@ import { db } from '@/lib/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 
 const DEFAULT_CONTACT = {
-  address: "270B Lý Thường Kiệt, Phường Diên Hồng, Thành phố Hồ Chí Minh",
-  phone: "0902.798.538",
-  email: "tuvanthietke@eurotile.vn",
+  address: "TT Nam Giang, Nam Trực, tỉnh Nam Định",
+  phone: "0971.325.658",
+  email: "tangiahuy.nd@gmail.com",
   background: "https://images.unsplash.com/photo-1534536281715-e28d76689b4d?auto=format&fit=crop&q=80"
 };
 
@@ -22,6 +22,7 @@ interface ContactProps {
 const Contact: React.FC<ContactProps> = ({ isActive }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [contact, setContact] = useState(DEFAULT_CONTACT);
+  const [bgImage, setBgImage] = useState(DEFAULT_CONTACT.background);
   const [prevActive, setPrevActive] = useState(isActive);
 
   if (prevActive !== isActive) {
@@ -30,6 +31,12 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
   }
 
   useEffect(() => {
+    const unsubGen = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+      if (snap.exists() && snap.data().section6Bg) {
+        setBgImage(snap.data().section6Bg);
+      }
+    });
+
     const unsub = onSnapshot(doc(db, 'contact', 'info'), (snap) => {
       if (snap.exists()) {
         setContact(snap.data() as any);
@@ -37,7 +44,10 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
     }, (err) => {
       console.error("[Contact] Snapshot error:", err);
     });
-    return () => unsub();
+    return () => {
+      unsubGen();
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
@@ -45,7 +55,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
 
     const timer = setTimeout(() => {
       setIsRevealed(true);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [isActive]);
 
@@ -54,7 +64,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
       {/* Background with blurred reveal effect */}
       <div className="absolute inset-0 z-0">
         <img
-          src={contact.background}
+          src={bgImage}
           alt="Vintage background"
           className={cn(
             "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
@@ -76,8 +86,8 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
         {/* Left Side: Contact Info */}
         <div className="text-white space-y-12 md:w-[45%]">
           <div className="space-y-4">
-            <h2 className="text-6xl md:text-8xl font-extralight tracking-[0.25em] uppercase opacity-90">
-              EUROTILE
+            <h2 className="text-6xl md:text-8xl font-black tracking-[0.25em] uppercase opacity-90 text-brand-gold">
+              TÂN GIA HUY
             </h2>
           </div>
 
@@ -130,16 +140,16 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
       <div className="absolute bottom-0 left-0 w-full z-30 px-12 py-8 flex flex-col md:flex-row items-center justify-between pointer-events-auto bg-gradient-to-t from-black/60 to-transparent">
         <div className="flex items-center space-x-6 mb-4 md:mb-0">
           <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase font-bold">
-            2018 EUROTILE. ALL RIGHTS RESERVED.
+            © 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.
           </span>
           <div className="flex space-x-4">
-            <Link href="#" className="text-white/40 hover:text-white transition-all transform hover:scale-110">
+            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110">
               <Facebook className="w-4 h-4" />
             </Link>
-            <Link href="#" className="text-white/40 hover:text-white transition-all transform hover:scale-110">
+            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110">
               <Youtube className="w-4 h-4" />
             </Link>
-            <Link href="#" className="text-white/40 hover:text-white transition-all transform hover:scale-110 font-bold text-[10px]">
+            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110 font-bold text-[10px]">
               Zalo
             </Link>
           </div>
@@ -149,14 +159,14 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
           <Link href="#" className="hover:text-white transition-colors">Site map</Link>
           <div className="flex items-center space-x-2">
             <span className="text-white/30">|</span>
-            <span>hotline: 0902.798.538</span>
+            <span>hotline: 0971.325.658</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-white/30">|</span>
-            <Link href="mailto:tuvanthietke@eurotile.vn" className="p-2 bg-brand-red rounded-full hover:scale-110 transition-transform">
+            <Link href="mailto:tangiahuy.nd@gmail.com" className="p-2 bg-brand-gold rounded-full hover:scale-110 transition-transform">
               <Mail className="w-3 h-3 text-white" />
             </Link>
-            <span className="lowercase text-[10px] opacity-60">tuvanthietke@eurotile.vn</span>
+            <span className="lowercase text-[10px] opacity-60">tangiahuy.nd@gmail.com</span>
           </div>
         </div>
       </div>

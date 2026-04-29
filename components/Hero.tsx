@@ -15,10 +15,24 @@ const Hero: React.FC<HeroProps> = () => {
   const [hasError, setHasError] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
+  const getDirectVideoUrl = (url: string) => {
+    if (!url) return '';
+    // Handle Google Drive links
+    if (url.includes('drive.google.com')) {
+      const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
+      if (match && match[1]) {
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+      }
+      return url; // Return original if no ID found
+    }
+    return url;
+  };
+
   useEffect(() => {
     const unsubSettings = onSnapshot(doc(db, 'settings', 'hero'), (snap) => {
       if (snap.exists() && snap.data().videoUrl) {
-        setVideoUrl(snap.data().videoUrl);
+        const directUrl = getDirectVideoUrl(snap.data().videoUrl);
+        setVideoUrl(directUrl);
         setHasError(false); // Reset error state on URL change
       }
     }, (err) => {
@@ -61,8 +75,8 @@ const Hero: React.FC<HeroProps> = () => {
               console.log("[Hero Video] Video is ready to play");
               if (videoRef.current) videoRef.current.style.opacity = '1';
             }}
-            onError={(e: any) => {
-              console.error("[Hero Video] Video tag error detected:", e);
+            onError={() => {
+              console.error("[Hero Video] Video tag error detected");
               setHasError(true);
             }}
             style={{ opacity: 0 }}
@@ -70,7 +84,7 @@ const Hero: React.FC<HeroProps> = () => {
             <source 
               src={videoUrl} 
               type="video/mp4" 
-              onError={(e) => {
+              onError={() => {
                 console.error("[Hero Video] Source element reported error for:", videoUrl);
                 setHasError(true);
               }}

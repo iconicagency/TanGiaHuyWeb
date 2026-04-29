@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Facebook, Youtube, MapPin, PenTool } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 const projectPairs = [
   [
@@ -43,6 +45,7 @@ interface CollectionsProps {
 const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
   const [current, setCurrent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [bgImage, setBgImage] = useState("");
   const [prevConfig, setPrevConfig] = useState({ current, isActive });
 
   if (prevConfig.current !== current || prevConfig.isActive !== isActive) {
@@ -51,11 +54,20 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
   }
 
   React.useEffect(() => {
+    const unsubGen = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+      if (snap.exists() && snap.data().section4Bg) {
+        setBgImage(snap.data().section4Bg);
+      }
+    });
+    return () => unsubGen();
+  }, []);
+
+  React.useEffect(() => {
     if (!isActive) return;
 
     const timer = setTimeout(() => {
       setIsRevealed(true);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [current, isActive]);
 
@@ -76,7 +88,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
             className="absolute inset-0"
           >
             <img
-              src={projectPairs[current][0].image}
+              src={bgImage || projectPairs[current][0].image}
               alt=""
               className={cn(
                 "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
@@ -141,8 +153,8 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
                   />
                 </div>
 
-                {/* Teal Footer Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 bg-[#2b5a6d]/85 backdrop-blur-sm p-4 md:p-6 border-t border-white/10">
+                {/* Green-Gold Gradient Footer Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-[#004d33]/95 to-[#C5A059]/95 backdrop-blur-sm p-4 md:p-6 border-t border-white/10">
                   <h3 className="text-white text-lg font-bold tracking-wider mb-2">
                     {project.title}
                   </h3>
@@ -168,7 +180,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
             onClick={() => setCurrent(index)}
             className={cn(
               "w-2 h-2 rounded-full transition-all duration-300",
-              current === index ? "bg-red-600 scale-125" : "bg-white/40 hover:bg-white"
+              current === index ? "bg-brand-gold scale-125" : "bg-white/40 hover:bg-white"
             )}
           />
         ))}
@@ -177,7 +189,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
       {/* Footer Branding Area */}
       <div className="absolute bottom-0 left-0 w-full z-40 bg-black/40 backdrop-blur-sm py-4 px-12 flex justify-between items-center text-[9px] text-white/60 font-bold tracking-widest border-t border-white/5">
         <div className="flex items-center space-x-6">
-          <span>2018 EUROTILE. ALL RIGHTS RESERVED.</span>
+          <span>© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
           <div className="flex items-center space-x-4">
             <Facebook className="w-4 h-4" />
             <Youtube className="w-4 h-4" />
@@ -188,11 +200,11 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
           <span className="hover:text-white cursor-pointer transition-colors">SITE MAP</span>
           <div className="flex items-center space-x-2">
             <span>HOTLINE:</span>
-            <span className="text-white">0902.798.538</span>
+            <span className="text-white">0971.325.658</span>
           </div>
-          <div className="flex items-center space-x-2 bg-[#1a3a4a] text-white px-4 py-2 rounded-full group cursor-pointer transition-all hover:bg-[#2a4a5a]">
+          <div className="flex items-center space-x-2 bg-brand-gold/20 text-white px-4 py-2 rounded-full group cursor-pointer transition-all hover:bg-brand-gold/40 border border-brand-gold/30">
              <PenTool className="w-4 h-4" />
-             <span>tuvanthietke@eurotile.vn</span>
+             <span>tangiahuy.nd@gmail.com</span>
           </div>
         </div>
       </div>

@@ -9,8 +9,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'Mayao Windows | Tinh hoa cửa nhôm',
-  description: 'Mayao Windows - Giải pháp cửa nhôm cao cấp, sang trọng và bền bỉ cho không gian sống hiện đại.',
+  title: 'Tân Gia Huy | Tinh hoa vật liệu hoàn thiện',
+  description: 'Tân Gia Huy - Giải pháp gạch ốp lát khổ lớn và thiết bị vệ sinh cao cấp cho không gian sống hiện đại.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

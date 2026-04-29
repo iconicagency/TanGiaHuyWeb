@@ -27,15 +27,27 @@
     },
     "ContactInfo": {
       "title": "Contact Info",
-      "description": "General contact information and background image",
+      "description": "General contact information",
       "type": "object",
       "properties": {
         "address": { "type": "string" },
         "phone": { "type": "string" },
-        "email": { "type": "string" },
-        "background": { "type": "string", "description": "Background image for contact section" }
+        "email": { "type": "string" }
       },
-      "required": ["address", "phone", "email", "background"]
+      "required": ["address", "phone", "email"]
+    },
+    "GeneralSettings": {
+      "title": "General Settings",
+      "description": "Global settings like logo and section backgrounds",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string", "description": "URL of the logo image" },
+        "section2Bg": { "type": "string", "description": "Background image for Section 2" },
+        "section3Bg": { "type": "string", "description": "Background image for Section 3" },
+        "section4Bg": { "type": "string", "description": "Background image for Section 4" },
+        "section5Bg": { "type": "string", "description": "Background image for Section 5" },
+        "section6Bg": { "type": "string", "description": "Background image for Section 6" }
+      }
     },
     "HeroSettings": {
       "title": "Hero Settings",
@@ -48,6 +60,10 @@
     }
   },
   "firestore": {
+    "/settings/general": {
+      "schema": "GeneralSettings",
+      "description": "Global settings"
+    },
     "/settings/hero": {
       "schema": "HeroSettings",
       "description": "Settings for the Hero section"

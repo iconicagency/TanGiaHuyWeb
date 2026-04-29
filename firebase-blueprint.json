@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "Slide": {
+      "title": "Slide",
+      "description": "A slide for sliders (Hero, Collections, Projects)",
+      "type": "object",
+      "properties": {
+        "image": { "type": "string", "description": "URL of the image" },
+        "title": { "type": "string", "description": "Title of the slide" },
+        "description": { "type": "string", "description": "Description text" },
+        "order": { "type": "number", "description": "Display order" }
+      },
+      "required": ["image", "title", "order"]
+    },
+    "NewsItem": {
+      "title": "News Item",
+      "description": "An item for the news section",
+      "type": "object",
+      "properties": {
+        "image": { "type": "string", "description": "URL of the image" },
+        "title": { "type": "string", "description": "Title of the news" },
+        "description": { "type": "string", "description": "Summary text" },
+        "category": { "type": "string", "description": "Category e.g. TIN DỰ ÁN" },
+        "position": { "type": "string", "enum": ["left", "top-right", "bottom-right"], "description": "Position in the grid" }
+      },
+      "required": ["image", "title", "position"]
+    },
+    "ContactInfo": {
+      "title": "Contact Info",
+      "description": "General contact information and background image",
+      "type": "object",
+      "properties": {
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "background": { "type": "string", "description": "Background image for contact section" }
+      },
+      "required": ["address", "phone", "email", "background"]
+    }
+  },
+  "firestore": {
+    "/hero_slides/{slideId}": {
+      "schema": "Slide",
+      "description": "Slides for the Hero section"
+    },
+    "/collection_slides/{slideId}": {
+      "schema": "Slide",
+      "description": "Slides for the Collection section"
+    },
+    "/project_slides/{slideId}": {
+      "schema": "Slide",
+      "description": "Slides for the Projects section"
+    },
+    "/news_items/{itemId}": {
+      "schema": "NewsItem",
+      "description": "Items for the News section"
+    },
+    "/contact/info": {
+      "schema": "ContactInfo",
+      "description": "Singleton for contact information"
+    }
+  }
+}

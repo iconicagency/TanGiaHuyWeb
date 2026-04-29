@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-sans);
+  
+  --color-brand-red: #A11E22;
+  --color-brand-dark: #000000;
+  --color-brand-gray: #1A1A1A;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  
+  body {
+    @apply bg-black text-white;
+  }
+
+  /* Full-page Snap Scrolling */
+  .snap-container {
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .snap-container::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+  
+  .snap-section {
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    position: relative;
+  }
+}

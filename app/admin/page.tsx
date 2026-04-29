@@ -191,26 +191,6 @@ const AdminPage = () => {
           </button>
 
           <footer className="pt-8 border-t border-white/5 space-y-4">
-            {user && !isAdmin && (
-              <button 
-                onClick={async () => {
-                  try {
-                    await setDoc(doc(db, 'admins', user.uid), {
-                      email: user.email,
-                      authorized: true,
-                      createdAt: serverTimestamp()
-                    });
-                    alert("Đã cấp quyền Admin! Hãy tải lại trang.");
-                    window.location.reload();
-                  } catch (e: any) {
-                    alert("Lỗi cấp quyền: " + e.message);
-                  }
-                }}
-                className="w-full py-2 bg-brand-red/20 text-brand-red border border-brand-red/30 rounded-lg text-[10px] uppercase tracking-widest font-bold hover:bg-brand-red hover:text-white transition-all mb-4"
-              >
-                Kích hoạt quyền Admin cho tài khoản này
-              </button>
-            )}
             <div className="text-[9px] text-zinc-600 uppercase tracking-widest text-left">
               <p className="mb-2">Firebase Project ID:</p>
               <code className="text-zinc-400 block bg-zinc-800/50 py-2 px-3 rounded mb-4 selection:bg-brand-red selection:text-white">tangiahuyweb</code>
@@ -230,6 +210,54 @@ const AdminPage = () => {
               </div>
             </div>
           </footer>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-zinc-950 text-white overflow-hidden relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-md bg-zinc-900 border border-white/5 p-12 rounded-3xl shadow-2xl text-center space-y-10">
+          <div className="space-y-4">
+            <div className="w-20 h-20 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <LogOut className="w-10 h-10 text-zinc-500" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-[0.2em] uppercase">Access Denied</h1>
+            <p className="text-zinc-500 font-light text-xs tracking-wide">
+              Tài khoản <span className="text-white font-medium">{user.email}</span> chưa được cấp quyền quản trị.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <button 
+              onClick={async () => {
+                try {
+                  await setDoc(doc(db, 'admins', user.uid), {
+                    email: user.email,
+                    authorized: true,
+                    createdAt: serverTimestamp()
+                  });
+                  alert("Đã cấp quyền Admin! Hãy tải lại trang.");
+                  window.location.reload();
+                } catch (e: any) {
+                  alert("Lỗi cấp quyền: " + e.message);
+                }
+              }}
+              className="w-full py-4 bg-brand-red text-white rounded-full font-bold uppercase tracking-widest text-[11px] hover:scale-105 transition-all shadow-xl shadow-brand-red/20"
+            >
+              Kích hoạt quyền Admin cho tài khoản này
+            </button>
+
+            <button 
+              onClick={logout}
+              className="w-full py-4 bg-zinc-800 text-zinc-400 rounded-full font-bold uppercase tracking-widest text-[11px] hover:bg-zinc-700 hover:text-white transition-all"
+            >
+              Đăng xuất
+            </button>
+          </div>
         </div>
       </div>
     );

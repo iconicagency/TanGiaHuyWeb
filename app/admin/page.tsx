@@ -41,12 +41,20 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
       userId: auth.currentUser?.uid,
       email: auth.currentUser?.email,
       emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
     },
     operationType,
     path
   };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
-  // We can show a toast or alert here in a real app
+  const jsonErr = JSON.stringify(errInfo);
+  console.error('Firestore Error: ', jsonErr);
+  // Instructions say MUST throw with specific JSON
+  throw new Error(jsonErr);
 }
 
 const AdminPage = () => {
@@ -54,9 +62,10 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'general' | 'hero' | 'collections' | 'projects' | 'news' | 'contact'>('general');
+  const [errorStatus, setErrorStatus] = useState<string | null>(null);
   
   // Data states
-  const [generalSettings, setGeneralSettings] = useState<any>(null);
+  const [generalSettings, setGeneralSettings] = useState<any>(undefined); // undefined = loading, null = not exists
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [heroSettings, setHeroSettings] = useState<any>(null);
   const [collectionSlides, setCollectionSlides] = useState<any[]>([]);
@@ -65,7 +74,7 @@ const AdminPage = () => {
   const [contactInfo, setContactInfo] = useState<any>(null);
 
   useEffect(() => {
-    console.log("Auth checking...");
+    console.log("Admin: Auth checking...");
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
       if (!u) {
@@ -81,6 +90,7 @@ const AdminPage = () => {
 
     // Check if user is admin via firestore
     const unsubAdmin = onSnapshot(doc(db, 'admins', user.uid), (snap) => {
+      console.log("Admin: Permissions loaded", snap.exists());
       setUserAdmin(snap.exists() ? snap.data() : null);
       setLoading(false);
     }, (err) => {
@@ -97,10 +107,18 @@ const AdminPage = () => {
   useEffect(() => {
     if (!isAdmin) return;
 
+    console.log("Admin: Initializing listeners...");
+
     // Real-time listeners
     const unsubGeneral = onSnapshot(doc(db, 'settings', 'general'), 
-      (snap) => setGeneralSettings(snap.exists() ? snap.data() : null),
-      (err) => handleFirestoreError(err, OperationType.GET, 'settings/general')
+      (snap) => {
+        console.log("Admin: General settings updated");
+        setGeneralSettings(snap.exists() ? snap.data() : null);
+      },
+      (err) => {
+        console.error("Admin: General settings listener error", err);
+        setErrorStatus("Cannot load settings: " + err.message);
+      }
     );
 
     const unsubHero = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), 
@@ -282,7 +300,7 @@ const AdminPage = () => {
         
         <nav className="flex-1 space-y-2">
           {[
-            { id: 'general', label: 'Global (Logo/BG)', icon: Settings },
+            { id: 'general', label: 'Global (Logo/BG)', icon: ExternalLink },
             { id: 'hero', label: 'Hero (Video/Slides)', icon: Layout },
             { id: 'collections', label: 'Collections', icon: ImageIcon },
             { id: 'projects', label: 'Projects', icon: Layout },
@@ -291,7 +309,10 @@ const AdminPage = () => {
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => {
+                console.log("Switching to tab:", tab.id);
+                setActiveTab(tab.id as any);
+              }}
               className={cn(
                 "w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all",
                 activeTab === tab.id ? "bg-white text-black font-bold" : "hover:bg-zinc-900 text-zinc-400"
@@ -304,6 +325,11 @@ const AdminPage = () => {
         </nav>
 
         <div className="mt-auto border-t border-zinc-800 pt-6">
+          {errorStatus && (
+            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-[10px] text-red-400 lowercase">
+              {errorStatus}
+            </div>
+          )}
           {user ? (
             <>
                 <div className="flex items-center space-x-3 mb-4">
@@ -378,8 +404,12 @@ const AdminPage = () => {
 
 const GeneralSettingsManager = ({ data }: any) => {
   const updateSettings = async (field: string, value: string) => {
-    try { await setDoc(doc(db, 'settings', 'general'), { [field]: value }, { merge: true }); }
-    catch (e) { handleFirestoreError(e, OperationType.WRITE, 'settings/general'); }
+    try {
+      console.log(`Updating general setting: ${field} = ${value}`);
+      await setDoc(doc(db, 'settings', 'general'), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, 'settings/general');
+    }
   };
 
   const sections = [
@@ -391,31 +421,73 @@ const GeneralSettingsManager = ({ data }: any) => {
     { id: 'section6Bg', label: 'Section 6 (Contact) Background' },
   ];
 
-  if (!data) return (
-    <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 text-center">
-      <p className="mb-4 text-zinc-500 uppercase tracking-widest text-xs">Cài đặt chung chưa được khởi tạo</p>
-      <button onClick={() => updateSettings('logoUrl', '')} className="bg-white text-black px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs">
-        Khởi tạo ngay
-      </button>
-    </div>
-  );
+  if (data === undefined) {
+    return (
+      <div className="flex flex-col items-center justify-center p-20 text-zinc-500">
+        <div className="w-8 h-8 border-2 border-zinc-800 border-t-white rounded-full animate-spin mb-4" />
+        <span className="text-[10px] uppercase tracking-widest font-bold">Loading Global Settings...</span>
+      </div>
+    );
+  }
+
+  if (data === null) {
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <div className="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Settings className="w-8 h-8 text-zinc-500" />
+        </div>
+        <h3 className="text-xl font-bold mb-2 uppercase tracking-widest text-white">Chưa có dữ liệu</h3>
+        <p className="mb-8 text-zinc-500 text-xs leading-relaxed">Hệ thống chưa tìm thấy cấu hình Global Settings. Vui lòng khởi tạo ngay để bắt đầu thiết lập Logo và Hình nền.</p>
+        <button 
+          onClick={() => updateSettings('logoUrl', '')} 
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+        >
+          Khởi tạo ngay
+        </button>
+      </div>
+    );
+  }
+
+  const safeData = data || {};
 
   return (
-    <div className="space-y-8 max-w-4xl">
-      <h2 className="text-2xl font-bold uppercase tracking-widest">Global Settings</h2>
+    <div className="space-y-10 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Global Settings</h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý logo thương hiệu và hình nền chính cho các phân đoạn website.</p>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {sections.map(s => (
-          <div key={s.id} className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 space-y-4">
-            <label className="text-xs uppercase tracking-widest text-zinc-500 font-bold">{s.label}</label>
-            <input 
-              defaultValue={data[s.id]} 
-              onBlur={(e) => updateSettings(s.id, e.target.value)}
-              placeholder="https://..."
-              className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
-            />
-            {data[s.id] && (
-              <div className="aspect-video rounded-lg overflow-hidden border border-white/5">
-                <img src={data[s.id]} className="w-full h-full object-cover" alt={s.label} />
+          <div key={s.id} className="group bg-zinc-900 p-8 rounded-2xl border border-white/5 space-y-6 hover:border-white/10 transition-all">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">{s.label}</label>
+            </div>
+            
+            <div className="relative">
+              <input 
+                defaultValue={safeData[s.id]} 
+                onBlur={(e) => {
+                  if (e.target.value !== safeData[s.id]) {
+                    updateSettings(s.id, e.target.value);
+                  }
+                }}
+                placeholder="Dán link ảnh tại đây (https://...)"
+                className="w-full bg-zinc-800/50 px-5 py-4 rounded-xl border border-white/5 outline-none focus:border-brand-red focus:bg-zinc-800 transition-all text-sm font-light tracking-wide"
+              />
+            </div>
+
+            {safeData[s.id] && (
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-white/5 group-hover:border-white/20 transition-all shadow-2xl">
+                <img 
+                  src={safeData[s.id]} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  alt={s.label}
+                  onError={(e) => {
+                    (e.target as any).src = 'https://placehold.co/600x400/27272a/white?text=Invalid+Image+URL';
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all" />
               </div>
             )}
           </div>

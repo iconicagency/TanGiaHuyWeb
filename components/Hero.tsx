@@ -12,13 +12,17 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = () => {
   const [videoUrl, setVideoUrl] = useState('/videos/hero-video.mp4');
+  const [hasError, setHasError] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const unsubSettings = onSnapshot(doc(db, 'settings', 'hero'), (snap) => {
       if (snap.exists() && snap.data().videoUrl) {
         setVideoUrl(snap.data().videoUrl);
+        setHasError(false); // Reset error state on URL change
       }
+    }, (err) => {
+      console.error("[Hero] Snapshot error:", err);
     });
 
     return () => {
@@ -27,45 +31,60 @@ const Hero: React.FC<HeroProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && !hasError) {
       console.log("[Hero Video] Attempting to load video:", videoUrl);
       videoRef.current.load();
-      videoRef.current.play().catch(error => {
-        console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
-      });
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
+        });
+      }
     }
-  }, [videoUrl]);
+  }, [videoUrl, hasError]);
 
   return (
     <section className="relative h-full w-full overflow-hidden bg-black">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          key={videoUrl}
-          preload="auto"
-          className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
-          onCanPlay={() => {
-            console.log("[Hero Video] Video is ready to play");
-            if (videoRef.current) videoRef.current.style.opacity = '1';
-          }}
-          onError={(e: any) => {
-            console.error("[Hero Video] Video tag error:", e);
-          }}
-          style={{ opacity: 0 }}
-        >
-          <source 
-            src={videoUrl} 
-            type="video/mp4" 
-            onError={() => {
-              console.error("[Hero Video] Source error - check if file exists at:", videoUrl);
+        {!hasError ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            key={videoUrl}
+            preload="auto"
+            className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
+            onCanPlay={() => {
+              console.log("[Hero Video] Video is ready to play");
+              if (videoRef.current) videoRef.current.style.opacity = '1';
             }}
-          />
-        </video>
+            onError={(e: any) => {
+              console.error("[Hero Video] Video tag error detected:", e);
+              setHasError(true);
+            }}
+            style={{ opacity: 0 }}
+          >
+            <source 
+              src={videoUrl} 
+              type="video/mp4" 
+              onError={(e) => {
+                console.error("[Hero Video] Source element reported error for:", videoUrl);
+                setHasError(true);
+              }}
+            />
+          </video>
+        ) : (
+          <div className="h-full w-full bg-zinc-900 flex items-center justify-center overflow-hidden">
+            <img 
+              src="https://picsum.photos/seed/hero/1920/1080?grayscale" 
+              className="h-full w-full object-cover brightness-[0.4]"
+              alt="Hero Fallback"
+            />
+          </div>
+        )}
         <div className="absolute inset-0 bg-black/40 z-10" />
       </div>
 

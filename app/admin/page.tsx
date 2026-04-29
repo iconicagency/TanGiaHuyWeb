@@ -17,7 +17,8 @@ import {
   deleteDoc, 
   query, 
   orderBy,
-  onSnapshot
+  onSnapshot,
+  serverTimestamp
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { LogIn, LogOut, Plus, Trash2, Save, Image as ImageIcon, Layout, Settings, ExternalLink } from 'lucide-react';
@@ -50,6 +51,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
 
 const AdminPage = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'hero' | 'collections' | 'projects' | 'news' | 'contact'>('hero');
   
@@ -65,14 +67,35 @@ const AdminPage = () => {
     console.log("Auth checking...");
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
-      setLoading(false);
-      console.log("User detected:", u ? u.email : "none");
+      if (!u) {
+        setUserAdmin(null);
+        setLoading(false);
+      }
     });
-    // Auto-login or just stay as is. User wants "vào luôn"
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+
+    // Check if user is admin via firestore
+    const unsubAdmin = onSnapshot(doc(db, 'admins', user.uid), (snap) => {
+      setUserAdmin(snap.exists() ? snap.data() : null);
+      setLoading(false);
+    }, (err) => {
+      console.error("Admin check failed:", err);
+      setUserAdmin(null);
+      setLoading(false);
+    });
+
+    return () => unsubAdmin();
+  }, [user]);
+
+  const isAdmin = userAdmin?.authorized || user?.email === "thanhnt.ads@gmail.com";
+
+  useEffect(() => {
+    if (!isAdmin) return;
+
     // Real-time listeners
     const unsubHero = onSnapshot(query(collection(db, 'hero_slides'), orderBy('order')), 
       (snap) => setHeroSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
@@ -112,7 +135,7 @@ const AdminPage = () => {
       unsubNews();
       unsubContact();
     };
-  }, [user]);
+  }, [isAdmin]);
 
   const login = async () => {
     try {
@@ -168,6 +191,26 @@ const AdminPage = () => {
           </button>
 
           <footer className="pt-8 border-t border-white/5 space-y-4">
+            {user && !isAdmin && (
+              <button 
+                onClick={async () => {
+                  try {
+                    await setDoc(doc(db, 'admins', user.uid), {
+                      email: user.email,
+                      authorized: true,
+                      createdAt: serverTimestamp()
+                    });
+                    alert("Đã cấp quyền Admin! Hãy tải lại trang.");
+                    window.location.reload();
+                  } catch (e: any) {
+                    alert("Lỗi cấp quyền: " + e.message);
+                  }
+                }}
+                className="w-full py-2 bg-brand-red/20 text-brand-red border border-brand-red/30 rounded-lg text-[10px] uppercase tracking-widest font-bold hover:bg-brand-red hover:text-white transition-all mb-4"
+              >
+                Kích hoạt quyền Admin cho tài khoản này
+              </button>
+            )}
             <div className="text-[9px] text-zinc-600 uppercase tracking-widest text-left">
               <p className="mb-2">Firebase Project ID:</p>
               <code className="text-zinc-400 block bg-zinc-800/50 py-2 px-3 rounded mb-4 selection:bg-brand-red selection:text-white">tangiahuyweb</code>
@@ -226,9 +269,13 @@ const AdminPage = () => {
         <div className="mt-auto border-t border-zinc-800 pt-6">
           {user ? (
             <>
-              <div className="flex items-center space-x-3 mb-4">
-                <img src={user.photoURL || ''} className="w-8 h-8 rounded-full" alt="" />
-                <div className="text-xs truncate max-w-[120px]">
+                <div className="flex items-center space-x-3 mb-4">
+                  {user.photoURL && (
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                      <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                  <div className="text-xs truncate max-w-[120px]">
                   <p className="font-bold">{user.displayName}</p>
                   <p className="opacity-50">{user.email}</p>
                 </div>
@@ -305,7 +352,9 @@ const HeroSettingsManager = ({ data }: any) => {
           console.error("Upload failed details:", error);
           let customMsg = error.message;
           if (error.code === 'storage/unauthorized') {
-            customMsg = "Lỗi phân quyền! Hãy đảm bảo bạn đã: \n1. Nhấn nút 'Publish' trong Storage Rules.\n2. Thêm tên miền " + window.location.hostname + " vào 'Authorized Domains' trong Firebase Auth.";
+            customMsg = "Lỗi phân quyền! Hãy đảm bảo bạn đã: \n1. Kích hoạt Storage trong Firebase Console.\n2. Thiết lập Storage Rules thành: allow read, write: if request.auth != null;";
+          } else if (error.code === 'storage/retry-limit-exceeded') {
+            customMsg = "Lỗi kết nối! Firebase Storage có thể chưa được KHỞI TẠO. \n\nHãy vào Firebase Console -> Storage và nhấn 'Get Started'.";
           }
           alert("Tải lên thất bại: \n" + customMsg);
           setUploading(false);
@@ -324,33 +373,66 @@ const HeroSettingsManager = ({ data }: any) => {
     }
   };
 
-  if (!data) return <button onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4')} className="bg-white/10 px-4 py-2 rounded">Initialize Hero Settings</button>;
+  const resetToDefault = async () => {
+    if (confirm("Bạn có chắc muốn đặt lại video về mặc định?")) {
+      await updateSettings('videoUrl', '/videos/hero-video.mp4');
+    }
+  };
+
+  if (!data) return (
+    <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 text-center">
+      <p className="mb-4 text-zinc-500 uppercase tracking-widest text-xs">Cài đặt Hero chưa được khởi tạo</p>
+      <button onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4')} className="bg-white text-black px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all">
+        Khởi tạo ngay
+      </button>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
-        {uploading && (
-          <div className="flex flex-col items-end space-y-1">
-            <div className="text-[10px] text-white/60 uppercase tracking-widest">Đang tải: {Math.round(progress)}%</div>
-            <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-brand-red transition-all duration-300" 
-                style={{ width: `${progress}%` }}
-              />
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={resetToDefault}
+            className="text-[10px] uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+          >
+            Reset về mặc định
+          </button>
+          {uploading && (
+            <div className="flex flex-col items-end space-y-1">
+              <div className="text-[10px] text-white/60 uppercase tracking-widest">Đang tải: {Math.round(progress)}%</div>
+              <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-brand-red transition-all duration-300" 
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-6">
         <div className="space-y-2">
           <label className="text-xs uppercase tracking-widest text-zinc-500">Video Source URL (.mp4)</label>
-          <input 
-            defaultValue={data.videoUrl} 
-            onBlur={(e) => updateSettings('videoUrl', e.target.value)}
-            placeholder="e.g. /videos/hero-video.mp4 or external URL"
-            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
-          />
+          <div className="flex gap-4">
+            <input 
+              defaultValue={data.videoUrl} 
+              onBlur={(e) => updateSettings('videoUrl', e.target.value)}
+              placeholder="e.g. /videos/hero-video.mp4 or external URL"
+              className="flex-1 bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+            />
+            <a 
+              href={data.videoUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-colors flex items-center justify-center"
+              title="Mở video trong tab mới để kiểm tra"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
+          <p className="text-[10px] text-zinc-500">Mẹo: Bạn có thể sử dụng link trực tiếp từ Pexels hoặc các dịch vụ kho video khác.</p>
         </div>
 
         <div className="space-y-2">
@@ -453,7 +535,8 @@ const NewsManager = ({ items }: any) => {
 
   // Ensure 3 spots exist
   useEffect(() => {
-    positions.forEach(pos => {
+    const fixedPositions = ['left', 'top-right', 'bottom-right'];
+    fixedPositions.forEach(pos => {
       if (!items.find((i: any) => i.position === pos)) {
         const id = `news-${pos}`;
         setDoc(doc(db, 'news_items', id), {

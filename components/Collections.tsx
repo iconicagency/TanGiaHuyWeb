@@ -43,9 +43,14 @@ interface CollectionsProps {
 const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
   const [current, setCurrent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [prevConfig, setPrevConfig] = useState({ current, isActive });
+
+  if (prevConfig.current !== current || prevConfig.isActive !== isActive) {
+    setPrevConfig({ current, isActive });
+    setIsRevealed(false);
+  }
 
   React.useEffect(() => {
-    setIsRevealed(false);
     if (!isActive) return;
 
     const timer = setTimeout(() => {

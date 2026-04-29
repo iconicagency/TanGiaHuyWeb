@@ -47,11 +47,17 @@ const CollectionSlider: React.FC<CollectionSliderProps> = () => {
   const [current, setCurrent] = useState(0);
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
 
+  if (slides.length > 0 && current >= slides.length) {
+    setCurrent(0);
+  }
+
   useEffect(() => {
     const unsub = onSnapshot(query(collection(db, 'collection_slides'), orderBy('order')), (snap) => {
       if (!snap.empty) {
         setSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }) as any));
       }
+    }, (err) => {
+      console.error("[CollectionSlider] Snapshot error:", err);
     });
     return () => unsub();
   }, []);
@@ -63,12 +69,6 @@ const CollectionSlider: React.FC<CollectionSliderProps> = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, [slides.length]);
-
-  useEffect(() => {
-    if (slides.length > 0 && current >= slides.length) {
-      setCurrent(0);
-    }
-  }, [slides.length, current]);
 
   if (slides.length === 0) return null;
 

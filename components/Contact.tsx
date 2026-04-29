@@ -22,21 +22,26 @@ interface ContactProps {
 const Contact: React.FC<ContactProps> = ({ isActive }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [contact, setContact] = useState(DEFAULT_CONTACT);
+  const [prevActive, setPrevActive] = useState(isActive);
+
+  if (prevActive !== isActive) {
+    setPrevActive(isActive);
+    setIsRevealed(false);
+  }
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'contact', 'info'), (snap) => {
       if (snap.exists()) {
         setContact(snap.data() as any);
       }
+    }, (err) => {
+      console.error("[Contact] Snapshot error:", err);
     });
     return () => unsub();
   }, []);
 
   useEffect(() => {
-    if (!isActive) {
-      setIsRevealed(false);
-      return;
-    }
+    if (!isActive) return;
 
     const timer = setTimeout(() => {
       setIsRevealed(true);

@@ -32,6 +32,12 @@ interface NewsProps {
 const News: React.FC<NewsProps> = ({ isActive }) => {
   const [isRevealed, setIsRevealed] = useState(false);
   const [news, setNews] = useState<any>(DEFAULT_NEWS);
+  const [prevActive, setPrevActive] = useState(isActive);
+
+  if (prevActive !== isActive) {
+    setPrevActive(isActive);
+    setIsRevealed(false);
+  }
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'news_items'), (snap) => {
@@ -43,6 +49,8 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
         });
         setNews((prev: any) => ({ ...prev, ...data }));
       }
+    }, (err) => {
+      console.error("[News] Snapshot error:", err);
     });
     return () => unsub();
   }, []);
@@ -50,7 +58,6 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
   const getItem = (pos: string) => news[pos] || DEFAULT_NEWS[pos];
 
   useEffect(() => {
-    setIsRevealed(false);
     if (!isActive) return;
 
     const timer = setTimeout(() => {

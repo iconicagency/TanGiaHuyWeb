@@ -36,19 +36,29 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
   const [current, setCurrent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
+  const [prevConfig, setPrevConfig] = useState({ current, isActive });
+
+  if (prevConfig.current !== current || prevConfig.isActive !== isActive) {
+    setPrevConfig({ current, isActive });
+    setIsRevealed(false);
+  }
+
+  if (slides.length > 0 && current >= slides.length) {
+    setCurrent(0);
+  }
 
   useEffect(() => {
     const unsub = onSnapshot(query(collection(db, 'project_slides'), orderBy('order')), (snap) => {
       if (!snap.empty) {
         setSlides(snap.docs.map(d => ({ id: d.id, ...d.data() }) as any));
       }
+    }, (err) => {
+      console.error("[Projects] Snapshot error:", err);
     });
     return () => unsub();
   }, []);
 
   useEffect(() => {
-    setIsRevealed(false);
-    
     if (!isActive) return;
 
     const timer = setTimeout(() => {
@@ -59,12 +69,6 @@ const NewProducts: React.FC<NewProductsProps> = ({ isActive }) => {
 
   const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-
-  useEffect(() => {
-    if (slides.length > 0 && current >= slides.length) {
-      setCurrent(0);
-    }
-  }, [slides.length, current]);
 
   if (slides.length === 0) return null;
 

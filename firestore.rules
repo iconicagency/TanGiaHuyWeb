@@ -13,8 +13,31 @@ service cloud.firestore {
       );
     }
 
+    function isBootstrapAdmin() {
+      return isSignedIn() && 
+             request.auth.token.email_verified == true && 
+             request.auth.token.email == "thanhnt.ads@gmail.com";
+    }
+
     function isValidId(id) {
       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Validation Helpers
+    function isValidHeroSlide(data) {
+      return data.keys().hasAll(['title', 'order', 'image']) &&
+             data.title is string && data.title.size() < 200 &&
+             data.image is string && data.image.size() < 1000 &&
+             data.order is int;
+    }
+
+    function isValidSettings(data) {
+      return data.keys().hasAll(['videoUrl']) &&
+             data.videoUrl is string && data.videoUrl.size() < 1000;
     }
 
     // Default deny
@@ -22,41 +45,41 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Admins collection - user can read their own if it exists
-    match /admins/{userId} {
-      allow read: if isSignedIn() && request.auth.uid == userId;
-      allow write: if false; // Only manageable through console or seed
-    }
-
-    // Generic rule for manageable content: Everyone can read and write (per user request to remove login)
+    // Public Collections - Read for all, Write for Admin
     match /hero_slides/{slideId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin() && (slideId == 'new' || isValidHeroSlide(incoming()));
     }
     
     match /collection_slides/{slideId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
     }
     
     match /project_slides/{slideId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
     }
     
     match /news_items/{itemId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
     }
     
     match /contact/info {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
     }
     
     match /settings/{docId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin() && isValidSettings(incoming());
+    }
+
+    // Admin identities
+    match /admins/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if isBootstrapAdmin() && request.auth.uid == userId;
     }
   }
 }

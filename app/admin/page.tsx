@@ -301,11 +301,11 @@ const AdminPage = () => {
         <nav className="flex-1 space-y-2">
           {[
             { id: 'general', label: 'Global (Logo/BG)', icon: ExternalLink },
-            { id: 'hero', label: 'Hero (Video/Slides)', icon: Layout },
-            { id: 'collections', label: 'Collections', icon: ImageIcon },
-            { id: 'projects', label: 'Projects', icon: Layout },
-            { id: 'news', label: 'News Items', icon: ImageIcon },
-            { id: 'contact', label: 'Contact Info', icon: Settings },
+            { id: 'hero', label: 'Trang chủ (Video)', icon: Layout },
+            { id: 'projects', label: 'Sản phẩm mới', icon: Layout },
+            { id: 'collections', label: 'Bộ sưu tập', icon: ImageIcon },
+            { id: 'news', label: 'Tin tức', icon: ImageIcon },
+            { id: 'contact', label: 'Thông tin liên hệ', icon: Settings },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -742,10 +742,14 @@ const SlideManager = ({ items, collectionName, description = false }: any) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold uppercase tracking-widest">{collectionName.replace('_', ' ')}</h2>
+        <h2 className="text-2xl font-bold uppercase tracking-widest">
+          {collectionName === 'project_slides' ? 'Quản lý Sản phẩm mới' : 
+           collectionName === 'collection_slides' ? 'Quản lý Bộ sưu tập' : 
+           collectionName.replace('_', ' ')}
+        </h2>
         <button onClick={addSlide} className="bg-white text-black px-4 py-2 rounded-lg flex items-center space-x-2 font-bold hover:scale-105 transition-all">
           <Plus className="w-4 h-4" />
-          <span>Add Slide</span>
+          <span>Thêm slide mới</span>
         </button>
       </div>
 

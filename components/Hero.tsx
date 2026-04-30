@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Play, Pause } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { onSnapshot, doc } from 'firebase/firestore';
 
@@ -13,6 +13,7 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = () => {
   const [videoUrl, setVideoUrl] = useState('/videos/hero-video.mp4');
   const [hasError, setHasError] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const getDirectVideoUrl = (url: string) => {
@@ -48,14 +49,28 @@ const Hero: React.FC<HeroProps> = () => {
     if (videoRef.current && !hasError) {
       console.log("[Hero Video] Attempting to load video:", videoUrl);
       videoRef.current.load();
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
-        });
+      if (isPlaying) {
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
+            setIsPlaying(false);
+          });
+        }
       }
     }
   }, [videoUrl, hasError]);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
 
   return (
     <section className="relative h-full w-full overflow-hidden bg-black">
@@ -102,9 +117,27 @@ const Hero: React.FC<HeroProps> = () => {
         <div className="absolute inset-0 bg-black/40 z-10" />
       </div>
 
-      <div className="absolute bottom-10 left-12 z-30 animate-bounce cursor-pointer flex items-center space-x-4">
-        <span className="text-[10px] tracking-[0.3em] font-bold opacity-60 text-white">CUỘN XUỐNG</span>
-        <ChevronDown className="w-5 h-5 opacity-60 text-white" />
+      <div className="absolute bottom-10 left-12 z-30 flex items-center space-x-8">
+        <div className="animate-bounce cursor-pointer flex items-center space-x-4">
+          <span className="text-[10px] tracking-[0.3em] font-bold opacity-60 text-white uppercase">CUỘN XUỐNG</span>
+          <ChevronDown className="w-5 h-5 opacity-60 text-white" />
+        </div>
+
+        <button 
+          onClick={togglePlay}
+          className="group flex items-center space-x-3 cursor-pointer hover:opacity-100 transition-opacity"
+        >
+          <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/40 transition-colors">
+            {isPlaying ? (
+              <Pause className="w-4 h-4 text-white/60 group-hover:text-white transition-colors" />
+            ) : (
+              <Play className="w-4 h-4 text-white/60 group-hover:text-white transition-colors ml-0.5" />
+            )}
+          </div>
+          <span className="text-[10px] tracking-[0.3em] font-bold opacity-40 group-hover:opacity-80 text-white uppercase transition-opacity">
+            {isPlaying ? 'PAUSE' : 'PLAY'}
+          </span>
+        </button>
       </div>
     </section>
   );

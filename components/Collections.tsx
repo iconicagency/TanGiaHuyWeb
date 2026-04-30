@@ -1,42 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Facebook, Youtube, MapPin, PenTool } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db } from '@/lib/firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
-
-const projectPairs = [
-  [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80',
-      title: 'FINN HOUSE',
-      location: 'Khu Căn Hộ Giảng Viên Đại Học Cần Thơ, phường An Khánh, quận Ninh Kiều, thành phố Cần Thơ',
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80',
-      title: 'VILLA ALIBU',
-      location: '86 Nguyễn Viết Xuân, TT.Phước An, H.Krông Pắc, Đắk Lắk',
-    }
-  ],
-  [
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1600607687940-c52af096999a?auto=format&fit=crop&q=80',
-      title: 'MODERN RETREAT',
-      location: 'Khu dân cư cao cấp, Quận 7, TP. Hồ Chí Minh',
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80',
-      title: 'OCEAN VILLA',
-      location: 'Bán đảo Sơn Trà, TP. Đà Nẵng',
-    }
-  ]
-];
+import { doc, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
 
 interface CollectionsProps {
   isActive?: boolean;
@@ -45,6 +14,7 @@ interface CollectionsProps {
 const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
   const [current, setCurrent] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [slides, setSlides] = useState<any[]>([]);
   const [bgImage, setBgImage] = useState("");
   const [prevConfig, setPrevConfig] = useState({ current, isActive });
 
@@ -53,16 +23,26 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
     setIsRevealed(false);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubGen = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
       if (snap.exists() && snap.data().section4Bg) {
         setBgImage(snap.data().section4Bg);
       }
     });
-    return () => unsubGen();
+
+    const unsubSlides = onSnapshot(query(collection(db, 'collection_slides'), orderBy('order')), (snap) => {
+      if (!snap.empty) {
+        setSlides(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      }
+    });
+
+    return () => {
+      unsubGen();
+      unsubSlides();
+    };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) return;
 
     const timer = setTimeout(() => {
@@ -71,8 +51,20 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
     return () => clearTimeout(timer);
   }, [current, isActive]);
 
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % projectPairs.length);
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + projectPairs.length) % projectPairs.length);
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+
+  if (slides.length === 0) return null;
+
+  // Group slides into pairs for the layout
+  const slidesAsPairs: any[][] = [];
+  for (let i = 0; i < slides.length; i += 2) {
+    const pair = [slides[i]];
+    if (slides[i + 1]) pair.push(slides[i + 1]);
+    slidesAsPairs.push(pair);
+  }
+
+  const currentPair = slidesAsPairs[current % slidesAsPairs.length] || [];
 
   return (
     <section className="relative h-full w-full bg-black overflow-hidden flex flex-col items-center justify-center">
@@ -88,7 +80,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
             className="absolute inset-0"
           >
             <img
-              src={bgImage || projectPairs[current][0].image}
+              src={bgImage || (currentPair[0]?.image)}
               alt=""
               className={cn(
                 "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
@@ -112,7 +104,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
         {/* Title */}
         <div className="mb-12">
           <h2 className="text-white text-5xl md:text-7xl font-extralight tracking-[0.3em] uppercase opacity-80">
-            DỰ ÁN
+            BỘ SƯU TẬP
           </h2>
         </div>
 
@@ -134,7 +126,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-1 gap-y-12">
           <AnimatePresence mode="wait">
-            {projectPairs[current].map((project, idx) => (
+            {currentPair.map((project, idx) => (
               <motion.div
                 key={`${current}-${project.id}`}
                 initial={{ opacity: 0, x: idx === 0 ? -20 : 20 }}
@@ -161,7 +153,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
                   <div className="flex items-start space-x-2 text-white/80">
                     <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                     <p className="text-[10px] md:text-xs leading-relaxed font-light">
-                      {project.location}
+                      {project.description || 'Chi tiết bộ sưu tập'}
                     </p>
                   </div>
                 </div>
@@ -174,7 +166,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
 
       {/* Selection Dots */}
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center space-x-2">
-        {projectPairs.map((_, index) => (
+        {slidesAsPairs.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrent(index)}

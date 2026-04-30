@@ -84,90 +84,77 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
         className="relative z-10 w-full max-w-7xl px-12 md:px-24 flex flex-col md:flex-row items-center justify-between"
       >
         {/* Left Side: Contact Info */}
-        <div className="text-white space-y-12 md:w-[45%]">
-          <div className="space-y-4">
-            <h2 className="text-6xl md:text-8xl font-black tracking-[0.25em] uppercase opacity-90 text-brand-gold">
+        <div className="text-white space-y-6 md:space-y-12 md:w-[45%]">
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-6xl font-black tracking-tight uppercase opacity-90 text-brand-gold whitespace-nowrap">
               TÂN GIA HUY
             </h2>
           </div>
 
-          <div className="space-y-6">
-            <div className="flex items-start space-x-6 group">
-              <MapPin className="w-6 h-6 text-white/40 mt-1" />
+          <div className="space-y-4 md:space-y-6">
+            <div className="flex items-start space-x-4 md:space-x-6 group">
+              <MapPin className="w-5 h-5 md:w-6 md:h-6 text-brand-gold mt-1" />
               <div>
-                <p className="text-lg md:text-xl font-light leading-snug max-w-sm text-white/80">
-                  {contact.address}
+                <p className="text-base md:text-xl font-light leading-snug max-w-sm text-white/80">
+                  {contact.address || 'TT Nam Giang, Nam Trực, tỉnh Nam Định'}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-6 group">
-              <Phone className="w-6 h-6 text-white/40" />
-              <p className="text-lg md:text-xl font-light text-white/80">
+            <div className="flex items-center space-x-4 md:space-x-6 group">
+              <Phone className="w-5 h-5 md:w-6 md:h-6 text-brand-gold" />
+              <p className="text-base md:text-xl font-light text-white/80">
                 {contact.phone}
               </p>
             </div>
 
-            <div className="flex items-center space-x-6 group">
-              <Mail className="w-6 h-6 text-white/40" />
-              <p className="text-lg md:text-xl font-light text-white/80">
+            <div className="flex items-center space-x-4 md:space-x-6 group">
+              <Mail className="w-5 h-5 md:w-6 md:h-6 text-brand-gold" />
+              <p className="text-base md:text-xl font-light text-white/80">
                 {contact.email}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Circular Map */}
-        <div className="md:w-[55%] flex justify-end">
-          <div className="relative w-[350px] h-[350px] md:w-[600px] md:h-[600px] rounded-full overflow-hidden border-[15px] border-white/5 shadow-2xl">
+        {/* Right Side: Circular Map - Increased size by 30% from previous small version */}
+        <div className="md:w-[50%] flex justify-center md:justify-end mt-8 md:mt-0">
+          <div className="relative w-[360px] h-[360px] md:w-[420px] md:h-[420px] max-w-[90vw] max-h-[90vw] rounded-full overflow-hidden border-[8px] border-white/5 shadow-2xl">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4602324283!2d106.66336597587842!3d10.7760193893732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f143714697d%3A0xc07a27eb27670729!2sEurotile%20Center!5e0!3m2!1sen!2s!4v1709187342930!5m2!1sen!2s"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14945.54160417578!2d106.205!3d20.33!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135e69f8c6cd7b1%3A0x8c7c7f3e8f6e80b1!2zTmFtIEdpYW5nLCBOYW0gVHLhu7FjLCBOYW0gxJDhu4tuaCwgVmlldG5hbQ!5e0!3m2!1sen!2s!4v1714490000000!5m2!1sen!2s"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen={true}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="grayscale invert-[5%] contrast-[110%] brightness-[95%] hover:grayscale-0 transition-all duration-1000 scale-[1.3] translate-y-[-5%]"
+              className="grayscale invert-[5%] contrast-[110%] brightness-[95%] hover:grayscale-0 transition-all duration-1000 scale-[1.5]"
             />
             {/* Inner vignette overlay */}
-            <div className="absolute inset-0 pointer-events-none rounded-full shadow-[inset_0_0_100px_rgba(0,0,0,0.4)]" />
+            <div className="absolute inset-0 pointer-events-none rounded-full shadow-[inset_0_0_60px_rgba(0,0,0,0.5)]" />
           </div>
         </div>
       </motion.div>
 
-      {/* Global Footer Bar - Integrated at bottom */}
-      <div className="absolute bottom-0 left-0 w-full z-30 px-12 py-8 flex flex-col md:flex-row items-center justify-between pointer-events-auto bg-gradient-to-t from-black/60 to-transparent">
-        <div className="flex items-center space-x-6 mb-4 md:mb-0">
-          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase font-bold">
-            © 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.
-          </span>
-          <div className="flex space-x-4">
-            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110">
-              <Facebook className="w-4 h-4" />
-            </Link>
-            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110">
-              <Youtube className="w-4 h-4" />
-            </Link>
-            <Link href="#" className="text-white/40 hover:text-brand-gold transition-all transform hover:scale-110 font-bold text-[10px]">
-              Zalo
-            </Link>
-          </div>
+      {/* Synchronized Footer Area like Projects section */}
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/40">
+        <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
+        <div className="flex items-center space-x-4">
+          <Facebook className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <Youtube className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <span className="text-[10px] font-bold cursor-pointer hover:text-white transition-colors">Zalo</span>
         </div>
+      </div>
 
-        <div className="flex items-center space-x-8 text-[11px] text-white/60 font-bold tracking-widest uppercase">
-          <Link href="#" className="hover:text-white transition-colors">Site map</Link>
-          <div className="flex items-center space-x-2">
-            <span className="text-white/30">|</span>
-            <span>hotline: 0971.325.658</span>
+      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">
+        <div className="flex items-center space-x-8 text-[10px] font-bold tracking-wider mr-4">
+          <span className="opacity-60 uppercase">hotline: 0971.325.658</span>
+        </div>
+        <div className="flex items-center space-x-3 bg-brand-gold/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-gold/20 transition-all">
+          <div className="w-7 h-7 flex items-center justify-center bg-brand-gold rounded-full text-white">
+            <Mail className="w-3.5 h-3.5" />
           </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-white/30">|</span>
-            <Link href="mailto:tangiahuy.nd@gmail.com" className="p-2 bg-brand-gold rounded-full hover:scale-110 transition-transform">
-              <Mail className="w-3 h-3 text-white" />
-            </Link>
-            <span className="lowercase text-[10px] opacity-60">tangiahuy.nd@gmail.com</span>
-          </div>
+          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-gold transition-colors">tangiahuy.nd@gmail.com</span>
         </div>
       </div>
     </section>

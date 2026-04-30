@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronLeft, ChevronRight, Facebook, Youtube, MapPin, PenTool } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Facebook, Youtube, MapPin, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db } from '@/lib/firebase';
 import { doc, onSnapshot, collection, query, orderBy } from 'firebase/firestore';
@@ -102,29 +102,29 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
         className="relative z-10 w-full flex flex-col items-center"
       >
         {/* Title */}
-        <div className="mb-12">
-          <h2 className="text-white text-5xl md:text-7xl font-extralight tracking-[0.3em] uppercase opacity-80">
+        <div className="mb-6 md:mb-12">
+          <h2 className="text-white text-4xl md:text-8xl font-sans font-black tracking-tight uppercase">
             BỘ SƯU TẬP
           </h2>
         </div>
 
         {/* Main Content: Two Side-by-Side Cards */}
-        <div className="relative w-full max-w-7xl px-12 md:px-24">
+        <div className="relative w-full max-w-7xl px-8 md:px-24">
         {/* Navigation Arrows - Closely pinned to the frame */}
         <button
           onClick={prevSlide}
-          className="absolute -left-12 md:-left-4 top-1/2 -translate-y-1/2 z-30 text-white/30 hover:text-white transition-all"
+          className="absolute -left-10 md:-left-4 top-1/2 -translate-y-1/2 z-30 text-white/30 hover:text-white transition-all"
         >
-          <ChevronLeft className="w-16 h-16 stroke-[1px]" />
+          <ChevronLeft className="w-12 h-12 md:w-16 md:h-16 stroke-[1px]" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute -right-12 md:-right-4 top-1/2 -translate-y-1/2 z-30 text-white/30 hover:text-white transition-all"
+          className="absolute -right-10 md:-right-4 top-1/2 -translate-y-1/2 z-30 text-white/30 hover:text-white transition-all"
         >
-          <ChevronRight className="w-16 h-16 stroke-[1px]" />
+          <ChevronRight className="w-12 h-12 md:w-16 md:h-16 stroke-[1px]" />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-1 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-1 gap-y-12">
           <AnimatePresence mode="wait">
             {currentPair.map((project, idx) => (
               <motion.div
@@ -136,7 +136,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
                 className="relative group cursor-pointer"
               >
                 {/* Project Image */}
-                <div className="aspect-[4/3] overflow-hidden">
+                <div className="aspect-[4/3] max-h-[30vh] md:max-h-none overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
@@ -147,12 +147,12 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
 
                 {/* Green-Gold Gradient Footer Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-b from-[#004d33]/95 to-[#C5A059]/95 backdrop-blur-sm p-4 md:p-6 border-t border-white/10">
-                  <h3 className="text-white text-lg font-bold tracking-wider mb-2">
+                  <h3 className="text-white text-sm md:text-lg font-bold tracking-wider mb-1 md:mb-2 line-clamp-1">
                     {project.title}
                   </h3>
                   <div className="flex items-start space-x-2 text-white/80">
-                    <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                    <p className="text-[10px] md:text-xs leading-relaxed font-light">
+                    <MapPin className="w-3 h-3 md:w-4 md:h-4 mt-0.5 flex-shrink-0" />
+                    <p className="text-[9px] md:text-xs leading-relaxed font-light line-clamp-2">
                       {project.description || 'Chi tiết bộ sưu tập'}
                     </p>
                   </div>
@@ -178,26 +178,25 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
         ))}
       </div>
 
-      {/* Footer Branding Area */}
-      <div className="absolute bottom-0 left-0 w-full z-40 bg-black/40 backdrop-blur-sm py-4 px-12 flex justify-between items-center text-[9px] text-white/60 font-bold tracking-widest border-t border-white/5">
-        <div className="flex items-center space-x-6">
-          <span>© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
-          <div className="flex items-center space-x-4">
-            <Facebook className="w-4 h-4" />
-            <Youtube className="w-4 h-4" />
-            <span>Zalo</span>
-          </div>
+      {/* Synchronized Footer Area like Projects section */}
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/40">
+        <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
+        <div className="flex items-center space-x-4">
+          <Facebook className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <Youtube className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <span className="text-[10px] font-bold cursor-pointer hover:text-white transition-colors">Zalo</span>
         </div>
-        <div className="flex items-center space-x-8">
-          <span className="hover:text-white cursor-pointer transition-colors">SITE MAP</span>
-          <div className="flex items-center space-x-2">
-            <span>HOTLINE:</span>
-            <span className="text-white">0971.325.658</span>
+      </div>
+
+      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">
+        <div className="flex items-center space-x-8 text-[10px] font-bold tracking-wider mr-4">
+          <span className="opacity-60 uppercase">hotline: 0971.325.658</span>
+        </div>
+        <div className="flex items-center space-x-3 bg-brand-gold/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-gold/20 transition-all">
+          <div className="w-7 h-7 flex items-center justify-center bg-brand-gold rounded-full text-white">
+            <Mail className="w-3.5 h-3.5" />
           </div>
-          <div className="flex items-center space-x-2 bg-brand-gold/20 text-white px-4 py-2 rounded-full group cursor-pointer transition-all hover:bg-brand-gold/40 border border-brand-gold/30">
-             <PenTool className="w-4 h-4" />
-             <span>tangiahuy.nd@gmail.com</span>
-          </div>
+          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-gold transition-colors">tangiahuy.nd@gmail.com</span>
         </div>
       </div>
     </section>

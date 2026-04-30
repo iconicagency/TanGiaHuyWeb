@@ -3,7 +3,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';
-import { ChevronDown, MousePointer2 } from 'lucide-react';
 
 interface SidebarProps {
   currentSection: number;
@@ -22,18 +21,7 @@ const SECTION_LABELS = [
 
 const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSectionClick }) => {
   return (
-    <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
-      {/* Scroll indicator (Mouse) - Moved to bottom left fixed */}
-      <div className="fixed bottom-8 left-8 z-50 flex flex-col items-center space-y-2 group">
-        <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center p-1">
-          <motion.div 
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-2 bg-white/60 rounded-full"
-          />
-        </div>
-      </div>
-
+    <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
       {Array.from({ length: totalSections }).map((_, index) => (
         <React.Fragment key={index}>
           {/* Section Marker */}
@@ -53,11 +41,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSect
 
             <button
               onClick={() => onSectionClick(index)}
-              className="relative flex items-center justify-center transition-all duration-300 p-2"
+              className="relative flex items-center justify-center transition-all duration-300 p-1 md:p-2"
               aria-label={`Go to section ${index + 1}`}
             >
               <div className={cn(
-                "w-10 h-10 rounded-full border flex items-center justify-center text-[10px] font-bold transition-all duration-500",
+                "w-8 h-8 md:w-10 md:h-10 rounded-full border flex items-center justify-center text-[9px] md:text-[10px] font-bold transition-all duration-500",
                 currentSection === index 
                   ? "border-brand-gold text-brand-gold bg-brand-gold/5 shadow-[0_0_15px_rgba(197,160,89,0.3)]" 
                   : "border-white/20 text-white/40 hover:border-white/60 hover:text-white"
@@ -69,18 +57,12 @@ const Sidebar: React.FC<SidebarProps> = ({ currentSection, totalSections, onSect
 
           {/* Interstitial Dot (except after the last one) */}
           {index < totalSections - 1 && (
-            <div className="w-[2px] h-6 flex items-center justify-center">
-              <div className="w-[4px] h-[4px] rounded-full bg-white/20" />
+            <div className="w-[2px] h-3 md:h-6 flex items-center justify-center">
+              <div className="w-[3px] h-[3px] md:w-[4px] md:h-[4px] rounded-full bg-white/20" />
             </div>
           )}
         </React.Fragment>
       ))}
-
-      {/* Down Arrow */}
-      <div className="mt-8 flex flex-col items-center">
-        <div className="w-[2px] h-12 bg-white/10 mb-4" />
-        <ChevronDown className="w-6 h-6 text-white/40 animate-bounce" />
-      </div>
     </div>
   );
 };

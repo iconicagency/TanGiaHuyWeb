@@ -372,10 +372,10 @@ const AdminPage = () => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Pexels / Khác:</p>
+              <p className="text-[8px] text-zinc-500 font-bold uppercase tracking-widest">Pexels / Vimeo / Khác:</p>
               <p className="text-[8px] text-zinc-500 leading-relaxed font-light">
-                KHÔNG sử dụng link trang web. Bạn cần link trực tiếp kết thúc bằng <code className="text-brand-red">.mp4</code>.<br/>
-                Cách lấy: Click chuột phải vào video trên Pexels {'>'} <span className="text-white font-medium">Copy video address</span> (Sao chép địa chỉ video).
+                KHÔNG sử dụng link trang web (ví dụ: vimeo.com/123). Bạn cần link trực tiếp kết thúc bằng <code className="text-brand-red">.mp4</code>.<br/>
+                Cách lấy Pexels: Click chuột phải vào video trên Pexels {'>'} <span className="text-white font-medium">Copy video address</span> (Sao chép địa chỉ video).
               </p>
             </div>
           </div>
@@ -576,6 +576,11 @@ const HeroSettingsManager = ({ data }: any) => {
       alert("CẢNH BÁO: Link Pexels bạn vừa nhập có vẻ là link TRANG WEB hoặc TRANG DOWNLOAD, không phải link VIDEO trực tiếp (.mp4).\n\nHãy chuột phải vào video trên trang Pexels đó và chọn 'Sao chép địa chỉ video' (Copy video address) để lấy link đúng.");
     }
 
+    // Warn if it looks like a Vimeo page link
+    if (url.includes('vimeo.com') && !url.includes('player.vimeo.com/external') && !url.includes('.mp4')) {
+      alert("CẢNH BÁO: Link Vimeo này có vẻ là link TRANG WEB, không phải link trực tiếp. Video sẽ không chạy được.\n\nLưu ý: Vimeo chỉ hỗ trợ link trực tiếp (.mp4) cho các tài khoản trả phí cao (Pro/Business). Nếu bạn không có tài khoản trả phí, hãy cân nhắc dùng Pexels hoặc Google Drive.");
+    }
+
     // Fix Google Drive links automatically
     if (url.includes('drive.google.com')) {
       const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
@@ -687,9 +692,9 @@ const HeroSettingsManager = ({ data }: any) => {
                <span className="text-[10px] font-bold uppercase tracking-widest">Hướng dẫn lấy link từ Pexels:</span>
              </div>
              <div className="text-zinc-400 text-[11px] space-y-2 font-light leading-relaxed">
-               <p>1. Tại Pexels, nhấn vào nút <b className="text-white">"Tải xuống miễn phí"</b>.</p>
+               <p>1. Tại Pexels, nhấn vào nút <b className="text-white">&quot;Tải xuống miễn phí&quot;</b>.</p>
                <p>2. Khi video hiện ra ở tab mới, <b className="text-white">nhấn chuột phải</b> vào video.</p>
-               <p>3. Chọn <b className="text-white">"Sao chép địa chỉ video"</b> (Copy video address).</p>
+               <p>3. Chọn <b className="text-white">&quot;Sao chép địa chỉ video&quot;</b> (Copy video address).</p>
                <p className="text-red-400/80 italic mt-2">Lưu ý: Link đúng thường bắt đầu bằng <code className="bg-black/40 px-1 py-0.5 rounded text-white">videos.pexels.com/...</code></p>
              </div>
           </div>

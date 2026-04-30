@@ -154,7 +154,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
           </div>
   
           {/* Protruding Content Box */}
-          <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[10%] z-20 flex justify-center w-[420px]">
+          <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[10%] z-20 flex justify-center w-[90%] max-w-[420px]">
             {/* White outer frame line */}
             <div className="absolute -inset-4 border border-white/40 pointer-events-none" />
 
@@ -163,19 +163,18 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
-              style={{ width: '420px', height: '321.61px' }}
-              className="relative bg-gradient-to-b from-[#004d33]/95 via-[#004d33]/85 to-[#C5A059]/95 backdrop-blur-md p-8 md:p-10 border border-white/20 pointer-events-auto shadow-2xl flex flex-col justify-between"
+              className="relative bg-gradient-to-b from-[#004d33]/95 via-[#004d33]/85 to-[#C5A059]/95 backdrop-blur-md p-6 md:p-8 border border-white/20 pointer-events-auto shadow-2xl flex flex-col justify-between w-full aspect-[420/321]"
             >
               <div>
-                <span className="text-[14px] font-bold tracking-[0.1em] text-white block mb-3 uppercase">Sản Phẩm Mới</span>
-                <h2 className="text-white text-3xl md:text-5xl font-sans font-light mb-6 leading-tight">
+                <span className="text-[12px] font-bold tracking-[0.1em] text-white block mb-2 md:mb-3 uppercase">Sản Phẩm Mới</span>
+                <h2 className="text-white text-2xl md:text-4xl font-sans font-black mb-4 md:mb-6 leading-tight tracking-tight uppercase">
                   {slides[current]?.title}
                 </h2>
-                <p className="text-white/90 text-sm leading-relaxed font-light tracking-wide line-clamp-3">
+                <p className="text-white/90 text-[11px] md:text-sm leading-relaxed font-light tracking-wide line-clamp-3">
                   {slides[current]?.description}
                 </p>
               </div>
-              <button className="group self-start flex items-center space-x-2 text-[11px] text-white font-bold tracking-[0.2em] uppercase border border-white px-8 py-3.5 hover:bg-white hover:text-black transition-all duration-500 mt-4">
+              <button className="group self-start flex items-center space-x-2 text-[10px] text-white font-bold tracking-[0.2em] uppercase border border-white px-6 md:px-8 py-3 md:py-3.5 hover:bg-white hover:text-black transition-all duration-500 mt-2 md:mt-4">
                 <span>CHI TIẾT</span>
                 <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </button>
@@ -204,8 +203,13 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
         ))}
       </div>
 
-      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/50">
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/40">
         <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
+        <div className="flex items-center space-x-4">
+          <Facebook className="w-4 h-4" />
+          <Youtube className="w-4 h-4" />
+          <span className="text-[10px] font-bold">Zalo</span>
+        </div>
       </div>
 
       <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">

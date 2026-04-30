@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, Home, Volume2 } from 'lucide-react';
+import { Search, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db } from '@/lib/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -49,21 +49,21 @@ const Navbar = () => {
       </div>
 
       {/* Main Nav Items */}
-      <div className="hidden xl:flex items-center space-x-6 pointer-events-auto bg-black/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/10 text-white">
-        <button className="w-8 h-8 flex items-center justify-center bg-brand-gold rounded-full text-white hover:scale-110 transition-transform">
-          <Home className="w-4 h-4" />
+      <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 pointer-events-auto bg-black/10 backdrop-blur-sm px-4 xl:px-6 py-2 rounded-full border border-white/10 text-white shadow-xl">
+        <button className="w-6 h-6 xl:w-8 xl:h-8 flex items-center justify-center bg-brand-gold rounded-full text-white hover:scale-110 transition-transform">
+          <Home className="w-3 h-3 xl:w-4 xl:h-4" />
         </button>
-        <div className="w-[1px] h-4 bg-white/20 mx-2" />
+        <div className="w-[1px] h-4 bg-white/20 mx-1 xl:mx-2" />
         {navLinks.map((link) => (
           <Link
             key={link.name}
             href={link.href}
-            className="text-[16px] font-light leading-[22px] hover:text-brand-gold transition-all whitespace-nowrap font-sans"
+            className="text-[12px] xl:text-[14px] 2xl:text-[16px] font-light leading-tight hover:text-brand-gold transition-all whitespace-nowrap font-sans"
           >
             {link.name}
           </Link>
         ))}
-        <div className="flex items-center space-x-4 ml-6 pl-6 border-l border-white/20">
+        <div className="flex items-center space-x-3 xl:space-x-4 ml-4 xl:ml-6 pl-4 xl:pl-6 border-l border-white/20">
           <button className="hover:text-brand-gold transition-colors">
             <Search className="w-4 h-4" />
           </button>
@@ -75,11 +75,6 @@ const Navbar = () => {
 
       {/* Placeholder for spacing */}
       <div className="w-24 hidden xl:block" />
-      
-      {/* Sound Toggle (Bottom Right in original, but putting here for visibility in simpler layout) */}
-      <button className="fixed bottom-8 right-8 w-10 h-10 flex items-center justify-center bg-brand-gold/20 border border-brand-gold/40 rounded-full text-white pointer-events-auto hover:bg-brand-gold transition-all">
-        <Volume2 className="w-5 h-5" />
-      </button>
     </nav>
   );
 };

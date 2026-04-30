@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
+import { Facebook, Youtube, Mail } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, onSnapshot, doc } from 'firebase/firestore';
 
@@ -100,18 +101,18 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
         className="relative z-10 flex items-center"
       >
         {/* Vertical Title - "TIN MỚI" */}
-        <div className="mr-8 md:mr-12">
-          <h2 className="text-white text-4xl md:text-6xl font-light tracking-[0.5em] uppercase [writing-mode:vertical-rl] rotate-180 transform select-none opacity-80 mix-blend-difference">
+        <div className="mr-6 md:mr-16">
+          <h2 className="text-white text-4xl md:text-8xl font-sans font-black tracking-tight uppercase [writing-mode:vertical-rl] rotate-180 transform select-none opacity-80 mix-blend-difference">
             TIN MỚI
           </h2>
         </div>
 
         {/* Content Container - 900x429 area with 10px gaps */}
-        <div className="flex gap-[10px] items-center justify-center h-[429px] shadow-2xl">
+        <div className="flex flex-col md:flex-row gap-[10px] items-center justify-center max-h-[70vh] md:h-[429px] shadow-2xl overflow-hidden md:overflow-visible">
           
           {/* Left Large Card - 315 x 429 */}
-          <div className="w-[315px] h-[429px] bg-gradient-to-b from-[#004d33]/95 to-[#C5A059]/95 group cursor-pointer transition-all duration-500 flex flex-col flex-shrink-0 border border-white/10">
-            <div className="relative h-[250px] overflow-hidden">
+          <div className="w-full md:w-[315px] h-full md:h-[429px] bg-gradient-to-b from-[#004d33]/95 to-[#C5A059]/95 group cursor-pointer transition-all duration-500 flex flex-col flex-shrink-0 border border-white/10">
+            <div className="relative h-[150px] md:h-[250px] overflow-hidden">
               <img
                 src={getItem('left').image}
                 alt={getItem('left').title}
@@ -182,6 +183,28 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
           </div>
         </div>
       </motion.div>
+
+      {/* Synchronized Footer Area like Projects section */}
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/40">
+        <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
+        <div className="flex items-center space-x-4">
+          <Facebook className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <Youtube className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <span className="text-[10px] font-bold cursor-pointer hover:text-white transition-colors">Zalo</span>
+        </div>
+      </div>
+
+      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">
+        <div className="flex items-center space-x-8 text-[10px] font-bold tracking-wider mr-4">
+          <span className="opacity-60 uppercase">hotline: 0971.325.658</span>
+        </div>
+        <div className="flex items-center space-x-3 bg-brand-gold/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-gold/20 transition-all">
+          <div className="w-7 h-7 flex items-center justify-center bg-brand-gold rounded-full text-white">
+            <Mail className="w-3.5 h-3.5" />
+          </div>
+          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-gold transition-colors">tangiahuy.nd@gmail.com</span>
+        </div>
+      </div>
     </section>
   );
 };

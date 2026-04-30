@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Play, Pause } from 'lucide-react';
+import { Facebook, Youtube, Mail } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { onSnapshot, doc } from 'firebase/firestore';
 
@@ -13,7 +13,6 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = () => {
   const [videoUrl, setVideoUrl] = useState('/videos/hero-video.mp4');
   const [hasError, setHasError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const getDirectVideoUrl = (url: string) => {
@@ -22,6 +21,12 @@ const Hero: React.FC<HeroProps> = () => {
     // Handle Pexels links - if it's a download/page link, it won't work in <video>
     if (url.includes('pexels.com') && (url.includes('/video/') || url.includes('/download/video/')) && !url.includes('.mp4')) {
       console.warn("[Hero Video] Pexels page link detected. Falling back to default video. Please use a direct .mp4 link.");
+      return '/videos/hero-video.mp4';
+    }
+
+    // Handle Vimeo links - regular page links won't work in <video> tag
+    if (url.includes('vimeo.com') && !url.includes('player.vimeo.com/external') && !url.includes('.mp4')) {
+      console.warn("[Hero Video] Vimeo page link detected. Falling back to default video. Direct links usually require Vimeo Pro/Business.");
       return '/videos/hero-video.mp4';
     }
     
@@ -56,28 +61,14 @@ const Hero: React.FC<HeroProps> = () => {
     if (videoRef.current && !hasError) {
       console.log("[Hero Video] Attempting to load video:", videoUrl);
       videoRef.current.load();
-      if (isPlaying) {
-        const playPromise = videoRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
-            setIsPlaying(false);
-          });
-        }
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
+        });
       }
     }
   }, [videoUrl, hasError]);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
 
   return (
     <section className="relative h-full w-full overflow-hidden bg-black">
@@ -124,27 +115,26 @@ const Hero: React.FC<HeroProps> = () => {
         <div className="absolute inset-0 bg-black/40 z-10" />
       </div>
 
-      <div className="absolute bottom-10 left-12 z-30 flex items-center space-x-8">
-        <div className="animate-bounce cursor-pointer flex items-center space-x-4">
-          <span className="text-[10px] tracking-[0.3em] font-bold opacity-60 text-white uppercase">CUỘN XUỐNG</span>
-          <ChevronDown className="w-5 h-5 opacity-60 text-white" />
+      {/* Synchronized Footer Area like other sections */}
+      <div className="absolute bottom-6 left-6 z-30 flex items-center space-x-6 text-white/40">
+        <span className="text-[9px] font-bold tracking-widest hidden md:inline">© 2024 TÂN GIA HUY. ALL RIGHTS RESERVED.</span>
+        <div className="flex items-center space-x-4">
+          <Facebook className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <Youtube className="w-4 h-4 cursor-pointer hover:text-white transition-colors" />
+          <span className="text-[10px] font-bold cursor-pointer hover:text-white transition-colors">Zalo</span>
         </div>
+      </div>
 
-        <button 
-          onClick={togglePlay}
-          className="group flex items-center space-x-3 cursor-pointer hover:opacity-100 transition-opacity"
-        >
-          <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/40 transition-colors">
-            {isPlaying ? (
-              <Pause className="w-4 h-4 text-white/60 group-hover:text-white transition-colors" />
-            ) : (
-              <Play className="w-4 h-4 text-white/60 group-hover:text-white transition-colors ml-0.5" />
-            )}
+      <div className="absolute bottom-6 right-6 z-30 flex items-center space-x-8 text-white/70">
+        <div className="flex items-center space-x-8 text-[10px] font-bold tracking-wider mr-4">
+          <span className="opacity-60 uppercase">hotline: 0971.325.658</span>
+        </div>
+        <div className="flex items-center space-x-3 bg-brand-gold/10 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 group cursor-pointer hover:bg-brand-gold/20 transition-all">
+          <div className="w-7 h-7 flex items-center justify-center bg-brand-gold rounded-full text-white">
+            <Mail className="w-3.5 h-3.5" />
           </div>
-          <span className="text-[10px] tracking-[0.3em] font-bold opacity-40 group-hover:opacity-80 text-white uppercase transition-opacity">
-            {isPlaying ? 'PAUSE' : 'PLAY'}
-          </span>
-        </button>
+          <span className="text-[10px] font-bold tracking-wider group-hover:text-brand-gold transition-colors">tangiahuy.nd@gmail.com</span>
+        </div>
       </div>
     </section>
   );

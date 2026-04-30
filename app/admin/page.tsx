@@ -413,7 +413,7 @@ const GeneralSettingsManager = ({ data }: any) => {
   };
 
   const sections = [
-    { id: 'logoUrl', label: 'Logo Image URL' },
+    { id: 'logoUrl', label: 'Logo Image' },
     { id: 'section2Bg', label: 'Section 2 (About) Background' },
     { id: 'section3Bg', label: 'Section 3 (Projects) Background' },
     { id: 'section4Bg', label: 'Section 4 (Collections) Background' },
@@ -464,34 +464,101 @@ const GeneralSettingsManager = ({ data }: any) => {
               <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">{s.label}</label>
             </div>
             
-            <div className="relative">
-              <input 
-                defaultValue={safeData[s.id]} 
-                onBlur={(e) => {
-                  if (e.target.value !== safeData[s.id]) {
-                    updateSettings(s.id, e.target.value);
-                  }
-                }}
-                placeholder="Dán link ảnh tại đây (https://...)"
-                className="w-full bg-zinc-800/50 px-5 py-4 rounded-xl border border-white/5 outline-none focus:border-brand-red focus:bg-zinc-800 transition-all text-sm font-light tracking-wide"
-              />
-            </div>
-
-            {safeData[s.id] && (
-              <div className="relative aspect-video rounded-xl overflow-hidden border border-white/5 group-hover:border-white/20 transition-all shadow-2xl">
-                <img 
-                  src={safeData[s.id]} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                  alt={s.label}
-                  onError={(e) => {
-                    (e.target as any).src = 'https://placehold.co/600x400/27272a/white?text=Invalid+Image+URL';
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all" />
-              </div>
-            )}
+            <ImageUploader 
+              value={safeData[s.id]} 
+              onUpload={(url) => updateSettings(s.id, url)}
+              folder="general"
+            />
           </div>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const ImageUploader = ({ value, onUpload, folder = 'uploads' }: { value: string, onUpload: (url: string) => void, folder?: string }) => {
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Ảnh quá lớn. Vui lòng chọn file dưới 10MB.");
+      return;
+    }
+
+    setUploading(true);
+    setProgress(0);
+    try {
+      const storageRef = ref(storage, `${folder}/${Date.now()}-${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setProgress(p);
+        }, 
+        (error) => {
+          console.error("Upload failed:", error);
+          alert("Tải lên thất bại: " + error.message);
+          setUploading(false);
+        }, 
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          onUpload(url);
+          setUploading(false);
+        }
+      );
+    } catch (error: any) {
+      alert("Lỗi: " + error.message);
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="relative group/uploader">
+        {value ? (
+          <div className="relative aspect-video rounded-xl overflow-hidden border border-white/5 bg-zinc-800 shadow-2xl">
+            <img 
+              src={value} 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover/uploader:scale-105" 
+              alt="Preview"
+              onError={(e) => { (e.target as any).src = 'https://placehold.co/600x400/27272a/white?text=Invalid+Image'; }}
+            />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/uploader:opacity-100 transition-opacity flex items-center justify-center">
+              <label className="cursor-pointer bg-white text-black px-4 py-2 rounded-full font-bold text-[10px] uppercase tracking-widest hover:scale-110 transition-transform">
+                Thay đổi ảnh
+                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading} />
+              </label>
+            </div>
+          </div>
+        ) : (
+          <label className="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-zinc-800 hover:border-zinc-700 bg-zinc-900 transition-colors cursor-pointer group/label">
+            <ImageIcon className="w-10 h-10 text-zinc-600 mb-3 group-hover/label:text-zinc-400 transition-colors" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover/label:text-zinc-300 transition-colors">Tải ảnh lên</span>
+            <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} disabled={uploading} />
+          </label>
+        )}
+
+        {uploading && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl z-20">
+            <div className="w-12 h-12 border-2 border-zinc-800 border-t-white rounded-full animate-spin mb-4" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white">Đang tải: {Math.round(progress)}%</span>
+          </div>
+        )}
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Hoặc dán URL ảnh</label>
+        <input 
+          value={value || ''} 
+          onChange={(e) => onUpload(e.target.value)}
+          placeholder="https://..."
+          className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5 outline-none focus:border-white/20 transition-all text-[11px] font-light"
+        />
       </div>
     </div>
   );
@@ -685,35 +752,39 @@ const SlideManager = ({ items, collectionName, description = false }: any) => {
       <div className="grid grid-cols-1 gap-6">
         {items.map((item: any) => (
           <div key={item.id} className="bg-zinc-900 p-6 rounded-xl border border-zinc-800 flex gap-6">
-            <div className="w-48 h-32 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-              <img src={item.image} className="w-full h-full object-cover" alt="" />
+            <div className="w-64 flex-shrink-0">
+               <ImageUploader 
+                 value={item.image} 
+                 onUpload={(url) => updateSlide(item.id, { image: url })}
+                 folder={collectionName}
+               />
             </div>
-            <div className="flex-1 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <input 
-                  defaultValue={item.title} 
-                  onBlur={(e) => updateSlide(item.id, { title: e.target.value })}
-                  placeholder="Title"
-                  className="bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                />
-                <input 
-                  defaultValue={item.image} 
-                  onBlur={(e) => updateSlide(item.id, { image: e.target.value })}
-                  placeholder="Image URL"
-                  className="bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                />
+            <div className="flex-1 space-y-4 pt-4">
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Tiêu đề slide</label>
+                  <input 
+                    defaultValue={item.title} 
+                    onBlur={(e) => updateSlide(item.id, { title: e.target.value })}
+                    placeholder="Title"
+                    className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+                  />
+                </div>
               </div>
               {description && (
-                <textarea 
-                  defaultValue={item.description} 
-                  onBlur={(e) => updateSlide(item.id, { description: e.target.value })}
-                  placeholder="Description"
-                  rows={2}
-                  className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                />
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Mô tả chi tiết</label>
+                  <textarea 
+                    defaultValue={item.description} 
+                    onBlur={(e) => updateSlide(item.id, { description: e.target.value })}
+                    placeholder="Description"
+                    rows={3}
+                    className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+                  />
+                </div>
               )}
             </div>
-            <button onClick={() => removeSlide(item.id)} className="text-zinc-600 hover:text-red-500 self-start p-2 hover:bg-red-500/10 rounded-lg transition-all">
+            <button onClick={() => removeSlide(item.id)} className="text-zinc-600 hover:text-red-500 self-start p-2 hover:bg-red-500/10 rounded-lg transition-all pt-6">
               <Trash2 className="w-5 h-5" />
             </button>
           </div>
@@ -756,42 +827,49 @@ const NewsManager = ({ items }: any) => {
           const item = items.find((i: any) => i.position === pos) || {};
           return (
             <div key={pos} className="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-500">Position: {pos}</span>
+              <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-4">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-zinc-500">Vị trí hiển thị: {pos}</span>
               </div>
-              <div className="flex gap-6">
-                <div className="w-48 h-32 bg-zinc-800 rounded-lg overflow-hidden flex-shrink-0">
-                  <img src={item.image} className="w-full h-full object-cover" alt="" />
+              <div className="flex gap-8">
+                <div className="w-64 flex-shrink-0">
+                  <ImageUploader 
+                    value={item.image} 
+                    onUpload={(url) => updateItem(item.id, { image: url })}
+                    folder="news"
+                  />
                 </div>
-                <div className="flex-1 grid grid-cols-2 gap-4">
+                <div className="flex-1 grid grid-cols-2 gap-6 pt-4">
                    <div className="space-y-4">
-                     <input 
-                        defaultValue={item.title} 
-                        onBlur={(e) => updateItem(item.id, { title: e.target.value })}
-                        placeholder="Title"
-                        className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                      />
-                      <input 
-                        defaultValue={item.image} 
-                        onBlur={(e) => updateItem(item.id, { image: e.target.value })}
-                        placeholder="Image URL"
-                        className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                      />
+                     <div className="space-y-1">
+                        <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Tiêu đề tin</label>
+                        <input 
+                            defaultValue={item.title} 
+                            onBlur={(e) => updateItem(item.id, { title: e.target.value })}
+                            placeholder="Title"
+                            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+                          />
+                     </div>
+                     <div className="space-y-1">
+                        <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Chuyên mục</label>
+                        <input 
+                          defaultValue={item.category} 
+                          onBlur={(e) => updateItem(item.id, { category: e.target.value })}
+                          placeholder="Category (e.g. TIN DỰ ÁN)"
+                          className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+                        />
+                     </div>
                    </div>
                    <div className="space-y-4">
-                      <input 
-                        defaultValue={item.category} 
-                        onBlur={(e) => updateItem(item.id, { category: e.target.value })}
-                        placeholder="Category (e.g. TIN DỰ ÁN)"
-                        className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                      />
-                      <textarea 
-                        defaultValue={item.description} 
-                        onBlur={(e) => updateItem(item.id, { description: e.target.value })}
-                        placeholder="Description"
-                        rows={2}
-                        className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-                      />
+                      <div className="space-y-1">
+                        <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Tóm tắt nội dung</label>
+                        <textarea 
+                          defaultValue={item.description} 
+                          onBlur={(e) => updateItem(item.id, { description: e.target.value })}
+                          placeholder="Description"
+                          rows={4}
+                          className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+                        />
+                      </div>
                    </div>
                 </div>
               </div>
@@ -809,35 +887,55 @@ const ContactManager = ({ data }: any) => {
     catch (e) { handleFirestoreError(e, OperationType.WRITE, 'contact/info'); }
   };
 
-  if (!data) return <button onClick={() => updateInfo('address', '...')}>Initialize Contact Info</button>;
+  if (!data) return (
+    <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+      <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có thông tin liên hệ</h3>
+      <button 
+        onClick={() => updateInfo('address', '...') } 
+        className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+      >
+        Khởi tạo ngay
+      </button>
+    </div>
+  );
 
   return (
-    <div className="space-y-6 max-w-2xl">
-      <h2 className="text-2xl font-bold uppercase tracking-widest">Contact Manager</h2>
-      <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-6">
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Address</label>
+    <div className="space-y-10 max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Contact Info</h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">Cập nhật thông tin địa chỉ, số điện thoại và email hiển thị ở chân trang web.</p>
+      </div>
+
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
+        <div className="space-y-3">
+          <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold ml-1">Địa chỉ văn phòng</label>
           <input 
             defaultValue={data.address} 
             onBlur={(e) => updateInfo('address', e.target.value)}
-            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
+            placeholder="Số... Đường... Phường... Quận..."
+            className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm tracking-wide"
           />
         </div>
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Phone</label>
-          <input 
-            defaultValue={data.phone} 
-            onBlur={(e) => updateInfo('phone', e.target.value)}
-            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Email</label>
-          <input 
-            defaultValue={data.email} 
-            onBlur={(e) => updateInfo('email', e.target.value)}
-            className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all"
-          />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold ml-1">Số điện thoại</label>
+            <input 
+              defaultValue={data.phone} 
+              onBlur={(e) => updateInfo('phone', e.target.value)}
+              placeholder="09xx xxx xxx"
+              className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm tracking-wide"
+            />
+          </div>
+          <div className="space-y-3">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold ml-1">Địa chỉ Email</label>
+            <input 
+              defaultValue={data.email} 
+              onBlur={(e) => updateInfo('email', e.target.value)}
+              placeholder="example@gmail.com"
+              className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm tracking-wide"
+            />
+          </div>
         </div>
       </div>
     </div>

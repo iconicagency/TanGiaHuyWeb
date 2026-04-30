@@ -71,9 +71,16 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
-    match /settings/{docId} {
+    match /settings/hero {
       allow read: if true;
-      allow write: if isAdmin() && isValidSettings(incoming());
+      allow write: if isAdmin() && 
+                   incoming().keys().hasAll(['videoUrl']) &&
+                   incoming().videoUrl is string && incoming().videoUrl.size() < 1000;
+    }
+
+    match /settings/general {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     // Admin identities

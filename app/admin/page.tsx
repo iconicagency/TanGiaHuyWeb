@@ -571,9 +571,9 @@ const HeroSettingsManager = ({ data }: any) => {
   const formatVideoUrl = (url: string) => {
     if (!url) return '';
     
-    // Warn if it looks like a Pexels page link instead of a file link
-    if (url.includes('pexels.com') && url.includes('/video/') && !url.includes('.mp4')) {
-      alert("CẢNH BÁO: Link Pexels bạn vừa nhập có vẻ là link TRANG WEB, không phải link VIDEO trực tiếp. Video sẽ không chạy được.\n\nHãy chuột phải vào video và chọn 'Copy video address' để lấy link đúng.");
+    // Warn if it looks like a Pexels page/download link instead of a direct file link
+    if (url.includes('pexels.com') && (url.includes('/video/') || url.includes('/download/video/')) && !url.includes('.mp4')) {
+      alert("CẢNH BÁO: Link Pexels bạn vừa nhập có vẻ là link TRANG WEB hoặc TRANG DOWNLOAD, không phải link VIDEO trực tiếp (.mp4).\n\nHãy chuột phải vào video trên trang Pexels đó và chọn 'Sao chép địa chỉ video' (Copy video address) để lấy link đúng.");
     }
 
     // Fix Google Drive links automatically
@@ -582,7 +582,6 @@ const HeroSettingsManager = ({ data }: any) => {
       if (match && match[1]) {
         return `https://drive.google.com/uc?export=download&id=${match[1]}`;
       }
-      return url; // Return original if no ID found
     }
     return url;
   };
@@ -597,8 +596,8 @@ const HeroSettingsManager = ({ data }: any) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 200 * 1024 * 1024) {
-      alert("Video quá lớn. Vui lòng chọn file dưới 200MB.");
+    if (file.size > 100 * 1024 * 1024) {
+      alert("Video quá lớn. Vui lòng chọn file dưới 100MB.");
       return;
     }
 
@@ -615,102 +614,101 @@ const HeroSettingsManager = ({ data }: any) => {
         }, 
         (error) => {
           console.error("Upload failed details:", error);
-          let customMsg = error.message;
-          if (error.code === 'storage/unauthorized') {
-            customMsg = "Lỗi phân quyền! Hãy đảm bảo bạn đã: \n1. Kích hoạt Storage trong Firebase Console.\n2. Thiết lập Storage Rules thành: allow read, write: if request.auth != null;";
-          } else if (error.code === 'storage/retry-limit-exceeded') {
-            customMsg = "Lỗi kết nối! Firebase Storage có thể chưa được KHỞI TẠO. \n\nHãy vào Firebase Console -> Storage và nhấn 'Get Started'.";
-          }
-          alert("Tải lên thất bại: \n" + customMsg);
+          alert("Tải lên thất bại: " + error.message);
           setUploading(false);
         }, 
         async () => {
           const url = await getDownloadURL(uploadTask.snapshot.ref);
           await updateSettings('videoUrl', url);
-          alert("Tải lên video thành công!");
           setUploading(false);
         }
       );
     } catch (error: any) {
-      console.error("Upload start failed:", error);
-      alert("Khởi tạo tải lên thất bại: " + error.message);
+      alert("Lỗi: " + error.message);
       setUploading(false);
     }
   };
 
   const resetToDefault = async () => {
-    if (confirm("Bạn có chắc muốn đặt lại video về mặc định?")) {
+    if (confirm("Đặt lại video về mặc định?")) {
       await updateSettings('videoUrl', '/videos/hero-video.mp4');
     }
   };
 
   if (!data) return (
-    <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 text-center">
-      <p className="mb-4 text-zinc-500 uppercase tracking-widest text-xs">Cài đặt Hero chưa được khởi tạo</p>
-      <button onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4')} className="bg-white text-black px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all">
+    <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+      <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có cấu hình Hero</h3>
+      <button 
+        onClick={() => updateSettings('videoUrl', '/videos/hero-video.mp4') } 
+        className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+      >
         Khởi tạo ngay
       </button>
     </div>
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold uppercase tracking-widest">Hero Video Settings</h2>
-        <div className="flex items-center space-x-4">
-          <button 
-            onClick={resetToDefault}
-            className="text-[10px] uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
-          >
-            Reset về mặc định
-          </button>
-          {uploading && (
-            <div className="flex flex-col items-end space-y-1">
-              <div className="text-[10px] text-white/60 uppercase tracking-widest">Đang tải: {Math.round(progress)}%</div>
-              <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-brand-red transition-all duration-300" 
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="bg-zinc-900 p-8 rounded-xl border border-zinc-800 space-y-6">
+    <div className="space-y-10 max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex items-end justify-between">
         <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Video Source URL (.mp4)</label>
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Trang chủ (Video)</h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý video nền cho trang chủ. Link chuẩn phải là link trực tiếp (.mp4).</p>
+        </div>
+        <button onClick={resetToDefault} className="text-[10px] uppercase tracking-widest text-zinc-600 hover:text-white transition-colors mb-2">
+          Reset về mặc định
+        </button>
+      </div>
+
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold ml-1">Video URL (Direct link .mp4)</label>
+            <label className="cursor-pointer bg-white text-black px-4 py-1.5 rounded-full font-bold text-[9px] uppercase tracking-widest hover:scale-105 transition-all">
+              {uploading ? `Đang tải ${Math.round(progress)}%` : 'Tải video từ máy'}
+              <input type="file" className="hidden" accept="video/mp4" onChange={handleVideoUpload} disabled={uploading} />
+            </label>
+          </div>
+
           <div className="flex gap-4">
             <input 
               defaultValue={data.videoUrl} 
               onBlur={(e) => updateSettings('videoUrl', e.target.value)}
-              placeholder="e.g. /videos/hero-video.mp4 or external URL"
-              className="flex-1 bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
+              placeholder="https://...video.mp4"
+              className="flex-1 bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light tracking-wide"
             />
-            <a 
-              href={data.videoUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-colors flex items-center justify-center"
-              title="Mở video trong tab mới để kiểm tra"
-            >
-              <ExternalLink className="w-4 h-4" />
+            <a href={data.videoUrl} target="_blank" className="p-4 bg-zinc-800 rounded-xl border border-white/5 hover:bg-zinc-700 transition-colors flex items-center justify-center">
+              <ExternalLink className="w-5 h-5 text-zinc-400" />
             </a>
           </div>
-          <p className="text-[10px] text-zinc-500">Mẹo: Bạn có thể sử dụng link trực tiếp từ Pexels hoặc các dịch vụ kho video khác.</p>
+
+          <div className="bg-blue-500/5 border border-blue-500/10 p-6 rounded-2xl space-y-4">
+             <div className="flex items-center space-x-2 text-blue-400">
+               <ExternalLink className="w-4 h-4" />
+               <span className="text-[10px] font-bold uppercase tracking-widest">Hướng dẫn lấy link từ Pexels:</span>
+             </div>
+             <div className="text-zinc-400 text-[11px] space-y-2 font-light leading-relaxed">
+               <p>1. Tại Pexels, nhấn vào nút <b className="text-white">"Tải xuống miễn phí"</b>.</p>
+               <p>2. Khi video hiện ra ở tab mới, <b className="text-white">nhấn chuột phải</b> vào video.</p>
+               <p>3. Chọn <b className="text-white">"Sao chép địa chỉ video"</b> (Copy video address).</p>
+               <p className="text-red-400/80 italic mt-2">Lưu ý: Link đúng thường bắt đầu bằng <code className="bg-black/40 px-1 py-0.5 rounded text-white">videos.pexels.com/...</code></p>
+             </div>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-xs uppercase tracking-widest text-zinc-500">Hoặc Tải Lên Video Mới</label>
-          <input 
-            type="file" 
-            accept="video/mp4" 
-            onChange={handleVideoUpload}
-            disabled={uploading}
-            className="block w-full text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-white file:text-black hover:file:bg-zinc-200 cursor-pointer disabled:opacity-50"
-          />
-          <p className="text-[10px] text-zinc-500 mt-1">Hỗ trợ file .mp4. Sau khi tải lên, video sẽ tự động cập nhật ngoài trang chủ.</p>
-        </div>
+        {data.videoUrl && (
+          <div className="space-y-3">
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">Bản xem trước</label>
+            <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 bg-zinc-800 shadow-2xl">
+              <video 
+                key={data.videoUrl}
+                src={data.videoUrl} 
+                className="w-full h-full object-cover" 
+                controls 
+                muted
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

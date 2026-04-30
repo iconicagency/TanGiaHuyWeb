@@ -17,15 +17,22 @@ const Hero: React.FC<HeroProps> = () => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const getDirectVideoUrl = (url: string) => {
-    if (!url) return '';
+    if (!url) return '/videos/hero-video.mp4';
+    
+    // Handle Pexels links - if it's a download/page link, it won't work in <video>
+    if (url.includes('pexels.com') && (url.includes('/video/') || url.includes('/download/video/')) && !url.includes('.mp4')) {
+      console.warn("[Hero Video] Pexels page link detected. Falling back to default video. Please use a direct .mp4 link.");
+      return '/videos/hero-video.mp4';
+    }
+    
     // Handle Google Drive links
     if (url.includes('drive.google.com')) {
       const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
       if (match && match[1]) {
         return `https://drive.google.com/uc?export=download&id=${match[1]}`;
       }
-      return url; // Return original if no ID found
     }
+    
     return url;
   };
 

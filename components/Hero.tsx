@@ -34,10 +34,18 @@ const Hero: React.FC<HeroProps> = () => {
     if (url.includes('drive.google.com')) {
       const match = url.match(/(?:\/d\/|id=)([\w-]+)/);
       if (match && match[1]) {
-        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+        // Updated format to try and avoid some common blocks, but 50MB+ remains an issue
+        return `https://drive.google.com/uc?id=${match[1]}&export=download`;
       }
     }
     
+    // Auto-fix Dropbox
+    if (url.includes('dropbox.com')) {
+      let freshUrl = url.replace(/(\?|&)dl=[01]/g, '');
+      const separator = freshUrl.includes('?') ? '&' : '?';
+      return freshUrl.includes('raw=1') ? freshUrl : `${freshUrl}${separator}raw=1`;
+    }
+
     return url;
   };
 
@@ -57,16 +65,28 @@ const Hero: React.FC<HeroProps> = () => {
     };
   }, []);
 
+  const handleVideoError = (e: any) => {
+    const errorMsg = e?.target?.error?.message || "Unknown error";
+    console.error(`[Hero Video] Load failed for: ${videoUrl}. Reason: ${errorMsg}`);
+    
+    // Check if it's already using the fallback
+    if (videoUrl !== '/videos/hero-video.mp4') {
+      console.info("[Hero Video] Attempting fallback to local video...");
+      setVideoUrl('/videos/hero-video.mp4');
+      setHasError(false);
+    } else {
+      console.error("[Hero Video] Both primary and local videos failed.");
+      setHasError(true);
+    }
+  };
+
   useEffect(() => {
     if (videoRef.current && !hasError) {
-      console.log("[Hero Video] Attempting to load video:", videoUrl);
+      console.log("[Hero Video] Loading:", videoUrl);
       videoRef.current.load();
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.warn("[Hero Video] Autoplay blocked or initial load failed:", error);
-        });
-      }
+      videoRef.current.play().catch(error => {
+        console.warn("[Hero Video] Autoplay blocked or load failed:", error);
+      });
     }
   }, [videoUrl, hasError]);
 
@@ -85,22 +105,14 @@ const Hero: React.FC<HeroProps> = () => {
             preload="auto"
             className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
             onCanPlay={() => {
-              console.log("[Hero Video] Video is ready to play");
               if (videoRef.current) videoRef.current.style.opacity = '1';
             }}
-            onError={() => {
-              console.error("[Hero Video] Video tag error detected");
-              setHasError(true);
-            }}
+            onError={handleVideoError}
             style={{ opacity: 0 }}
           >
             <source 
               src={videoUrl} 
               type="video/mp4" 
-              onError={() => {
-                console.error("[Hero Video] Source element reported error for:", videoUrl);
-                setHasError(true);
-              }}
             />
           </video>
         ) : (

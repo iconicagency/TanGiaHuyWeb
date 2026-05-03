@@ -102,7 +102,7 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
       >
         {/* Vertical Title - "TIN MỚI" */}
         <div className="mr-6 md:mr-16">
-          <h2 className="text-white text-4xl md:text-8xl font-sans font-black tracking-tight uppercase [writing-mode:vertical-rl] rotate-180 transform select-none opacity-80 mix-blend-difference">
+          <h2 className="text-white text-4xl md:text-7xl lg:text-8xl font-sans font-black tracking-tight uppercase [writing-mode:vertical-rl] rotate-180 transform select-none opacity-80 mix-blend-difference">
             TIN MỚI
           </h2>
         </div>

@@ -103,7 +103,7 @@ const Hero: React.FC<HeroProps> = () => {
             playsInline
             key={videoUrl}
             preload="auto"
-            className="h-full w-full object-cover grayscale-[10%] brightness-[0.7] transition-opacity duration-1000"
+            className="h-full w-full object-cover transition-opacity duration-1000"
             onCanPlay={() => {
               if (videoRef.current) videoRef.current.style.opacity = '1';
             }}
@@ -118,13 +118,13 @@ const Hero: React.FC<HeroProps> = () => {
         ) : (
           <div className="h-full w-full bg-zinc-900 flex items-center justify-center overflow-hidden">
             <img 
-              src="https://picsum.photos/seed/hero/1920/1080?grayscale" 
-              className="h-full w-full object-cover brightness-[0.4]"
+              src="https://picsum.photos/seed/hero/1920/1080" 
+              className="h-full w-full object-cover"
               alt="Hero Fallback"
             />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 z-10" />
+        <div className="absolute inset-0 bg-black/10 z-10" />
       </div>
 
       {/* Synchronized Footer Area like other sections */}

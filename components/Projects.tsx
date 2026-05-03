@@ -167,7 +167,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
             >
               <div>
                 <span className="text-[12px] font-bold tracking-[0.1em] text-white block mb-2 md:mb-3 uppercase">Sản Phẩm Mới</span>
-                <h2 className="text-white text-2xl md:text-4xl font-sans font-black mb-4 md:mb-6 leading-tight tracking-tight uppercase">
+                <h2 className="text-white text-xl md:text-2xl font-sans font-extrabold mb-4 md:mb-6 leading-tight tracking-tight uppercase">
                   {slides[current]?.title}
                 </h2>
                 <p className="text-white/90 text-[11px] md:text-sm leading-relaxed font-light tracking-wide line-clamp-3">

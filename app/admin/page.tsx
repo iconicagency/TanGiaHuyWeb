@@ -434,8 +434,8 @@ const AdminPage = () => {
                     <strong className="text-white">
                       1. Pexels (Khuyên dùng):
                     </strong>{" "}
-                    Ổn định nhất. Chuột phải vào video {">"} "Sao chép địa chỉ
-                    video".
+                    Ổn định nhất. Chuột phải vào video {">"} &quot;Sao chép địa chỉ
+                    video&quot;.
                   </p>
                   <p>
                     <strong className="text-white">2. Dropbox:</strong> Rất tốt.

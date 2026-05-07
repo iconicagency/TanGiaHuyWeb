@@ -43,48 +43,67 @@ const Navbar = () => {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 left-0 right-0 z-[60] px-6 py-4 md:py-6 flex items-center justify-between transition-all duration-500",
-        scrolled ? "bg-black/80 backdrop-blur-md" : "bg-transparent"
+        "fixed top-0 left-0 right-0 z-[60] px-6 lg:px-12 py-4 md:py-6 flex items-center justify-between transition-all duration-500",
+        scrolled ? "bg-black/90 backdrop-blur-md border-b border-white/5" : "bg-transparent"
       )}>
-        {/* Left Side: Menu Toggle */}
-        <button 
-          onClick={() => setIsMenuOpen(true)}
-          className="flex items-center space-x-3 group pointer-events-auto"
-        >
-          <div className="relative w-8 h-8 flex items-center justify-center">
-            <Menu className="w-6 h-6 text-white group-hover:text-brand-gold transition-colors" />
-          </div>
-          <span className="text-[10px] md:text-[12px] font-bold tracking-[0.2em] text-white uppercase hidden sm:block">Menu</span>
-        </button>
-
-        {/* Center: Logo */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
-          <Link href="/" className="flex flex-col items-center">
+        {/* Left Section: Logo & Desktop Links */}
+        <div className="flex items-center space-x-8 xl:space-x-12">
+          {/* Logo */}
+          <Link href="/" className="flex flex-col items-start">
             {logoUrl ? (
               <img src={logoUrl} alt="Logo" className="h-8 md:h-12 w-auto object-contain" />
             ) : (
-              <div className="text-center">
+              <div className="text-left">
                 <span className="text-[8px] tracking-[0.3em] font-medium opacity-80 uppercase block">VẬT LIỆU CAO CẤP</span>
-                <span className="text-xl md:text-2xl font-sans font-black tracking-tighter leading-none uppercase">
+                <span className="text-xl md:text-2xl font-sans font-black tracking-tighter leading-none uppercase text-white">
                   tân gia huy
                 </span>
               </div>
             )}
           </Link>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden lg:flex items-center space-x-6 xl:space-x-10">
+            {navLinks.map((link, idx) => (
+              <button
+                key={link.name}
+                onClick={() => window.dispatchEvent(new CustomEvent('scrollToSection', { detail: idx }))}
+                className="text-[11px] font-bold tracking-[0.2em] text-white hover:text-brand-gold transition-all uppercase whitespace-nowrap"
+              >
+                {link.name}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Right Side: Language & Search */}
-        <div className="flex items-center space-x-4 md:space-x-8 pointer-events-auto">
-          <button className="text-[10px] md:text-[12px] font-bold tracking-[0.2em] text-white hover:text-brand-gold transition-colors hidden md:block">
-            VI / EN
-          </button>
-          <button className="text-white hover:text-brand-gold transition-colors">
-            <Search className="w-5 h-5" />
-          </button>
+        {/* Right Section: Actions & Mobile Toggle */}
+        <div className="flex items-center space-x-6 md:space-x-8">
+          {/* Desktop Actions */}
+          <div className="hidden lg:flex items-center space-x-8">
+            <button className="text-white hover:text-brand-gold transition-colors">
+              <Search className="w-5 h-5" />
+            </button>
+            <button className="text-[11px] font-bold tracking-[0.2em] text-white hover:text-brand-gold transition-colors uppercase">
+              EN
+            </button>
+          </div>
+
+          {/* Mobile Actions */}
+          <div className="lg:hidden flex items-center space-x-4">
+            <button className="text-white hover:text-brand-gold transition-colors">
+              <Search className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => setIsMenuOpen(true)}
+              className="text-white hover:text-brand-gold transition-colors"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* Full Screen Menu Overlay */}
+      {/* Mobile Menu Overlay Remains for Mobile Experience */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div

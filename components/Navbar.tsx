@@ -49,18 +49,18 @@ const Navbar = () => {
         <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-[#EBE9E4]/95 backdrop-blur-xl rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-[#1A1A1A] transition-all duration-500 border border-[#D5D3CE]/50">
           
           {/* Left Section: Logo */}
-          <div className="flex-shrink-0 flex items-center">
+          <div className="flex-shrink-0 flex items-center pr-8">
             <Link href="/" className="flex flex-col items-start justify-center">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-10 md:h-14 w-auto object-contain mix-blend-multiply" />
+                <img src={logoUrl} alt="Logo" className="h-12 md:h-16 w-auto object-contain mix-blend-multiply" />
               ) : (
                 <div className="text-left flex flex-col items-center">
-                  <span className="text-2xl md:text-4xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
-                    <span className="text-[16px]">✦</span>
+                  <span className="text-3xl md:text-5xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
+                    <span className="text-[20px]">✦</span>
                     TÂN GIA HUY
-                    <span className="text-[16px]">✦</span>
+                    <span className="text-[20px]">✦</span>
                   </span>
-                  <span className="text-[8px] md:text-[10px] tracking-[0.3em] font-medium opacity-70 uppercase block mt-1">
+                  <span className="text-[9px] md:text-[11px] tracking-[0.3em] font-medium opacity-70 uppercase block mt-1">
                     VẬT LIỆU CAO CẤP
                   </span>
                 </div>
@@ -69,48 +69,25 @@ const Navbar = () => {
           </div>
 
           {/* Center Section: Desktop Links */}
-          <div className="hidden xl:flex items-center space-x-8">
+          <div className="hidden xl:flex flex-1 items-center justify-end space-x-6 2xl:space-x-10 pr-6">
             {navLinks.map((link, idx) => (
               <button
                 key={link.name}
                 onClick={() => window.dispatchEvent(new CustomEvent('scrollToSection', { detail: idx }))}
-                className="text-[15px] font-sans hover:text-[#555] transition-colors whitespace-nowrap text-[#1A1A1A]"
+                className="text-[14px] 2xl:text-[15px] font-medium hover:text-[#555] transition-colors whitespace-nowrap text-[#1A1A1A] tracking-wide"
               >
                 {link.name}
               </button>
             ))}
           </div>
 
-          {/* Right Section: Actions & Settings */}
-          <div className="hidden xl:flex items-center h-full">
-            <div className="flex items-center space-x-6 text-[#1A1A1A]">
-              <button className="flex items-center space-x-1 hover:text-[#555] transition-colors">
-                <Globe className="w-4 h-4" />
-                <span className="text-[14px] font-medium min-w-[20px]">EN</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="w-[1px] h-8 bg-[#1A1A1A]/10 mx-6"></div>
-            
-            <button 
-              onClick={() => setIsMenuOpen(true)}
-              className="hover:text-[#555] transition-colors"
-            >
-              <AlignRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Mobile Actions */}
-          <div className="xl:hidden flex items-center space-x-4">
-            <button className="text-[#1A1A1A] hover:text-[#555] transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
+          {/* Right Section: Hamburger Menu */}
+          <div className="flex items-center border-l border-[#1A1A1A]/10 pl-6 h-8">
             <button 
               onClick={() => setIsMenuOpen(true)}
               className="text-[#1A1A1A] hover:text-[#555] transition-colors"
             >
-              <AlignRight className="w-6 h-6" />
+              <AlignRight className="w-6 h-6 md:w-7 md:h-7" />
             </button>
           </div>
         </nav>

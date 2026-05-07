@@ -52,6 +52,17 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const handleScrollToSection = (e: any) => {
+      if (e.detail !== undefined) {
+        scrollToSection(e.detail);
+      }
+    };
+
+    window.addEventListener('scrollToSection', handleScrollToSection);
+    return () => window.removeEventListener('scrollToSection', handleScrollToSection);
+  }, [currentSection]);
+
+  useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       // Prevent multiple triggered scrolls
       if (isScrolling.current) return;

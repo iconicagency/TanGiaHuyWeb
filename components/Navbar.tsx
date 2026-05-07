@@ -32,11 +32,12 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Công ty', href: '#company', desc: 'Hành trình và sứ mệnh' },
-    { name: 'Bộ sưu tập', href: '#collections', desc: 'Đẳng cấp và khác biệt' },
-    { name: 'Sản phẩm', href: '#products', desc: 'Tinh hoa vật liệu cao cấp' },
-    { name: 'Tin tức', href: '#news', desc: 'Cập nhật xu hướng mới nhất' },
-    { name: 'Liên hệ', href: '#contact', desc: 'Kết nối cùng chúng tôi' },
+    { name: 'TRANG CHỦ', href: '#hero', desc: 'Kiến tạo không gian sống' },
+    { name: 'VỀ TÂN GIA HUY', href: '#about', desc: 'Hành trình và sứ mệnh' },
+    { name: 'SẢN PHẨM', href: '#products', desc: 'Tinh hoa vật liệu cao cấp' },
+    { name: 'BỘ SƯU TẬP', href: '#collections', desc: 'Đẳng cấp và khác biệt' },
+    { name: 'TIN TỨC', href: '#news', desc: 'Cập nhật xu hướng mới nhất' },
+    { name: 'LIÊN HỆ', href: '#contact', desc: 'Kết nối cùng chúng tôi' },
   ];
 
   return (
@@ -51,15 +52,15 @@ const Navbar = () => {
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex flex-col items-start justify-center">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-8 md:h-10 w-auto object-contain mix-blend-multiply" />
+                <img src={logoUrl} alt="Logo" className="h-10 md:h-14 w-auto object-contain mix-blend-multiply" />
               ) : (
                 <div className="text-left flex flex-col items-center">
-                  <span className="text-xl md:text-3xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
-                    <span className="text-[14px]">✦</span>
+                  <span className="text-2xl md:text-4xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
+                    <span className="text-[16px]">✦</span>
                     TÂN GIA HUY
-                    <span className="text-[14px]">✦</span>
+                    <span className="text-[16px]">✦</span>
                   </span>
-                  <span className="text-[7px] md:text-[9px] tracking-widest font-medium opacity-70 uppercase block mt-1">
+                  <span className="text-[8px] md:text-[10px] tracking-[0.3em] font-medium opacity-70 uppercase block mt-1">
                     VẬT LIỆU CAO CẤP
                   </span>
                 </div>
@@ -82,22 +83,12 @@ const Navbar = () => {
 
           {/* Right Section: Actions & Settings */}
           <div className="hidden xl:flex items-center h-full">
-            <div className="w-[1px] h-8 bg-[#1A1A1A]/10 mx-6"></div>
-            
             <div className="flex items-center space-x-6 text-[#1A1A1A]">
-              <span className="text-[13px] font-medium whitespace-nowrap leading-tight text-center">
-                Tân Gia Huy<br/>VN
-              </span>
-              <button className="hover:text-[#555] transition-colors"><LayoutGrid className="w-5 h-5" /></button>
-              <button className="hover:text-[#555] transition-colors"><SlidersHorizontal className="w-5 h-5" /></button>
-              
               <button className="flex items-center space-x-1 hover:text-[#555] transition-colors">
                 <Globe className="w-4 h-4" />
                 <span className="text-[14px] font-medium min-w-[20px]">EN</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
-              
-              <button className="hover:text-[#555] transition-colors"><User className="w-5 h-5" /></button>
             </div>
 
             <div className="w-[1px] h-8 bg-[#1A1A1A]/10 mx-6"></div>

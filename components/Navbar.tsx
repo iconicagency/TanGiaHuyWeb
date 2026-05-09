@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, Home, Menu, X, Plus, LayoutGrid, SlidersHorizontal, Globe, ChevronDown, User, AlignRight, Facebook, Instagram, Youtube, Twitter, Linkedin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
@@ -9,6 +10,7 @@ import { db } from '@/lib/firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 
 const Navbar = () => {
+  const router = useRouter();
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -32,13 +34,22 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'TRANG CHỦ', href: '#hero', desc: 'Kiến tạo không gian sống' },
-    { name: 'VỀ TÂN GIA HUY', href: '#about', desc: 'Hành trình và sứ mệnh' },
-    { name: 'SẢN PHẨM', href: '#products', desc: 'Tinh hoa vật liệu cao cấp' },
-    { name: 'BỘ SƯU TẬP', href: '#collections', desc: 'Đẳng cấp và khác biệt' },
-    { name: 'TIN TỨC', href: '#news', desc: 'Cập nhật xu hướng mới nhất' },
-    { name: 'LIÊN HỆ', href: '#contact', desc: 'Kết nối cùng chúng tôi' },
+    { name: 'TRANG CHỦ', href: '/', desc: 'Kiến tạo không gian sống' },
+    { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
+    { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
+    { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
+    { name: 'TIN TỨC', href: '/news', desc: 'Cập nhật xu hướng mới nhất' },
+    { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
   ];
+
+  const handleNavClick = (link: { name: string; href: string }, idx: number) => {
+    setIsMenuOpen(false);
+    if (link.href.startsWith('/')) {
+      router.push(link.href);
+    } else {
+      window.dispatchEvent(new CustomEvent('scrollToSection', { detail: idx }));
+    }
+  };
 
   return (
     <>
@@ -49,19 +60,16 @@ const Navbar = () => {
         <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-[#EBE9E4]/20 backdrop-blur-md rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-[#1A1A1A] transition-all duration-500 border border-[#D5D3CE]/50 overflow-hidden">
           
           {/* Left Section: Logo */}
-          <div className="flex-shrink-0 flex items-center pr-8">
+          <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex flex-col items-start justify-center">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-[45px] md:h-[60px] w-auto object-contain mix-blend-multiply scale-[1.2] origin-left ml-[8px] md:ml-[16px]" />
+                <img src={logoUrl} alt="Logo" className="h-[45px] md:h-[60px] w-auto object-contain mix-blend-multiply origin-left ml-[8px] md:ml-[16px]" />
               ) : (
                 <div className="text-left flex flex-col items-center">
-                  <span className="text-3xl md:text-5xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
-                    <span className="text-[20px]">✦</span>
+                  <span className="text-2xl md:text-3xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
+                    <span className="text-[16px]">✦</span>
                     TÂN GIA HUY
-                    <span className="text-[20px]">✦</span>
-                  </span>
-                  <span className="text-[9px] md:text-[11px] tracking-[0.3em] font-medium opacity-70 uppercase block mt-1">
-                    VẬT LIỆU CAO CẤP
+                    <span className="text-[16px]">✦</span>
                   </span>
                 </div>
               )}
@@ -69,12 +77,12 @@ const Navbar = () => {
           </div>
 
           {/* Center Section: Desktop Links */}
-          <div className="hidden xl:flex flex-1 items-center justify-end space-x-6 2xl:space-x-10 pr-6">
+          <div className="hidden xl:flex flex-1 items-center justify-end space-x-6 2xl:space-x-10 pr-10">
             {navLinks.map((link, idx) => (
               <button
                 key={link.name}
-                onClick={() => window.dispatchEvent(new CustomEvent('scrollToSection', { detail: idx }))}
-                className="text-[14px] 2xl:text-[15px] font-medium hover:text-[#555] transition-colors whitespace-nowrap text-[#1A1A1A] tracking-wide"
+                onClick={() => handleNavClick(link, idx)}
+                className="text-[13px] 2xl:text-[14px] font-medium hover:text-[#555] transition-colors whitespace-nowrap text-[#1A1A1A] tracking-wider uppercase"
               >
                 {link.name}
               </button>
@@ -82,7 +90,7 @@ const Navbar = () => {
           </div>
 
           {/* Right Section: Hamburger Menu */}
-          <div className="flex items-center border-l border-[#1A1A1A]/10 pl-6 h-8">
+          <div className="flex items-center pl-2">
             <button 
               onClick={() => setIsMenuOpen(true)}
               className="text-[#1A1A1A] hover:text-[#555] transition-colors"
@@ -126,10 +134,7 @@ const Navbar = () => {
                 {navLinks.map((link, idx) => (
                   <button 
                     key={link.name}
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      window.dispatchEvent(new CustomEvent('scrollToSection', { detail: idx }));
-                    }}
+                    onClick={() => handleNavClick(link, idx)}
                     className="flex justify-between items-center px-8 py-5 border-b border-gray-100 w-full text-left hover:bg-gray-50 transition-colors"
                   >
                     <span className="text-[15px] font-medium text-[#1e1e1e]">

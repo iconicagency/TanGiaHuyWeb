@@ -16,12 +16,38 @@
         "video_placeholder_image": { "type": "string", "format": "uri" }
       },
       "required": ["hero_title", "section1_title", "section2_title"]
+    },
+    "NavLink": {
+      "title": "Navigation Link",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "href": { "type": "string" },
+        "desc": { "type": "string" }
+      },
+      "required": ["name", "href"]
+    },
+    "NavigationSettings": {
+      "title": "Navigation Settings",
+      "description": "Main menu navigation links",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": { "$ref": "NavLink" }
+        }
+      },
+      "required": ["links"]
     }
   },
   "firestore": {
     "/cms/company_page": {
       "schema": "CompanyContent",
       "description": "Content for the About Us page"
+    },
+    "/settings/navigation": {
+      "schema": "NavigationSettings",
+      "description": "Main header navigation menu"
     }
   }
 }

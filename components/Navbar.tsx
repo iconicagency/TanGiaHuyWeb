@@ -14,11 +14,25 @@ const Navbar = () => {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [navLinks, setNavLinks] = useState<any[]>([
+    { name: 'TRANG CHỦ', href: '/', desc: 'Kiến tạo không gian sống' },
+    { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
+    { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
+    { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
+    { name: 'TIN TỨC', href: '/', desc: 'Cập nhật xu hướng mới nhất' },
+    { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
+  ]);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
+    const unsubLogo = onSnapshot(doc(db, 'settings', 'general'), (snap) => {
       if (snap.exists() && snap.data().logoUrl) {
         setLogoUrl(snap.data().logoUrl);
+      }
+    });
+
+    const unsubNav = onSnapshot(doc(db, 'settings', 'navigation'), (snap) => {
+      if (snap.exists() && snap.data().links) {
+        setNavLinks(snap.data().links);
       }
     });
 
@@ -28,19 +42,11 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     
     return () => {
-      unsub();
+      unsubLogo();
+      unsubNav();
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
-  const navLinks = [
-    { name: 'TRANG CHỦ', href: '/', desc: 'Kiến tạo không gian sống' },
-    { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
-    { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
-    { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
-    { name: 'TIN TỨC', href: '/', desc: 'Cập nhật xu hướng mới nhất' },
-    { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
-  ];
 
   const handleNavClick = (link: { name: string; href: string }, idx: number) => {
     setIsMenuOpen(false);
@@ -82,7 +88,7 @@ const Navbar = () => {
               <button
                 key={link.name}
                 onClick={() => handleNavClick(link, idx)}
-                className="text-[13px] 2xl:text-[14px] font-medium hover:text-[#555] transition-colors whitespace-nowrap text-[#1A1A1A] tracking-wider uppercase"
+                className="text-[15px] 2xl:text-[16px] font-bold hover:text-[#C5A059] transition-colors whitespace-nowrap text-black tracking-wider uppercase"
               >
                 {link.name}
               </button>
@@ -93,7 +99,7 @@ const Navbar = () => {
           <div className="flex items-center pl-2">
             <button 
               onClick={() => setIsMenuOpen(true)}
-              className="text-[#1A1A1A] hover:text-[#555] transition-colors"
+              className="text-black hover:text-[#C5A059] transition-colors"
             >
               <AlignRight className="w-6 h-6 md:w-7 md:h-7" />
             </button>
@@ -123,7 +129,7 @@ const Navbar = () => {
               <div className="flex justify-end p-4">
                 <button 
                   onClick={() => setIsMenuOpen(false)}
-                  className="w-10 h-10 bg-[#1e1e1e] rounded flex items-center justify-center text-white hover:bg-black transition-colors"
+                  className="w-10 h-10 bg-black rounded flex items-center justify-center text-white hover:bg-[#C5A059] transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -135,12 +141,12 @@ const Navbar = () => {
                   <button 
                     key={link.name}
                     onClick={() => handleNavClick(link, idx)}
-                    className="flex justify-between items-center px-8 py-5 border-b border-gray-100 w-full text-left hover:bg-gray-50 transition-colors"
+                    className="flex justify-between items-center px-8 py-6 border-b border-gray-100 w-full text-left hover:bg-gray-50 group transition-colors"
                   >
-                    <span className="text-[15px] font-medium text-[#1e1e1e]">
+                    <span className="text-[17px] font-bold text-black group-hover:text-[#C5A059] transition-colors">
                       {link.name}
                     </span>
-                    <ChevronDown className="w-4 h-4 text-gray-500 -rotate-90" />
+                    <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-[#C5A059] -rotate-90 transition-colors" />
                   </button>
                 ))}
               </div>

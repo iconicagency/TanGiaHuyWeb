@@ -81,7 +81,7 @@ function CompanyPageContent({ content }: { content: any }) {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-gray-900"
+            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-black"
           >
             {content.hero_title}
           </motion.h1>
@@ -132,8 +132,8 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-[1.75rem] font-sans font-bold tracking-tight text-black leading-tight uppercase">
                     {content.section1_title}
                   </h2>
                 </div>
@@ -166,8 +166,8 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="lg:order-1 space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-[1.75rem] font-sans font-bold tracking-tight text-black leading-tight uppercase">
                     {content.section2_title}
                   </h2>
                 </div>
@@ -218,8 +218,8 @@ function CompanyPageContent({ content }: { content: any }) {
           viewport={{ once: true }}
           className="pb-24 px-6 md:px-12 lg:px-24 w-full"
         >
-          <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block mb-12">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-gray-900">
+          <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block mb-12">
+            <h2 className="text-[1.75rem] font-sans font-bold tracking-tight uppercase leading-tight text-black">
               Quick <br /> <span className="text-brand-gold">links</span>
             </h2>
             <p className="text-gray-600 font-light italic mt-4 max-w-md">

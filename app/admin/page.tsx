@@ -31,6 +31,7 @@ import {
   Layout,
   Settings,
   ExternalLink,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -77,7 +78,7 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company"
+    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu"
   >("general");
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
@@ -90,6 +91,7 @@ const AdminPage = () => {
   const [newsItems, setNewsItems] = useState<any[]>([]);
   const [contactInfo, setContactInfo] = useState<any>(null);
   const [companyContent, setCompanyContent] = useState<any>(null);
+  const [navLinks, setNavLinks] = useState<any[]>([]);
 
   useEffect(() => {
     console.log("Admin: Auth checking...");
@@ -193,6 +195,18 @@ const AdminPage = () => {
       (err) => handleFirestoreError(err, OperationType.GET, "cms/company_page"),
     );
 
+    const unsubNavigation = onSnapshot(
+      doc(db, "settings", "navigation"),
+      (snap) => {
+        if (snap.exists() && snap.data().links) {
+          setNavLinks(snap.data().links);
+        } else {
+          setNavLinks([]);
+        }
+      },
+      (err) => handleFirestoreError(err, OperationType.GET, "settings/navigation"),
+    );
+
     return () => {
       unsubGeneral();
       unsubHero();
@@ -202,6 +216,7 @@ const AdminPage = () => {
       unsubNews();
       unsubContact();
       unsubCompany();
+      unsubNavigation();
     };
   }, [isAdmin]);
 
@@ -364,6 +379,7 @@ const AdminPage = () => {
         <nav className="flex-1 space-y-2">
           {[
             { id: "general", label: "Global (Logo/BG)", icon: ExternalLink },
+            { id: "menu", label: "Thanh Menu (Header)", icon: Layout },
             { id: "hero", label: "Trang chủ (Video)", icon: Layout },
             { id: "projects", label: "Sản phẩm mới", icon: Layout },
             { id: "collections", label: "Bộ sưu tập", icon: ImageIcon },
@@ -513,6 +529,7 @@ const AdminPage = () => {
         {activeTab === "news" && <NewsManager items={newsItems} />}
         {activeTab === "contact" && <ContactManager data={contactInfo} />}
         {activeTab === "company" && <CompanyContentManager data={companyContent} />}
+        {activeTab === "menu" && <MenuManager items={navLinks} />}
       </main>
     </div>
   );
@@ -1255,6 +1272,130 @@ const ContactManager = ({ data }: any) => {
               className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm tracking-wide"
             />
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MenuManager = ({ items }: { items: any[] }) => {
+  const updateLinks = async (newLinks: any[]) => {
+    try {
+      await setDoc(doc(db, "settings", "navigation"), { links: newLinks }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "settings/navigation");
+    }
+  };
+
+  const addItem = () => {
+    const newItem = { name: "NEW ITEM", href: "/", desc: "New description" };
+    updateLinks([...items, newItem]);
+  };
+
+  const removeItem = (idx: number) => {
+    const newLinks = [...items];
+    newLinks.splice(idx, 1);
+    updateLinks(newLinks);
+  };
+
+  const updateItem = (idx: number, field: string, value: string) => {
+    const newLinks = [...items];
+    newLinks[idx] = { ...newLinks[idx], [field]: value };
+    updateLinks(newLinks);
+  };
+
+  const moveItem = (idx: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && idx === 0) return;
+    if (direction === 'down' && idx === items.length - 1) return;
+    
+    const newLinks = [...items];
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    [newLinks[idx], newLinks[targetIdx]] = [newLinks[targetIdx], newLinks[idx]];
+    updateLinks(newLinks);
+  };
+
+  const initializeDefault = () => {
+    const defaultLinks = [
+      { name: 'TRANG CHỦ', href: '/', desc: 'Kiến tạo không gian sống' },
+      { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
+      { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
+      { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
+      { name: 'TIN TỨC', href: '/', desc: 'Cập nhật xu hướng mới nhất' },
+      { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
+    ];
+    updateLinks(defaultLinks);
+  };
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex items-end justify-between">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Menu Navigation</h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý các đề mục trên thanh điều hướng chính.</p>
+        </div>
+        <div className="space-x-4">
+          <button onClick={initializeDefault} className="text-xs text-zinc-500 hover:text-white transition-colors">Reset về mặc định</button>
+          <button onClick={addItem} className="bg-white text-black px-6 py-2 rounded-lg font-bold flex items-center space-x-2 text-sm hover:scale-105 transition-all">
+            <Plus className="w-4 h-4" />
+            <span>Thêm mục mới</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-zinc-900 border border-white/5 rounded-3xl overflow-hidden">
+        {items.length === 0 && (
+          <div className="p-20 text-center space-y-4">
+            <p className="text-zinc-500 italic">Chưa có mục menu nào.</p>
+            <button onClick={initializeDefault} className="bg-zinc-800 text-white px-6 py-2 rounded-lg text-sm">Khởi tạo nhanh</button>
+          </div>
+        )}
+        <div className="divide-y divide-white/5">
+          {items.map((item, idx) => (
+            <div key={idx} className="p-6 flex items-start gap-6 hover:bg-white/5 transition-colors group">
+              <div className="flex flex-col gap-2 pt-2">
+                <button onClick={() => moveItem(idx, 'up')} className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors">
+                  <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-bottom-[6px] border-bottom-current rotate-180" />
+                  <ChevronDown className="w-4 h-4 rotate-180" />
+                </button>
+                <button onClick={() => moveItem(idx, 'down')} className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors">
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+              
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Tên hiển thị</label>
+                  <input 
+                    value={item.name} 
+                    onChange={(e) => updateItem(idx, 'name', e.target.value)}
+                    className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Đường dẫn (Link)</label>
+                  <input 
+                    value={item.href} 
+                    onChange={(e) => updateItem(idx, 'href', e.target.value)}
+                    className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
+                    placeholder="/abc hoặc https://..."
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Mô tả ngắn</label>
+                  <input 
+                    value={item.desc} 
+                    onChange={(e) => updateItem(idx, 'desc', e.target.value)}
+                    className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
+                    placeholder="Dòng chữ nhỏ dưới menu..."
+                  />
+                </div>
+              </div>
+
+              <button onClick={() => removeItem(idx)} className="mt-6 p-2 text-zinc-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

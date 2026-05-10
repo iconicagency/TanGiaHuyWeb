@@ -88,6 +88,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /settings/navigation {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /cms/company_page {
       allow read: if true;
       allow write: if isAdmin();

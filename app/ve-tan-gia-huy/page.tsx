@@ -81,7 +81,7 @@ function CompanyPageContent({ content }: { content: any }) {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-8xl font-serif font-bold leading-tight"
+            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight"
           >
             {content.hero_title}
           </motion.h1>
@@ -106,19 +106,19 @@ function CompanyPageContent({ content }: { content: any }) {
         </div>
 
         <div className="w-full space-y-8 pb-12">
-          <p className="text-xl md:text-3xl text-gray-800 leading-relaxed font-serif">
+          <p className="text-xl md:text-3xl text-gray-800 leading-relaxed font-sans font-bold tracking-tight uppercase">
             {content.intro_vocation_text || "Our vocation for materials, in particular porcelain stoneware, has been guiding our work, our thoughts and our actions since the date of our establishment."}
           </p>
-          <p className="text-xl md:text-2xl text-gray-600 leading-relaxed font-sans font-light">
+          <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-sans font-light max-w-5xl">
             {content.intro_design_activity_text || "Our design activities have the purpose of creating ceramic surfaces that work towards the best in terms of technical performance and aesthetics."}
           </p>
         </div>
       </section>
       
       {/* Sequence Container */}
-      <div className="relative">
+      <div className="relative bg-[#F5F3F1]">
         {/* Section 1: Material for your projects */}
-        <section ref={section1Ref} className="h-[150vh] relative">
+        <section ref={section1Ref} className="h-[120vh] relative">
           <motion.div 
             style={{ opacity: section1Opacity, scale: section1Scale }}
             className="sticky top-0 h-screen bg-[#F5F3F1] py-24 px-6 md:px-12 lg:px-24 flex items-center"
@@ -132,10 +132,10 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="space-y-10">
-                <h2 className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-gray-900 leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
                   {content.section1_title}
                 </h2>
-                <p className="text-gray-600 leading-relaxed text-xl max-w-xl font-sans">
+                <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
                   {content.section1_description}
                 </p>
                 <motion.button 
@@ -150,10 +150,10 @@ function CompanyPageContent({ content }: { content: any }) {
         </section>
 
         {/* Section 2: Caesar porcelain tiles */}
-        <section ref={section2Ref} className="h-[150vh] relative z-20">
+        <section ref={section2Ref} className="h-[120vh] relative z-20">
           <motion.div 
             style={{ y: section2Y }}
-            className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center border-t border-black/5 shadow-[0_-20px_50px_rgba(0,0,0,0.1)]"
+            className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]"
           >
             <div className="w-full grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
               <div className="lg:order-2 overflow-hidden rounded-3xl shadow-2xl">
@@ -164,10 +164,10 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="lg:order-1 space-y-10">
-                <h2 className="text-5xl md:text-7xl font-serif font-bold tracking-tight text-gray-900 leading-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
                   {content.section2_title}
                 </h2>
-                <p className="text-gray-600 leading-relaxed text-xl max-w-xl font-sans">
+                <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
                   {content.section2_description}
                 </p>
                 <motion.button 
@@ -182,8 +182,8 @@ function CompanyPageContent({ content }: { content: any }) {
         </section>
       </div>
 
-      {/* Spacing reduced here */}
-      <div className="py-20 lg:py-32">
+      {/* Video Section spacing adjustment */}
+      <div className="bg-white py-12 md:py-24">
         {/* Video Section */}
         <motion.section 
           initial={{ opacity: 0, y: 30 }}
@@ -212,10 +212,10 @@ function CompanyPageContent({ content }: { content: any }) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="py-24 px-6 md:px-12 lg:px-24 w-full"
+          className="pb-24 px-6 md:px-12 lg:px-24 w-full"
         >
-          <h2 className="text-5xl font-serif font-bold mb-6">Quick links</h2>
-          <p className="text-zinc-500 mb-16 text-lg max-w-2xl font-sans">Quickly access some of the most useful sections of the site.</p>
+          <h2 className="text-3xl md:text-5xl font-sans font-bold tracking-tight uppercase mb-6">Quick links</h2>
+          <p className="text-zinc-500 mb-16 text-lg max-w-2xl font-sans font-light">Quickly access some of the most useful sections of the site.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
                { title: "Find a dealer", desc: "Discover the retailer nearest to you and experience the quality of our surfaces firsthand." },

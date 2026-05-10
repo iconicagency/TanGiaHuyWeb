@@ -103,8 +103,8 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
       >
         {/* Title */}
         <div className="mb-6 md:mb-12">
-          <h2 className="text-white text-4xl md:text-7xl lg:text-8xl font-sans font-black tracking-tight uppercase">
-            BỘ SƯU TẬP
+          <h2 className="text-white text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight uppercase">
+            DỰ ÁN THÀNH CÔNG
           </h2>
         </div>
 

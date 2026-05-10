@@ -56,7 +56,7 @@ const CollectionSlider: React.FC<AboutSectionProps> = ({ isActive }) => {
            transition={{ duration: 1, ease: "easeOut" }}
            className="text-center mb-6 md:mb-10"
         >
-          <h2 className="text-4xl md:text-7xl lg:text-8xl font-sans font-black tracking-tight text-white uppercase leading-tight">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-white uppercase leading-tight">
             VỀ <span className="text-brand-gold">TÂN GIA HUY</span>
           </h2>
         </motion.div>

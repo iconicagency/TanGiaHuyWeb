@@ -14,7 +14,7 @@ const SECTION_LABELS = [
   'TRANG CHỦ',
   'GIỚI THIỆU',
   'SẢN PHẨM MỚI',
-  'BỘ SƯU TẬP',
+  'DỰ ÁN',
   'TIN TỨC',
   'LIÊN HỆ'
 ];

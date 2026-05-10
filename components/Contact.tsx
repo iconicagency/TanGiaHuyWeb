@@ -86,7 +86,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
         {/* Left Side: Contact Info */}
         <div className="text-white space-y-6 md:space-y-12 md:w-[45%]">
           <div className="space-y-2">
-            <h2 className="text-3xl md:text-6xl font-black tracking-tight uppercase opacity-90 text-brand-gold whitespace-nowrap">
+            <h2 className="text-2xl md:text-5xl font-bold tracking-tight uppercase opacity-90 text-brand-gold whitespace-nowrap">
               TÂN GIA HUY
             </h2>
           </div>

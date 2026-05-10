@@ -125,7 +125,9 @@ const AdminPage = () => {
   }, [user]);
 
   const isAdmin =
-    userAdmin?.authorized || user?.email === "thanhnt.ads@gmail.com";
+    userAdmin?.authorized || 
+    user?.email === "thanhnt.ads@gmail.com" || 
+    user?.email === "hyperlinkec@gmail.com";
 
   useEffect(() => {
     if (!isAdmin) return;
@@ -1288,6 +1290,10 @@ const CompanyContentManager = ({ data }: any) => {
         {[
           { id: "hero_title", label: "Hero Title", type: "text" },
           { id: "hero_image", label: "Hero Image", type: "image" },
+          { id: "intro_vocation_text", label: "Intro Vocation Text", type: "textarea" },
+          { id: "intro_design_activity_text", label: "Intro Design Activity Text", type: "textarea" },
+          { id: "intro_cta1", label: "Intro CTA 1 Text", type: "text" },
+          { id: "intro_cta2", label: "Intro CTA 2 Text", type: "text" },
           { id: "section1_title", label: "Section 1 Title", type: "text" },
           { id: "section1_description", label: "Section 1 Description", type: "textarea" },
           { id: "section1_image", label: "Section 1 Image", type: "image" },

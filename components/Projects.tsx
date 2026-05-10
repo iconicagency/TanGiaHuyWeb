@@ -22,7 +22,7 @@ const DEFAULT_SLIDES = [
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1600607687940-c52af096999a?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80',
     title: 'Large Format Vũ điệu xanh',
     description: 'Những đường vân uốn lượn như dải lụa mềm mại, Vũ điệu xanh khơi gợi trí tưởng tượng và khát vọng tự do, biến mỗi gian phòng thành một tác phẩm nghệ thuật sống động.',
   },

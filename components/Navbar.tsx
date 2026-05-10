@@ -38,7 +38,7 @@ const Navbar = () => {
     { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
     { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
     { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
-    { name: 'TIN TỨC', href: '/news', desc: 'Cập nhật xu hướng mới nhất' },
+    { name: 'TIN TỨC', href: '/', desc: 'Cập nhật xu hướng mới nhất' },
     { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
   ];
 

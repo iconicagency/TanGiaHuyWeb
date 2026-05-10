@@ -77,7 +77,7 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "general" | "hero" | "collections" | "projects" | "news" | "contact"
+    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company"
   >("general");
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
@@ -89,6 +89,7 @@ const AdminPage = () => {
   const [projectSlides, setProjectSlides] = useState<any[]>([]);
   const [newsItems, setNewsItems] = useState<any[]>([]);
   const [contactInfo, setContactInfo] = useState<any>(null);
+  const [companyContent, setCompanyContent] = useState<any>(null);
 
   useEffect(() => {
     console.log("Admin: Auth checking...");
@@ -184,6 +185,12 @@ const AdminPage = () => {
       (err) => handleFirestoreError(err, OperationType.GET, "contact/info"),
     );
 
+    const unsubCompany = onSnapshot(
+      doc(db, "cms", "company_page"),
+      (snap) => setCompanyContent(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, "cms/company_page"),
+    );
+
     return () => {
       unsubGeneral();
       unsubHero();
@@ -192,6 +199,7 @@ const AdminPage = () => {
       unsubProjects();
       unsubNews();
       unsubContact();
+      unsubCompany();
     };
   }, [isAdmin]);
 
@@ -359,6 +367,7 @@ const AdminPage = () => {
             { id: "collections", label: "Bộ sưu tập", icon: ImageIcon },
             { id: "news", label: "Tin tức", icon: ImageIcon },
             { id: "contact", label: "Thông tin liên hệ", icon: Settings },
+            { id: "company", label: "Về Tân Gia Huy", icon: Layout },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -501,6 +510,7 @@ const AdminPage = () => {
         )}
         {activeTab === "news" && <NewsManager items={newsItems} />}
         {activeTab === "contact" && <ContactManager data={contactInfo} />}
+        {activeTab === "company" && <CompanyContentManager data={companyContent} />}
       </main>
     </div>
   );
@@ -1250,3 +1260,50 @@ const ContactManager = ({ data }: any) => {
 };
 
 export default AdminPage;
+
+const CompanyContentManager = ({ data }: any) => {
+  const updateContent = async (field: string, value: string) => {
+    try {
+      await setDoc(doc(db, "cms", "company_page"), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "cms/company_page");
+    }
+  };
+
+  if (!data) return (
+     <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <button
+          onClick={() => updateContent("hero_title", "Về Tân Gia Huy")}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs"
+        >
+          Khởi tạo nội dung trang
+        </button>
+     </div>
+  );
+
+  return (
+    <div className="space-y-10 max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Về Tân Gia Huy</h2>
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
+        {[
+          { id: "hero_title", label: "Hero Title", type: "text" },
+          { id: "hero_image", label: "Hero Image", type: "image" },
+          { id: "section1_title", label: "Section 1 Title", type: "text" },
+          { id: "section1_description", label: "Section 1 Description", type: "textarea" },
+          { id: "section1_image", label: "Section 1 Image", type: "image" },
+          { id: "section2_title", label: "Section 2 Title", type: "text" },
+          { id: "section2_description", label: "Section 2 Description", type: "textarea" },
+          { id: "section2_image", label: "Section 2 Image", type: "image" },
+          { id: "video_placeholder_image", label: "Video Placeholder", type: "image" },
+        ].map((field) => (
+          <div key={field.id} className="space-y-3">
+             <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">{field.label}</label>
+             {field.type === 'text' && <input defaultValue={data[field.id]} onBlur={(e) => updateContent(field.id, e.target.value)} className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none"/>}
+             {field.type === 'textarea' && <textarea defaultValue={data[field.id]} onBlur={(e) => updateContent(field.id, e.target.value)} className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none" rows={4}/>}
+             {field.type === 'image' && <ImageUploader value={data[field.id]} onUpload={(url) => updateContent(field.id, url)} />}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

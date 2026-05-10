@@ -83,6 +83,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /cms/company_page {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     // Admin identities
     match /admins/{userId} {
       allow read: if isSignedIn() && request.auth.uid == userId;

@@ -1,92 +1,27 @@
 {
   "entities": {
-    "Slide": {
-      "title": "Slide",
-      "description": "A slide for sliders (Hero, Collections, Projects)",
+    "CompanyContent": {
+      "title": "Company Page Content",
+      "description": "Content for the Company page",
       "type": "object",
       "properties": {
-        "image": { "type": "string", "description": "URL of the image" },
-        "title": { "type": "string", "description": "Title of the slide" },
-        "description": { "type": "string", "description": "Description text" },
-        "order": { "type": "number", "description": "Display order" }
+        "hero_image": { "type": "string", "format": "uri" },
+        "hero_title": { "type": "string" },
+        "section1_image": { "type": "string", "format": "uri" },
+        "section1_title": { "type": "string" },
+        "section1_description": { "type": "string" },
+        "section2_image": { "type": "string", "format": "uri" },
+        "section2_title": { "type": "string" },
+        "section2_description": { "type": "string" },
+        "video_placeholder_image": { "type": "string", "format": "uri" }
       },
-      "required": ["image", "title", "order"]
-    },
-    "NewsItem": {
-      "title": "News Item",
-      "description": "An item for the news section",
-      "type": "object",
-      "properties": {
-        "image": { "type": "string", "description": "URL of the image" },
-        "title": { "type": "string", "description": "Title of the news" },
-        "description": { "type": "string", "description": "Summary text" },
-        "category": { "type": "string", "description": "Category e.g. TIN DỰ ÁN" },
-        "position": { "type": "string", "enum": ["left", "top-right", "bottom-right"], "description": "Position in the grid" }
-      },
-      "required": ["image", "title", "position"]
-    },
-    "ContactInfo": {
-      "title": "Contact Info",
-      "description": "General contact information",
-      "type": "object",
-      "properties": {
-        "address": { "type": "string" },
-        "phone": { "type": "string" },
-        "email": { "type": "string" }
-      },
-      "required": ["address", "phone", "email"]
-    },
-    "GeneralSettings": {
-      "title": "General Settings",
-      "description": "Global settings like logo and section backgrounds",
-      "type": "object",
-      "properties": {
-        "logoUrl": { "type": "string", "description": "URL of the logo image" },
-        "section2Bg": { "type": "string", "description": "Background image for Section 2" },
-        "section3Bg": { "type": "string", "description": "Background image for Section 3" },
-        "section4Bg": { "type": "string", "description": "Background image for Section 4" },
-        "section5Bg": { "type": "string", "description": "Background image for Section 5" },
-        "section6Bg": { "type": "string", "description": "Background image for Section 6" }
-      }
-    },
-    "HeroSettings": {
-      "title": "Hero Settings",
-      "description": "General settings for the Hero section",
-      "type": "object",
-      "properties": {
-        "videoUrl": { "type": "string", "description": "URL of the background video" }
-      },
-      "required": ["videoUrl"]
+      "required": ["hero_title", "section1_title", "section2_title"]
     }
   },
   "firestore": {
-    "/settings/general": {
-      "schema": "GeneralSettings",
-      "description": "Global settings"
-    },
-    "/settings/hero": {
-      "schema": "HeroSettings",
-      "description": "Settings for the Hero section"
-    },
-    "/hero_slides/{slideId}": {
-      "schema": "Slide",
-      "description": "Slides for the Hero section"
-    },
-    "/collection_slides/{slideId}": {
-      "schema": "Slide",
-      "description": "Slides for the Collection section"
-    },
-    "/project_slides/{slideId}": {
-      "schema": "Slide",
-      "description": "Slides for the Projects section"
-    },
-    "/news_items/{itemId}": {
-      "schema": "NewsItem",
-      "description": "Items for the News section"
-    },
-    "/contact/info": {
-      "schema": "ContactInfo",
-      "description": "Singleton for contact information"
+    "/cms/company_page": {
+      "schema": "CompanyContent",
+      "description": "Content for the About Us page"
     }
   }
 }

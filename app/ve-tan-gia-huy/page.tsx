@@ -39,15 +39,19 @@ export default function CompanyPage() {
     offset: ["start start", "end end"]
   });
 
-  const section1Opacity = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
-  const section1Scale = useTransform(scrollYProgress, [0, 0.4], [1, 0.9]);
-  const section1PointerEvents = useTransform(scrollYProgress, [0.3, 0.31], ["auto", "none"]);
-  const section1Y = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+  // Adjusted progress points:
+  // Assuming total page is ~4 screens. Hero is 0.6 screens.
+  // Sections container is 2 screens.
+  // We want section 1 to appear after hero.
+  const section1Opacity = useTransform(scrollYProgress, [0.1, 0.15, 0.4, 0.45], [0, 1, 1, 0]);
+  const section1Scale = useTransform(scrollYProgress, [0.1, 0.4], [0.95, 1]);
+  const section1PointerEvents = useTransform(scrollYProgress, [0.4, 0.41], ["auto", "none"]);
+  const section1Y = useTransform(scrollYProgress, [0.1, 0.5], [50, -50]);
   
-  const section2Opacity = useTransform(scrollYProgress, [0.3, 0.35, 0.7], [0, 1, 1]);
-  const section2Y = useTransform(scrollYProgress, [0.3, 0.7], ["100%", "0%"]);
-  const section2PointerEvents = useTransform(scrollYProgress, [0.3, 0.31], ["none", "auto"]);
-  const section2YImg = useTransform(scrollYProgress, [0.3, 1], [100, 0]);
+  const section2Opacity = useTransform(scrollYProgress, [0.4, 0.45, 0.7, 0.75], [0, 1, 1, 0]);
+  const section2Y = useTransform(scrollYProgress, [0.4, 0.7], ["100%", "0%"]);
+  const section2PointerEvents = useTransform(scrollYProgress, [0.4, 0.41], ["none", "auto"]);
+  const section2YImg = useTransform(scrollYProgress, [0.4, 0.8], [100, 0]);
 
   if (!content) return <div>Loading...</div>;
 
@@ -74,9 +78,9 @@ export default function CompanyPage() {
         {/* Section 1: Material for your projects */}
         <motion.section 
           style={{ opacity: section1Opacity, scale: section1Scale, pointerEvents: section1PointerEvents as any }}
-          className="bg-[#F5F3F1] py-24 px-6 md:px-12 lg:px-20 min-h-screen flex items-center sticky top-0"
+          className="bg-[#F5F3F1] py-24 px-6 md:px-12 lg:px-24 min-h-screen flex items-center sticky top-0"
         >
-          <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12 items-center">
+          <div className="w-full flex flex-col lg:flex-row gap-12 items-center">
             <motion.div 
               className="w-full lg:w-3/5 overflow-hidden rounded-2xl"
               style={{ y: section1Y }}
@@ -106,9 +110,9 @@ export default function CompanyPage() {
         {/* Section 2: Caesar porcelain tiles */}
         <motion.section 
           style={{ opacity: section2Opacity, y: section2Y, pointerEvents: section2PointerEvents as any }}
-          className="bg-[#FDFDFD] py-24 px-6 md:px-12 lg:px-20 min-h-screen flex items-center absolute top-0 left-0 w-full"
+          className="bg-[#FDFDFD] py-24 px-6 md:px-12 lg:px-24 min-h-screen flex items-center absolute top-0 left-0 w-full"
         >
-          <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row-reverse gap-12 items-center">
+          <div className="w-full flex flex-col lg:flex-row-reverse gap-12 items-center">
             <motion.div 
               className="w-full lg:w-3/5 overflow-hidden rounded-2xl"
               style={{ y: section2YImg }}
@@ -142,7 +146,7 @@ export default function CompanyPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="mt-12 rounded-3xl overflow-hidden px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto"
+          className="mt-12 rounded-3xl overflow-hidden px-6 md:px-12 lg:px-24 w-full"
         >
           <div className="relative w-full aspect-video bg-gray-200">
             <img 
@@ -165,7 +169,7 @@ export default function CompanyPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="py-20 px-6 md:px-12 lg:px-20 max-w-[1400px] mx-auto"
+          className="py-20 px-6 md:px-12 lg:px-24 w-full"
         >
           <h2 className="text-4xl font-serif font-bold mb-4">Quick links</h2>
           <p className="text-gray-600 mb-12">Quickly access some of the most useful sections of the site.</p>

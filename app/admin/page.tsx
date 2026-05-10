@@ -578,7 +578,7 @@ const GeneralSettingsManager = ({ data }: any) => {
   const safeData = data || {};
 
   return (
-    <div className="space-y-10 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="space-y-2">
         <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
           Global Settings
@@ -852,7 +852,7 @@ const HeroSettingsManager = ({ data }: any) => {
     );
 
   return (
-    <div className="space-y-10 max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-end justify-between">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
@@ -1206,7 +1206,7 @@ const ContactManager = ({ data }: any) => {
     );
 
   return (
-    <div className="space-y-10 max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="space-y-2">
         <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
           Contact Info
@@ -1282,7 +1282,7 @@ const CompanyContentManager = ({ data }: any) => {
   );
 
   return (
-    <div className="space-y-10 max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Về Tân Gia Huy</h2>
       <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
         {[

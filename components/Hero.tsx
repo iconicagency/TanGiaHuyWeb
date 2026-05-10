@@ -80,16 +80,9 @@ const Hero: React.FC<HeroProps> = () => {
     }
   };
 
-  useEffect(() => {
-    if (videoRef.current && !hasError) {
-      console.log("[Hero Video] Loading:", videoUrl);
-      videoRef.current.load();
-      videoRef.current.play().catch(error => {
-        console.warn("[Hero Video] Autoplay blocked or load failed:", error);
-      });
-    }
-  }, [videoUrl, hasError]);
-
+  // Automatically handles video source changes via the 'key' prop on the <video> element
+  // which triggers a remount with the new source and autoPlay
+  
   return (
     <section className="relative h-full w-full overflow-hidden bg-black">
       {/* Background Video */}
@@ -103,12 +96,9 @@ const Hero: React.FC<HeroProps> = () => {
             playsInline
             key={videoUrl}
             preload="auto"
-            className="h-full w-full object-cover transition-opacity duration-1000"
-            onCanPlay={() => {
-              if (videoRef.current) videoRef.current.style.opacity = '1';
-            }}
+            poster="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1920&auto=format&fit=crop"
+            className="h-full w-full object-cover"
             onError={handleVideoError}
-            style={{ opacity: 0 }}
           >
             <source 
               src={videoUrl} 

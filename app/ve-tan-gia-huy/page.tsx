@@ -77,11 +77,11 @@ function CompanyPageContent({ content }: { content: any }) {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute bottom-20 left-6 md:left-24 bg-[#EBE9E4]/95 p-12 md:p-16 max-w-2xl shadow-2xl">
+        <div className="absolute bottom-20 left-6 md:left-24 bg-[#EBE9E4]/20 backdrop-blur-md p-10 md:p-16 max-w-2xl rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#D5D3CE]/50">
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight"
+            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-gray-900"
           >
             {content.hero_title}
           </motion.h1>
@@ -132,9 +132,11 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="space-y-10">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
-                  {content.section1_title}
-                </h2>
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
+                    {content.section1_title}
+                  </h2>
+                </div>
                 <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
                   {content.section1_description}
                 </p>
@@ -164,9 +166,11 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="lg:order-1 space-y-10">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
-                  {content.section2_title}
-                </h2>
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-gray-900 leading-tight uppercase">
+                    {content.section2_title}
+                  </h2>
+                </div>
                 <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
                   {content.section2_description}
                 </p>
@@ -214,8 +218,14 @@ function CompanyPageContent({ content }: { content: any }) {
           viewport={{ once: true }}
           className="pb-24 px-6 md:px-12 lg:px-24 w-full"
         >
-          <h2 className="text-3xl md:text-5xl font-sans font-bold tracking-tight uppercase mb-6">Quick links</h2>
-          <p className="text-zinc-500 mb-16 text-lg max-w-2xl font-sans font-light">Quickly access some of the most useful sections of the site.</p>
+          <div className="bg-[#EBE9E4]/20 backdrop-blur-md p-8 md:p-12 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block mb-12">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-gray-900">
+              Quick <br /> <span className="text-brand-gold">links</span>
+            </h2>
+            <p className="text-gray-600 font-light italic mt-4 max-w-md">
+              Quickly access some of the most useful sections of the site.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
                { title: "Find a dealer", desc: "Discover the retailer nearest to you and experience the quality of our surfaces firsthand." },

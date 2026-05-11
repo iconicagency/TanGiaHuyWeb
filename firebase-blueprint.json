@@ -107,6 +107,113 @@
         "order": { "type": "number" }
       }
     },
+    "FooterSettings": {
+      "title": "Footer Settings",
+      "description": "Configuration for the website footer",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "facebookUrl": { "type": "string" },
+        "youtubeUrl": { "type": "string" },
+        "zaloUrl": { "type": "string" },
+        "copyright": { "type": "string" },
+        "quickLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "url": { "type": "string" }
+            }
+          }
+        },
+        "servicesLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "CollectionsPage": {
+      "title": "Collections Page",
+      "description": "Full content for the collections page",
+      "type": "object",
+      "properties": {
+        "hero_title": { "type": "string" },
+        "hero_image": { "type": "string" },
+        "explore": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "image": { "type": "string" }
+          }
+        },
+        "featured": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "slides": { "type": "array" }
+          }
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description": { "type": "string" },
+            "videoUrl": { "type": "string" }
+          }
+        },
+        "news": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" }
+          }
+        },
+        "architectural_solutions": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "slides": { "type": "array" }
+          }
+        },
+        "architectural_space": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "slides": { "type": "array" }
+          }
+        },
+        "inspiration": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "buttonText": { "type": "string" },
+            "topImages": { "type": "array" },
+            "bottomCards": { "type": "array" }
+          }
+        }
+      }
+    },
     "Admin": {
       "title": "Admin",
       "description": "Authorized admin users",

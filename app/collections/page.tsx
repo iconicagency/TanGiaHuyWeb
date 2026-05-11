@@ -9,10 +9,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 
 const CollectionsPage = () => {
   const [content, setContent] = useState<any>(null);
+  const [collectionSlides, setCollectionSlides] = useState<any[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredSlideIndex, setFeaturedSlideIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -32,13 +33,29 @@ const CollectionsPage = () => {
           setContent({
             hero_title: "BỘ SƯU TẬP",
             hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-            explore_title: "Explore our collections",
-            explore_description: "Inspirations, colors, and sizes for every design vision.",
-            research_title: "Nghiên cứu Vật liệu",
-            research_description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
-            research_image: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"
+            explore: {
+              title: "Explore our collections",
+              description: "Inspirations, colors, and sizes for every design vision.",
+              buttonText: "MORE INFORMATION",
+              image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070"
+            },
+            featured: {
+              title: "Featured",
+              subtitle: "Explore the different look of the collections.",
+              buttonText: "XEM CHI TIẾT"
+            },
+            research: {
+              title: "Nghiên cứu Vật liệu",
+              description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
+              videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+            }
           });
         }
+
+        // Fetch collection slides for Featured section
+        const slidesSnap = await getDocs(query(collection(db, 'collection_slides'), orderBy('order', 'asc')));
+        setCollectionSlides(slidesSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+
       } catch (e) {
         console.error("Error fetching collections data:", e);
       }
@@ -246,39 +263,39 @@ const CollectionsPage = () => {
       <section className="pb-16 px-6 md:px-12 lg:px-24 bg-[#F8F7F5]">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-black mb-2 tracking-tight leading-tight">{content.explore_title}</h2>
-            <p className="text-[#404040] text-[20px] font-light font-sans">{content.explore_description}</p>
+            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-black mb-2 tracking-tight leading-tight">{content.explore?.title || "Explore our collections"}</h2>
+            <p className="text-[#404040] text-[20px] font-light font-sans">{content.explore?.description}</p>
           </div>
           <div className="flex gap-3 mt-8 md:mt-0">
             <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
               Search Product <Search className="w-4 h-4 ml-1" />
             </button>
             <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
-              All the collections <ArrowRight className="w-4 h-4 ml-1" />
+              {content.explore?.buttonText || "All the collections"} <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {categories.map((cat, idx) => (
-            <Link key={idx} href="/products">
-              <motion.div 
-                whileHover={{ y: -10 }}
-                className="space-y-4 cursor-pointer group"
-              >
-                <div className="aspect-square relative overflow-hidden rounded-2xl bg-gray-100 shadow-sm group-hover:shadow-xl transition-all duration-500">
-                  <Image
-                    src={cat.img}
-                    alt={cat.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    referrerPolicy="no-referrer"
-                  />
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+          <div className="aspect-[16/10] relative rounded-[2rem] overflow-hidden shadow-2xl">
+            <Image 
+              src={content.explore?.image || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070"} 
+              alt="Explore" 
+              fill 
+              className="object-cover"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+             {categories.slice(0, 4).map((cat, idx) => (
+                <div key={idx} className="aspect-square relative rounded-2xl overflow-hidden group">
+                   <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                   <div className="absolute inset-0 bg-black/20 flex items-end p-4">
+                      <p className="text-white font-bold text-[10px] uppercase tracking-widest">{cat.name}</p>
+                   </div>
                 </div>
-                <p className="text-center font-bold text-[13px] text-gray-800 tracking-tight group-hover:text-brand-gold transition-colors uppercase">{cat.name}</p>
-              </motion.div>
-            </Link>
-          ))}
+             ))}
+          </div>
         </div>
       </section>
 
@@ -289,8 +306,8 @@ const CollectionsPage = () => {
         
         <div className="relative z-10 w-full">
           <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Featured</h2>
-            <p className="text-[#404040] text-[17px] font-normal font-sans">Products, trends, and news selected to inspire your next project.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">{content.featured?.title || "Featured"}</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">{content.featured?.subtitle}</p>
           </div>
 
           <div className="pl-6 md:pl-12 lg:pl-24 w-full mt-10 md:mt-8 overflow-hidden">
@@ -301,7 +318,7 @@ const CollectionsPage = () => {
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              {featuredSlides.map((slide, index) => {
+              {(collectionSlides.length > 0 ? collectionSlides : featuredSlides).map((slide, index) => {
                 const isActive = index === featuredSlideIndex;
                 return (
                   <motion.div 
@@ -328,9 +345,10 @@ const CollectionsPage = () => {
                         referrerPolicy="no-referrer"
                       />
                     </motion.div>
-                    <h3 className="text-[26px] font-sans font-normal mb-3 text-black">{slide.title}</h3>
+                    <h3 className="text-[26px] font-sans font-normal mb-1 text-black">{slide.title}</h3>
+                    <p className="text-gray-500 text-sm mb-4 line-clamp-1">{slide.description}</p>
                     <button className="px-5 py-2 bg-white border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
-                      {slide.buttonText}
+                      {content.featured?.buttonText || slide.buttonText || "KHÁM PHÁ"}
                     </button>
                   </motion.div>
                 );
@@ -365,37 +383,28 @@ const CollectionsPage = () => {
 
       {/* Exploring Material Section */}
       <section className="py-24 px-6 md:px-12 lg:px-24 text-center">
-        <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-4 tracking-tighter uppercase">{content.research_title}</h2>
-        <p className="text-gray-500 mb-16 text-lg font-light">{content.research_description}</p>
+        <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-4 tracking-tighter uppercase">{content.research?.title || content.research_title}</h2>
+        <p className="text-gray-500 mb-16 text-lg font-light">{content.research?.description || content.research_description}</p>
         
-        <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden group shadow-2xl">
-          <Image
-            src={content.research_image || "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"}
-            alt="Nghiên cứu vật liệu"
-            fill
-            className="object-cover brightness-75 group-hover:scale-105 transition-transform duration-1000"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <button className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center text-white border border-white/30 hover:scale-110 transition-all group/play">
-              <Play className="w-10 h-10 md:w-12 md:h-12 fill-white group-hover/play:scale-110 transition-transform ml-1" />
-            </button>
-          </div>
-          
-          <div className="absolute bottom-0 left-0 right-0 p-8 flex items-center gap-6 text-white text-[10px] font-bold tracking-widest bg-gradient-to-t from-black/60 to-transparent">
-            <div className="flex gap-4">
-              <Play className="w-4 h-4" />
-              <span>01:44</span>
-            </div>
-            <div className="flex-1 h-[2px] bg-white/20 relative">
-              <div className="absolute top-0 left-0 w-1/3 h-full bg-white" />
-            </div>
-            <div className="flex gap-6">
-              <Globe className="w-4 h-4" />
-              <Search className="w-4 h-4" />
-              <Menu className="w-4 h-4" />
-            </div>
-          </div>
+        <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden group shadow-2xl bg-black">
+          {content.research?.videoUrl ? (
+             <iframe
+               src={content.research.videoUrl.includes('youtube.com') && !content.research.videoUrl.includes('embed') 
+                 ? content.research.videoUrl.replace('watch?v=', 'embed/') 
+                 : content.research.videoUrl}
+               className="absolute inset-0 w-full h-full border-0"
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+             ></iframe>
+          ) : (
+            <Image
+              src={content.research_image || "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"}
+              alt="Nghiên cứu vật liệu"
+              fill
+              className="object-cover brightness-75 group-hover:scale-105 transition-transform duration-1000"
+              referrerPolicy="no-referrer"
+            />
+          )}
         </div>
       </section>
 
@@ -403,8 +412,8 @@ const CollectionsPage = () => {
       <section className="py-20 bg-[#F8F8F8] relative overflow-hidden">
         <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Từ chuyên mục tin tức</h2>
-            <p className="text-[#404040] text-[17px] font-normal font-sans">Những câu chuyện, ý tưởng và góc nhìn từ thế giới gốm sứ và thiết kế.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">{content.newsContent?.title || "Từ chuyên mục tin tức"}</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">{content.newsContent?.subtitle || "Những câu chuyện, ý tưởng và góc nhìn từ thế giới gốm sứ và thiết kế."}</p>
           </div>
         </div>
 
@@ -443,7 +452,7 @@ const CollectionsPage = () => {
                   </h3>
                     <Link href="/products" className="mt-auto">
                       <button className="px-5 py-2 bg-transparent border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
-                        Read more
+                        {content.newsContent?.buttonText || "Read more"}
                       </button>
                     </Link>
                 </div>
@@ -484,8 +493,8 @@ const CollectionsPage = () => {
         
         <div className="relative z-10 w-full">
           <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Giải pháp kiến trúc</h2>
-            <p className="text-[#404040] text-[17px] font-normal font-sans">Sự giao thao hoàn hảo giữa tính thẩm mỹ và công năng sử dụng.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">{content.solutions?.title || "Giải pháp kiến trúc"}</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">{content.solutions?.subtitle || "Sự giao thao hoàn hảo giữa tính thẩm mỹ và công năng sử dụng."}</p>
           </div>
 
           <div className="pl-6 md:pl-12 lg:pl-24 w-full mt-10 md:mt-8 overflow-hidden">
@@ -525,7 +534,7 @@ const CollectionsPage = () => {
                     </motion.div>
                     <h3 className="text-[26px] font-sans font-normal mb-3 text-black">{slide.title}</h3>
                     <button className="px-5 py-2 bg-white border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
-                      {slide.buttonText}
+                      {content.solutions?.buttonText || slide.buttonText}
                     </button>
                   </motion.div>
                 );
@@ -562,11 +571,11 @@ const CollectionsPage = () => {
       <section className="py-20 bg-[#F0F0F0] relative overflow-hidden">
         <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full flex justify-between items-end">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Không gian kiến trúc</h2>
-            <p className="text-[#404040] text-[17px] font-normal font-sans">Nơi kiến trúc quốc tế kể câu chuyện của vật liệu qua các công trình tiêu biểu.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">{content.space?.title || "Không gian kiến trúc"}</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">{content.space?.subtitle || "Nơi kiến trúc quốc tế kể câu chuyện của vật liệu qua các công trình tiêu biểu."}</p>
           </div>
-          <button className="hidden md:flex px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest items-center gap-2 hover:border-black transition-all">
-            Tất cả dự án <ChevronRight className="w-4 h-4" />
+          <button className="hidden md:flex px-6 py-2 border border-black rounded-full text-[10px] font-bold uppercase tracking-widest items-center gap-2 text-black transition-all">
+            {content.space?.buttonText || "Tất cả dự án"} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -636,32 +645,30 @@ const CollectionsPage = () => {
         </div>
       </section>
 
-      {/* Solutions designed to bring... Section */}
+      {/* Solutions designed to bring... Section (Inspiration) */}
       <section className="py-24 px-6 md:px-12 lg:px-24">
         <div className="grid lg:grid-cols-2 gap-24 items-center">
           <div className="grid grid-cols-2 gap-6 scale-90 lg:scale-100">
-             <div className="aspect-[3/4] relative rounded-[3rem] overflow-hidden translate-y-12 shadow-2xl">
-               <Image src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800&auto=format&fit=crop" alt="P1" fill className="object-cover" referrerPolicy="no-referrer" />
-             </div>
-             <div className="aspect-[3/4] relative rounded-[3rem] overflow-hidden shadow-2xl">
-               <Image src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?q=80&w=800&auto=format&fit=crop" alt="P2" fill className="object-cover" referrerPolicy="no-referrer" />
-             </div>
-             <div className="aspect-[3/4] relative rounded-[3rem] overflow-hidden translate-y-12 shadow-2xl">
-               <Image src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800&auto=format&fit=crop" alt="P3" fill className="object-cover" referrerPolicy="no-referrer" />
-             </div>
-             <div className="aspect-[3/4] relative rounded-[3rem] overflow-hidden shadow-2xl">
-               <Image src="https://images.unsplash.com/photo-1554034483-04cca0a3d7d4?q=80&w=800&auto=format&fit=crop" alt="P4" fill className="object-cover" referrerPolicy="no-referrer" />
-             </div>
+             {(content.inspiration?.topImages || [
+               "https://images.unsplash.com/photo-1556911220-e15b29be8c8f",
+               "https://images.unsplash.com/photo-1507089947368-19c1da9775ae",
+               "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d",
+               "https://images.unsplash.com/photo-1554034483-04cca0a3d7d4"
+             ]).map((img: string, i: number) => (
+                <div key={i} className={`aspect-[3/4] relative rounded-[3rem] overflow-hidden shadow-2xl ${i % 2 === 0 ? 'translate-y-12' : ''}`}>
+                  <Image src={img} alt={`Inspiration ${i}`} fill className="object-cover" referrerPolicy="no-referrer" />
+                </div>
+             ))}
           </div>
           <div className="max-w-xl">
             <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-8 tracking-tighter leading-[1.1] uppercase">
-              Giải pháp khơi nguồn cảm hứng kiến trúc
+              {content.inspiration?.title || "Giải pháp khơi nguồn cảm hứng kiến trúc"}
             </h2>
             <p className="text-gray-500 mb-10 text-xl leading-relaxed font-light">
-              Chúng tôi cung cấp những giải pháp vật liệu tối ưu để biến những ý tưởng táo bạo của bạn thành hiện thực rực rỡ.
+              {content.inspiration?.subtitle || "Chúng tôi cung cấp những giải pháp vật liệu tối ưu để biến những ý tưởng táo bạo của bạn thành hiện thực rực rỡ."}
             </p>
             <button className="px-6 py-2.5 border border-black rounded-md text-[15px] font-sans font-medium text-black hover:bg-black hover:text-white transition-all">
-              Khám phá cảm hứng
+              {content.inspiration?.buttonText || "Khám phá cảm hứng"}
             </button>
           </div>
         </div>

@@ -80,7 +80,7 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu" | "products" | "about_home" | "collections_page" | "products_page"
+    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu" | "products" | "about_home" | "collections_page" | "products_page" | "footer"
   >("general");
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
@@ -98,6 +98,7 @@ const AdminPage = () => {
   const [aboutHome, setAboutHome] = useState<any>(null);
   const [collectionsPageContent, setCollectionsPageContent] = useState<any>(null);
   const [productsPageContent, setProductsPageContent] = useState<any>(null);
+  const [footerContent, setFooterContent] = useState<any>(null);
 
   useEffect(() => {
     console.log("Admin: Auth checking...");
@@ -237,6 +238,12 @@ const AdminPage = () => {
       (err) => handleFirestoreError(err, OperationType.GET, "cms/products_page"),
     );
 
+    const unsubFooter = onSnapshot(
+      doc(db, "settings", "footer"),
+      (snap) => setFooterContent(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, "settings/footer"),
+    );
+
     return () => {
       unsubGeneral();
       unsubHero();
@@ -251,6 +258,7 @@ const AdminPage = () => {
       unsubAboutHome();
       unsubCollectionsPage();
       unsubProductsPage();
+      unsubFooter();
     };
   }, [isAdmin]);
 
@@ -421,6 +429,7 @@ const AdminPage = () => {
             { id: "news", label: "Tin tức", icon: ImageIcon },
             { id: "collections_page", label: "Trang Bộ sưu tập", icon: Layout },
             { id: "products_page", label: "Banner Sản phẩm", icon: Layout },
+            { id: "footer", label: "Thông tin Footer", icon: Settings },
             { id: "contact", label: "Thông tin liên hệ", icon: Settings },
             { id: "company", label: "Về Tân Gia Huy", icon: Layout },
             { id: "products", label: "Danh sách sản phẩm", icon: GridIcon },
@@ -572,6 +581,7 @@ const AdminPage = () => {
         {activeTab === "about_home" && <AboutHomeManager data={aboutHome} />}
         {activeTab === "collections_page" && <CollectionsPageManager data={collectionsPageContent} />}
         {activeTab === "products_page" && <ProductsPageManager data={productsPageContent} />}
+        {activeTab === "footer" && <FooterManager data={footerContent} />}
       </main>
     </div>
   );
@@ -1736,10 +1746,54 @@ const CollectionsPageManager = ({ data }: any) => {
       await setDoc(doc(db, "cms", "collections_page"), {
         hero_title: "BỘ SƯU TẬP",
         hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-        explore_title: "Explore our collections",
-        explore_description: "Inspirations, colors, and sizes for every design vision.",
-        research_title: "Nghiên cứu Vật liệu",
-        research_description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế."
+        explore: {
+          title: "Explore our collections",
+          description: "Inspirations, colors, and sizes for every design vision.",
+          buttonText: "MORE INFORMATION",
+          image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070"
+        },
+        featured: {
+          title: "Featured",
+          subtitle: "Explore the different look of the collections.",
+          buttonText: "XEM CHI TIẾT"
+        },
+        research: {
+          title: "Nghiên cứu Vật liệu",
+          description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        },
+        newsContent: {
+          title: "Từ chuyên mục tin tức",
+          subtitle: "Vật liệu của các dự án",
+          buttonText: "XEM TẤT CẢ"
+        },
+        solutions: {
+          title: "Giải pháp kiến trúc",
+          subtitle: "Phòng tắm",
+          buttonText: "KHÁM PHÁ NGAY"
+        },
+        space: {
+          title: "Không gian kiến trúc",
+          subtitle: "Living",
+          buttonText: "Tất cả dự án"
+        },
+        inspiration: {
+          title: "Giải pháp khơi nguồn",
+          subtitle: "cảm hứng kiến trúc",
+          buttonText: "KHÁM PHÁ NGAY",
+          topImages: [
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c",
+            "https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e",
+            "https://images.unsplash.com/photo-1600585154542-6379b1d359ee"
+          ],
+          categories: [
+            { title: "Gạch porcelain phòng tắm", desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6" },
+            { title: "Gạch porcelain phòng bếp", desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" },
+            { title: "Gạch porcelain hồ bơi", desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae" },
+            { title: "Không gian thương mại", desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af" }
+          ]
+        }
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
@@ -1763,81 +1817,217 @@ const CollectionsPageManager = ({ data }: any) => {
   }
 
   return (
-    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Bộ sưu tập</h2>
-        <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung text và hình ảnh trên toàn bộ trang Bộ sưu tập.</p>
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      <div className="flex justify-between items-end border-b border-white/10 pb-6">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Bộ sưu tập</h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung text và hình ảnh trên toàn bộ trang Bộ sưu tập.</p>
+        </div>
       </div>
 
-      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-12">
+      <div className="grid grid-cols-1 gap-12">
         {/* Section: Hero */}
-        <section className="space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">1. Hero Section</h3>
-          <div className="space-y-4">
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề chính (Hero Title)</label>
-                <input
-                  defaultValue={data.hero_title}
-                  onBlur={(e) => updateContent("hero_title", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Hero</label>
-                <ImageUploader 
-                  value={data.hero_image} 
-                  onUpload={(url) => updateContent("hero_image", url)}
-                  folder="collections"
-                />
-             </div>
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">1. Banner Hero</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+              <input
+                defaultValue={data.hero_title}
+                onBlur={(e) => updateContent("hero_title", e.target.value)}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Banner</label>
+              <ImageUploader value={data.hero_image} onUpload={(url) => updateContent("hero_image", url)} folder="collections" />
+            </div>
           </div>
-        </section>
+        </div>
 
         {/* Section: Explore */}
-        <section className="space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">2. Explore Section</h3>
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">2. Explore Our Collections</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+                <input
+                  defaultValue={data.explore?.title}
+                  onBlur={(e) => updateContent("explore", { ...data.explore, title: e.target.value })}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Description)</label>
+                <textarea
+                  defaultValue={data.explore?.description}
+                  onBlur={(e) => updateContent("explore", { ...data.explore, description: e.target.value })}
+                  rows={3}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút (Button)</label>
+                <input
+                  defaultValue={data.explore?.buttonText}
+                  onBlur={(e) => updateContent("explore", { ...data.explore, buttonText: e.target.value })}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
+                />
+              </div>
+            </div>
             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề Explore</label>
-                <input
-                  defaultValue={data.explore_title}
-                  onBlur={(e) => updateContent("explore_title", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả Explore</label>
-                <input
-                  defaultValue={data.explore_description}
-                  onBlur={(e) => updateContent("explore_description", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
-                />
-             </div>
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Phải</label>
+              <ImageUploader value={data.explore?.image} onUpload={(url) => updateContent("explore", { ...data.explore, image: url })} folder="collections" />
+            </div>
           </div>
-        </section>
+        </div>
 
-        {/* Section: Material Research */}
-        <section className="space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">3. Nghiên cứu Vật liệu</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề</label>
+        {/* Section: Featured */}
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">3. Featured</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
                 <input
-                  defaultValue={data.research_title}
-                  onBlur={(e) => updateContent("research_title", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                  defaultValue={data.featured?.title}
+                  onBlur={(e) => updateContent("featured", { ...data.featured, title: e.target.value })}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
                 />
              </div>
              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả</label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Subtitle)</label>
                 <input
-                  defaultValue={data.research_description}
-                  onBlur={(e) => updateContent("research_description", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                  defaultValue={data.featured?.subtitle}
+                  onBlur={(e) => updateContent("featured", { ...data.featured, subtitle: e.target.value })}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút</label>
+                <input
+                  defaultValue={data.featured?.buttonText}
+                  onBlur={(e) => updateContent("featured", { ...data.featured, buttonText: e.target.value })}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
                 />
              </div>
           </div>
-        </section>
+          <p className="text-[10px] text-zinc-500 uppercase italic">Lưu ý: Các ảnh của phần này được quản lý qua tab "Bộ sưu tập (Slider)" để linh hoạt thêm/xóa/sửa.</p>
+        </div>
+
+        {/* Section: Research */}
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">4. Nghiên cứu Vật liệu (Video)</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+                  <input
+                    defaultValue={data.research?.title}
+                    onBlur={(e) => updateContent("research", { ...data.research, title: e.target.value })}
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Link Video (Youtube/Dropbox/Pexels)</label>
+                  <input
+                    defaultValue={data.research?.videoUrl}
+                    onBlur={(e) => updateContent("research", { ...data.research, videoUrl: e.target.value })}
+                    placeholder="Link trực tiếp mp4 hoặc embed"
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Description)</label>
+                  <textarea
+                    defaultValue={data.research?.description}
+                    onBlur={(e) => updateContent("research", { ...data.research, description: e.target.value })}
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                    rows={3}
+                  />
+                </div>
+             </div>
+             <div className="bg-zinc-950 rounded-2xl flex items-center justify-center p-4">
+                <p className="text-[10px] text-zinc-600 text-center uppercase tracking-widest">Xem trợ giúp Video ở sidebar bên trái để biết cách lấy link chuẩn.</p>
+             </div>
+          </div>
+        </div>
+
+        {/* Section: News */}
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">5. Từ chuyên mục tin tức</h3>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề</label>
+                <input defaultValue={data.newsContent?.title} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, title: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề phụ</label>
+                <input defaultValue={data.newsContent?.subtitle} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, subtitle: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút</label>
+                <input defaultValue={data.newsContent?.buttonText} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, buttonText: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+              </div>
+           </div>
+        </div>
+
+        {/* Section: Solutions & Space */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+             <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">6. Giải pháp kiến trúc</h3>
+             <div className="space-y-4">
+                <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
+                   <input placeholder="Tiêu đề (Giải pháp kiến trúc)" defaultValue={data.solutions?.title} onBlur={(e) => updateContent("solutions", { ...data.solutions, title: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                   <input placeholder="Tiêu đề phụ (Phòng tắm)" defaultValue={data.solutions?.subtitle} onBlur={(e) => updateContent("solutions", { ...data.solutions, subtitle: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                   <input placeholder="Text nút" defaultValue={data.solutions?.buttonText} onBlur={(e) => updateContent("solutions", { ...data.solutions, buttonText: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                </div>
+             </div>
+           </div>
+
+           <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">7. Không gian kiến trúc</h3>
+              <div className="space-y-4">
+                 <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
+                   <input placeholder="Tiêu đề (Không gian kiến trúc)" defaultValue={data.space?.title} onBlur={(e) => updateContent("space", { ...data.space, title: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                   <input placeholder="Tiêu đề phụ (Living)" defaultValue={data.space?.subtitle} onBlur={(e) => updateContent("space", { ...data.space, subtitle: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                   <input placeholder="Text nút (Tất cả dự án)" defaultValue={data.space?.buttonText} onBlur={(e) => updateContent("space", { ...data.space, buttonText: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
+                </div>
+              </div>
+           </div>
+        </div>
+
+        {/* Section: Inspiration */}
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">8. Giải pháp khơi nguồn cảm hứng (Inspiration)</h3>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                 <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Tiêu đề & Chữ chạy</label>
+                    <input defaultValue={data.inspiration?.title} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, title: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+                    <input placeholder="Subtitle" defaultValue={data.inspiration?.subtitle} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, subtitle: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+                    <input placeholder="Nút chính" defaultValue={data.inspiration?.buttonText} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, buttonText: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase">4 Hình ảnh nhỏ cạnh Title</label>
+                    <div className="grid grid-cols-4 gap-2">
+                       {[0, 1, 2, 3].map((idx) => (
+                          <div key={idx} className="scale-75 origin-top-left -mb-10">
+                             <ImageUploader value={data.inspiration?.topImages?.[idx]} onUpload={(url) => {
+                                const imgs = [...(data.inspiration?.topImages || [])];
+                                imgs[idx] = url;
+                                updateContent("inspiration", { ...data.inspiration, topImages: imgs });
+                             }} />
+                          </div>
+                       ))}
+                    </div>
+                 </div>
+              </div>
+              <div className="space-y-4">
+                 <p className="text-[10px] text-zinc-500 uppercase italic">Ghi chú: Slides slide ảnh lớn cuộn ngang ở các phần 6, 7 & 8 được lấy tự động hoặc quản lý tại code để duy trì hiệu ứng đặc biệt của trang này.</p>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   );
@@ -1909,6 +2099,159 @@ const ProductsPageManager = ({ data }: any) => {
              </div>
           </div>
         </section>
+      </div>
+    </div>
+  );
+};
+
+export default AdminPage;
+
+const FooterManager = ({ data }: any) => {
+  const updateFooter = async (field: string, value: any) => {
+    try {
+      await setDoc(doc(db, "settings", "footer"), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "settings/footer");
+    }
+  };
+
+  const handleInitialize = async () => {
+    try {
+      await setDoc(doc(db, "settings", "footer"), {
+        logoUrl: "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
+        description: "Đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
+        address: "Thôn Thượng – Xã Cửu Cao – Huyện Văn Giang – Tỉnh Hưng Yên",
+        phone: "0904.225.899",
+        email: "tangiahuyvn@gmail.com",
+        copyright: "© 2024 TAN GIA HUY. All rights reserved.",
+        facebookUrl: "#",
+        youtubeUrl: "#",
+        zaloUrl: "#",
+        quickLinks: [
+          { label: "Về Tân Gia Huy", url: "/ve-tan-gia-huy" },
+          { label: "Sản phẩm", url: "/products" },
+          { label: "Bộ sưu tập", url: "/collections" }
+        ],
+        servicesLinks: [
+          { label: "Chỉnh sách bảo hành", url: "#" },
+          { label: "Chính sách đổi trả", url: "#" },
+          { label: "Chính sách vận chuyển", url: "#" }
+        ]
+      });
+      alert("Khởi tạo thành công!");
+    } catch (e) {
+       alert("Lỗi: " + e);
+    }
+  };
+
+  if (!data) return (
+     <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <h3 className="text-xl font-bold uppercase tracking-widest text-white mb-6">Chưa có dữ liệu Footer</h3>
+        <button onClick={handleInitialize} className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">Khởi tạo Footer</button>
+     </div>
+  );
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+      <div className="flex justify-between items-end border-b border-white/10 pb-6">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Footer</h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">Thiết lập thông tin liên hệ, logo và các liên kết chân trang.</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">Thông tin chung</h3>
+           <div className="space-y-4">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Logo Footer</label>
+              <ImageUploader value={data.logoUrl} onUpload={(url) => updateFooter("logoUrl", url)} folder="footer" />
+              
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Mô tả công ty</label>
+                <textarea 
+                  defaultValue={data.description} 
+                  onBlur={(e) => updateFooter("description", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                  rows={3} 
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Địa chỉ</label>
+                <input 
+                  defaultValue={data.address} 
+                  onBlur={(e) => updateFooter("address", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Điện thoại</label>
+                  <input 
+                    defaultValue={data.phone} 
+                    onBlur={(e) => updateFooter("phone", e.target.value)} 
+                    className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Email</label>
+                  <input 
+                    defaultValue={data.email} 
+                    onBlur={(e) => updateFooter("email", e.target.value)} 
+                    className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Copyright text</label>
+                <input 
+                  defaultValue={data.copyright} 
+                  onBlur={(e) => updateFooter("copyright", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                />
+              </div>
+           </div>
+        </div>
+
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">Mạng xã hội</h3>
+           <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Facebook URL</label>
+                <input 
+                  defaultValue={data.facebookUrl} 
+                  onBlur={(e) => updateFooter("facebookUrl", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Youtube URL</label>
+                <input 
+                  defaultValue={data.youtubeUrl} 
+                  onBlur={(e) => updateFooter("youtubeUrl", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Zalo URL</label>
+                <input 
+                  defaultValue={data.zaloUrl} 
+                  onBlur={(e) => updateFooter("zaloUrl", e.target.value)} 
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                />
+              </div>
+              
+              <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
+                 <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Ghi chú vận hành</h4>
+                 <p className="text-[11px] text-zinc-500 leading-relaxed font-light">
+                    Các liên kết trang (Về Tân Gia Huy, Sản phẩm, Bộ sưu tập...) được đồng bộ từ thanh Menu để đảm bảo tính nhất quán trên toàn hệ thống. Để thay đổi các liên kết này, vui lòng truy cập tab <span className="text-white font-medium italic">&quot;Thanh Menu&quot;</span>.
+                 </p>
+              </div>
+           </div>
+        </div>
       </div>
     </div>
   );

@@ -2,15 +2,32 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Facebook, Instagram, Linkedin, Send, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Footer = () => {
+  const [footerData, setFooterData] = useState<any>(null);
   const [quickLinkIndex, setQuickLinkIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
+    async function fetchFooter() {
+      try {
+        const docRef = doc(db, 'settings', 'footer');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setFooterData(docSnap.data());
+        }
+      } catch (e) {
+        console.error("Error fetching footer data:", e);
+      }
+    }
+    fetchFooter();
+
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -117,82 +134,89 @@ const Footer = () => {
       <footer className="bg-[#1A1A1A] text-white pt-16 pb-6 px-6 md:px-12 lg:px-24 border-t-4 border-black relative">
         <div className="max-w-[1600px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-10 border-b border-gray-800 pb-12 mb-8">
-            <div>
-              <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center">
-                <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
-                HEADQUARTERS
-              </h4>
-              <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
-                <p className="font-bold text-white mb-2 text-[14px]">Ceramiche Tân Gia Huy</p>
-                <p>Via del Canaletto, 49, 41042</p>
-                <p>Fiorano Modenese MO</p>
-                <p>Italia</p>
-                <p className="mt-2">Tel: +39 0536 817111</p>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center hidden md:flex opacity-0">
-                <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
-                SPACER
-              </h4>
-              <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
-                <p className="font-bold text-white mb-2 text-[14px]">Tân Gia Huy USA, INC.</p>
-                <p>500 Wilson Pike Cir, 37027</p>
-                <p>Brentwood TN</p>
-                <p>USA</p>
-                <p className="mt-2">Tel: +1 (615) 986-1500</p>
-              </div>
-            </div>
-            <div>
-              <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center">
-                <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
-                URBAN LAB
-              </h4>
-              <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
-                <p className="font-bold text-white mb-2 text-[14px]">Tân Gia Huy Urban Lab London</p>
-                <p>17-18 Great Sutton Street, EC1V 0DP</p>
-                <p>London</p>
-                <p>UK</p>
-                <p className="mt-2">Tel: +44 (0) 20 7836 4662</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-6">
-              <div>
-                <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center hidden md:flex opacity-0">
+            {footerData?.locations?.map((loc: any, i: number) => (
+              <div key={loc.id || i}>
+                <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center">
                   <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
-                  SPACER
+                  {loc.type || "OFFICE"}
                 </h4>
                 <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
-                  <p className="font-bold text-white mb-2 text-[14px]">Tân Gia Huy Urban Lab Paris</p>
-                  <p>10b, Rue Saint Nicolas, 75012</p>
-                  <p>Paris</p>
-                  <p>France</p>
-                  <p className="mt-2">Tel: +33 1 44 73 42 02</p>
+                  <p className="font-bold text-white mb-2 text-[14px]">{loc.name}</p>
+                  <p>{loc.address}</p>
+                  <p>{loc.city}</p>
+                  <p>{loc.country}</p>
+                  <p className="mt-2">Tel: {loc.phone}</p>
                 </div>
               </div>
-              <div className="mt-4">
-                <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
-                  <p className="font-bold text-white mb-2 text-[14px]">Tân Gia Huy Urban Lab Milano</p>
-                  <p>Via Molino delle Armi, 14, 20123</p>
-                  <p>Milano</p>
-                  <p>Italia</p>
-                  <p className="mt-2">Tel: +39 02 97107119</p>
+            )) || (
+              <>
+                <div>
+                  <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center">
+                    <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
+                    HEADQUARTERS
+                  </h4>
+                  <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
+                    <p className="font-bold text-white mb-2 text-[14px]">Ceramiche Tân Gia Huy</p>
+                    <p>Via del Canaletto, 49, 41042</p>
+                    <p>Fiorano Modenese MO</p>
+                    <p>Italia</p>
+                    <p className="mt-2">Tel: +39 0536 817111</p>
+                  </div>
                 </div>
-              </div>
-            </div>
+                <div>
+                  <h4 className="text-[#E0E0E0] uppercase tracking-[0.1em] text-[11px] font-bold mb-5 flex items-center opacity-0 h-4">
+                    <span className="h-[1px] w-8 bg-gray-500 mr-2"></span>
+                    SPACER
+                  </h4>
+                  <div className="space-y-1 text-[13px] text-[#A3A3A3] font-sans font-medium">
+                    <p className="font-bold text-white mb-2 text-[14px]">Tân Gia Huy USA, INC.</p>
+                    <p>500 Wilson Pike Cir, 37027</p>
+                    <p>Brentwood TN</p>
+                    <p>USA</p>
+                    <p className="mt-2">Tel: +1 (615) 986-1500</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-start gap-8 border-b border-gray-800 pb-8 mb-6">
             <div className="flex flex-col gap-1">
-              <div className="text-3xl font-serif font-medium tracking-widest uppercase mb-1">
-                Tân Gia Huy<span className="text-xl align-top">&bull;</span>
-              </div>
-              <div className="text-[10px] tracking-widest text-[#A3A3A3] font-sans">CERAMICHE</div>
+              {footerData?.logo ? (
+                <div className="relative h-12 w-48">
+                  <Image src={footerData.logo} alt="Logo" fill className="object-contain object-left" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-3xl font-serif font-medium tracking-widest uppercase mb-1">
+                    Tân Gia Huy<span className="text-xl align-top">&bull;</span>
+                  </div>
+                  <div className="text-[10px] tracking-widest text-[#A3A3A3] font-sans text-white">CERAMICHE</div>
+                </>
+              )}
             </div>
             
-            <div className="text-[13px] text-[#A3A3A3] font-sans font-medium md:mr-auto md:ml-12">
-              <p className="font-bold text-white mb-1">Ceramiche Tân Gia Huy S.p.A.</p>
-              <p>Fiscal Code and VAT Code: P.iva: IT00179660360</p>
+            <div className="text-[13px] text-[#A3A3A3] font-sans font-medium md:mr-auto md:ml-12 max-w-sm">
+              <p className="font-bold text-white mb-1">{footerData?.description || "Ceramiche Tân Gia Huy S.p.A."}</p>
+              <p>{footerData?.copyright || "Fiscal Code and VAT Code: P.iva: IT00179660360"}</p>
+            </div>
+
+            <div className="flex gap-4">
+              {footerData?.socials?.map((social: any, i: number) => {
+                const Icon = {
+                  facebook: Facebook,
+                  instagram: Instagram,
+                  linkedin: Linkedin,
+                  youtube: Youtube,
+                  twitter: Send
+                }[social.platform.toLowerCase()] || Send;
+
+                return (
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

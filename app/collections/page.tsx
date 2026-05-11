@@ -14,8 +14,8 @@ const CollectionsPage = () => {
   const [windowWidth, setWindowWidth] = useState(1024);
 
   const [magazineSlideIndex, setMagazineSlideIndex] = useState(0);
-
   const [solutionSlideIndex, setSolutionSlideIndex] = useState(0);
+  const [spaceSlideIndex, setSpaceSlideIndex] = useState(0);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -75,6 +75,26 @@ const CollectionsPage = () => {
   const prevSolutionSlide = () => {
     if (solutionSlideIndex > 0) {
       setSolutionSlideIndex(prev => prev - 1);
+    }
+  };
+
+  const spaceItems = [
+    { title: "BIỆT THỰ TƯ NHÂN", img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop" },
+    { title: "CĂN HỘ CAO CẤP", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=800&auto=format&fit=crop" },
+    { title: "SÂN BAY QUỐC TẾ KING SHAKA", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop" },
+    { title: "RESORT NGHỈ DƯỠNG", img: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?q=80&w=800&auto=format&fit=crop" }
+  ];
+
+  const nextSpaceSlide = () => {
+    const itemsPerView = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
+    if (spaceSlideIndex < spaceItems.length - itemsPerView) {
+      setSpaceSlideIndex(prev => prev + 1);
+    }
+  };
+
+  const prevSpaceSlide = () => {
+    if (spaceSlideIndex > 0) {
+      setSpaceSlideIndex(prev => prev - 1);
     }
   };
 
@@ -510,39 +530,80 @@ const CollectionsPage = () => {
       </section>
 
       {/* Spaces that speak of Caesar */}
-      <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#F0F0F0]">
-        <div className="flex justify-between items-end mb-16">
+      <section className="py-20 bg-[#F0F0F0] relative overflow-hidden">
+        <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full flex justify-between items-end">
           <div>
-            <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-4 tracking-tight uppercase">Không gian kiến trúc</h2>
-            <p className="text-gray-500 max-w-xl text-lg font-light">Nơi kiến trúc quốc tế kể câu chuyện của vật liệu qua các công trình tiêu biểu.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Không gian kiến trúc</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">Nơi kiến trúc quốc tế kể câu chuyện của vật liệu qua các công trình tiêu biểu.</p>
           </div>
-          <button className="px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:border-black transition-all">
+          <button className="hidden md:flex px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest items-center gap-2 hover:border-black transition-all">
             Tất cả dự án <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {[
-            { title: "Biệt thự tư nhân", img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop" },
-            { title: "Căn hộ cao cấp", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=800&auto=format&fit=crop" },
-            { title: "Sân bay quốc tế King Shaka", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop" }
-          ].map((item, idx) => (
-            <div key={idx} className="group cursor-pointer">
-              <div className="aspect-[4/3] relative overflow-hidden rounded-[2rem] mb-6 shadow-sm group-hover:shadow-xl transition-all duration-700">
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <h4 className="text-2xl font-sans font-bold text-gray-900 mb-4 uppercase tracking-tighter">{item.title}</h4>
-              <button className="px-6 py-2 border border-gray-300 rounded-lg text-[10px] font-bold uppercase tracking-widest group-hover:bg-gray-900 group-hover:text-white transition-all">
-                Xem dự án
-              </button>
-            </div>
-          ))}
+        <div className="pl-6 md:pl-12 lg:pl-24 pr-6 w-full overflow-hidden relative z-10">
+          <motion.div 
+            className="flex min-w-max pr-6"
+            animate={{
+              x: `calc(-${spaceSlideIndex * (windowWidth < 768 ? 85 : windowWidth < 1024 ? 45 : 30)}vw - ${spaceSlideIndex * 24}px)`
+            }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {spaceItems.map((item, idx) => (
+              <motion.div 
+                key={idx}
+                className="flex flex-col flex-shrink-0 relative group"
+                style={{ 
+                  width: windowWidth < 768 ? '85vw' : windowWidth < 1024 ? '45vw' : '30vw',
+                  marginRight: 24 
+                }}
+              >
+                <div className="aspect-[4/3] relative w-full overflow-hidden shrink-0 rounded-[2rem] mb-6">
+                  <Image
+                    src={item.img}
+                    alt={item.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="flex flex-col flex-1 pl-1">
+                  <h4 className="text-[19px] font-sans font-bold text-[#1A1A1A] mb-5 leading-snug uppercase tracking-tight">
+                    {item.title}
+                  </h4>
+                  <div className="mt-auto flex">
+                    <button className="px-6 py-2 bg-[#1A1A1A] border border-[#1A1A1A] rounded-md text-[12px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-[#1A1A1A] transition-all">
+                      Xem dự án
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Navigation buttons */}
+        <div className="flex justify-center gap-4 mt-12 relative z-10 w-full">
+          <button 
+            onClick={prevSpaceSlide}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+              spaceSlideIndex === 0 
+                ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
+                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+            }`}
+          >
+            <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
+          </button>
+          <button 
+            onClick={nextSpaceSlide}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+              spaceSlideIndex >= spaceItems.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
+                ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
+                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+            }`}
+          >
+            <ArrowRight className="w-5 h-5 stroke-[1.5]" />
+          </button>
         </div>
       </section>
 
@@ -570,29 +631,37 @@ const CollectionsPage = () => {
             <p className="text-gray-500 mb-10 text-xl leading-relaxed font-light">
               Chúng tôi cung cấp những giải pháp vật liệu tối ưu để biến những ý tưởng táo bạo của bạn thành hiện thực rực rỡ.
             </p>
-            <button className="px-10 py-4 bg-gray-900 text-white rounded-full text-[10px] font-extrabold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all shadow-xl">
+            <button className="px-6 py-2.5 border border-[#1A1A1A] rounded-md text-[15px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
               Khám phá cảm hứng
             </button>
           </div>
         </div>
 
         {/* Categories Detail Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mt-32">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 items-start">
           {[
             { title: "Gạch porcelain phòng tắm", desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.", img: categories[0].img },
             { title: "Gạch porcelain phòng bếp", desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.", img: categories[1].img },
             { title: "Gạch porcelain hồ bơi", desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.", img: categories[2].img },
             { title: "Không gian thương mại", desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.", img: categories[3].img }
           ].map((cat, idx) => (
-            <div key={idx} className="group cursor-pointer">
-              <div className="aspect-square relative rounded-[2rem] overflow-hidden mb-8 bg-gray-100 shadow-lg">
-                <Image src={cat.img} alt={cat.title} fill className="object-cover group-hover:scale-110 transition-transform duration-1000" referrerPolicy="no-referrer" />
+            <div key={idx} className="bg-white rounded-[12px] overflow-hidden border border-gray-200 flex flex-col group transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1">
+              <div className="aspect-[16/10] relative w-full overflow-hidden shrink-0">
+                <Image src={cat.img} alt={cat.title} fill className="object-cover" referrerPolicy="no-referrer" />
               </div>
-              <h5 className="text-lg font-sans font-bold mb-4 text-gray-900 uppercase tracking-tighter">{cat.title}</h5>
-              <p className="text-gray-500 text-[13px] leading-relaxed mb-8 min-h-[5rem] font-light">{cat.desc}</p>
-              <button className="px-8 py-2 border border-gray-200 rounded-lg text-[10px] font-extrabold uppercase tracking-widest hover:border-black transition-all">
-                Xem thêm
-              </button>
+              <div className="p-6 md:p-8 flex flex-col items-center text-center">
+                <h5 className="text-[19px] font-sans font-normal mb-3 text-[#1A1A1A] tracking-tight">{cat.title}</h5>
+                <p className="text-[#404040] text-[15px] leading-relaxed font-sans font-normal">{cat.desc}</p>
+                <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out w-full">
+                  <div className="overflow-hidden w-full flex justify-center">
+                    <div className="pt-6">
+                      <button className="px-6 py-2 border border-[#1A1A1A] rounded-md text-[14px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all opacity-0 group-hover:opacity-100 duration-300">
+                        Read more
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>

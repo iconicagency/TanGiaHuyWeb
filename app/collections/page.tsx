@@ -232,22 +232,23 @@ const CollectionsPage = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {categories.map((cat, idx) => (
-            <motion.div 
-              key={idx}
-              whileHover={{ y: -10 }}
-              className="space-y-4 cursor-pointer group"
-            >
-              <div className="aspect-square relative overflow-hidden rounded-2xl bg-gray-100 shadow-sm group-hover:shadow-xl transition-all duration-500">
-                <Image
-                  src={cat.img}
-                  alt={cat.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <p className="text-center font-bold text-[13px] text-gray-800 tracking-tight group-hover:text-brand-gold transition-colors uppercase">{cat.name}</p>
-            </motion.div>
+            <Link key={idx} href="/products">
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="space-y-4 cursor-pointer group"
+              >
+                <div className="aspect-square relative overflow-hidden rounded-2xl bg-gray-100 shadow-sm group-hover:shadow-xl transition-all duration-500">
+                  <Image
+                    src={cat.img}
+                    alt={cat.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <p className="text-center font-bold text-[13px] text-gray-800 tracking-tight group-hover:text-brand-gold transition-colors uppercase">{cat.name}</p>
+              </motion.div>
+            </Link>
           ))}
         </div>
       </section>

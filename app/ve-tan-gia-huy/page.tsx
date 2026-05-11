@@ -144,23 +144,25 @@ function CompanyPageContent({ content }: { content: any }) {
                     {content.section1_description}
                   </p>
                 </div>
-                <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
-                  Read more
-                </button>
+                <Link href="/products">
+                  <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                    Read more
+                  </button>
+                </Link>
               </div>
             </div>
           </motion.div>
         </section>
 
         {/* Section 2: Caesar porcelain tiles */}
-        <section ref={section2Ref} className="h-[150vh] relative z-20 mt-[-100vh]">
-          <div className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
+        <section ref={section2Ref} className="h-[200vh] relative z-20 mt-[-100vh]">
+          <div className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center overflow-hidden shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
             <div className="w-full max-w-[1920px] mx-auto grid lg:grid-cols-[25%_70%] gap-8 lg:gap-[5%] items-center">
               <div className="lg:order-2 overflow-hidden rounded-xl shadow-lg">
                 <img 
                   src={content.section2_image || "https://images.unsplash.com/photo-1574362848149-11d06bdad3f4?auto=format&fit=crop&q=80&w=1200"}
                   alt="Tiles"
-                  className="w-full h-auto object-cover aspect-[21/9]"
+                  className="w-full h-auto object-cover aspect-[16/10]"
                 />
               </div>
               <div className="lg:order-1 space-y-4">
@@ -172,33 +174,35 @@ function CompanyPageContent({ content }: { content: any }) {
                     {content.section2_description}
                   </p>
                 </div>
-                <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
-                  Khám phá bộ sưu tập
-                </button>
+                <Link href="/products">
+                  <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                    Khám phá bộ sưu tập
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
         </section>
       </div>
 
-      <div className="bg-white py-12 md:py-24">
+      <div className="bg-[#F5F3F1] py-12 md:py-24">
         {/* Video Section */}
         <motion.section 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="rounded-[3rem] overflow-hidden px-6 md:px-12 lg:px-24 w-full"
+          className="px-6 md:px-12 lg:px-24 w-full"
         >
-          <div className="relative w-full aspect-video bg-gray-200">
+          <div className="relative w-full aspect-video bg-gray-200 rounded-[3rem] overflow-hidden">
             <img 
                src={content.video_placeholder_image || "https://images.unsplash.com/photo-1542744173-8e7e53415acc?auto=format&fit=crop&q=80&w=1600"} 
                alt="Video Placeholder"
                className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-              <button className="bg-white/90 p-10 rounded-full text-black hover:scale-110 transition-transform shadow-2xl">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <button className="bg-white/90 p-8 rounded-full text-black hover:scale-110 transition-transform shadow-2xl">
+                <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               </button>
             </div>
           </div>

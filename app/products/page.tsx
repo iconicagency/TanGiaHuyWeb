@@ -53,24 +53,25 @@ const FilterSwitch = ({ label, count, active, onToggle }: { label: string; count
 );
 
 const ProductCard = ({ name, specs, image }: { name: string; specs: string; image: string }) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="group cursor-pointer"
-  >
-    <div className="aspect-[3/4] relative overflow-hidden rounded-xl bg-[#F0F0F0] mb-5 shadow-sm group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500">
-      <Image
-        src={image}
-        alt={name}
-        fill
-        className="object-cover transition-transform duration-1000 group-hover:scale-110"
-        referrerPolicy="no-referrer"
-      />
-    </div>
-    <h3 className="text-[16px] font-bold text-gray-900 mb-1 group-hover:text-brand-gold transition-colors tracking-tight">{name}</h3>
-    <p className="text-[12px] text-gray-500 font-light leading-relaxed">{specs}</p>
-  </motion.div>
+  <Link href={`/san-pham/${encodeURIComponent(name.toLowerCase().replace(/ /g, '-'))}`} className="block group cursor-pointer">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+    >
+      <div className="aspect-[3/4] relative overflow-hidden rounded-xl bg-[#F0F0F0] mb-5 shadow-sm group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500">
+        <Image
+          src={image}
+          alt={name}
+          fill
+          className="object-cover transition-transform duration-1000 group-hover:scale-110"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+      <h3 className="text-[16px] font-bold text-gray-900 mb-1 group-hover:text-brand-gold transition-colors tracking-tight">{name}</h3>
+      <p className="text-[12px] text-gray-500 font-light leading-relaxed">{specs}</p>
+    </motion.div>
+  </Link>
 );
 
 const ProductsPage = () => {

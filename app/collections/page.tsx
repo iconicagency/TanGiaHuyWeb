@@ -57,7 +57,7 @@ const CollectionsPage = () => {
       <Navbar />
 
       {/* Hero Image (like Company page) */}
-      <section className="relative h-[80vh] w-full overflow-hidden">
+      <section className="relative h-[85vh] w-full overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
           alt="Collections Hero"
@@ -68,14 +68,18 @@ const CollectionsPage = () => {
         />
         <div className="absolute inset-0 bg-black/10" />
         
-        <div className="absolute bottom-20 left-6 md:left-24 bg-[#EBE9E4]/95 p-12 md:p-16 max-w-2xl shadow-2xl">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight"
-          >
-            BỘ SƯU TẬP <br /> <span className="text-brand-gold">HÌNH ẢNH</span>
-          </motion.h1>
+        <div className="absolute inset-0 px-4 md:px-8 pointer-events-none flex flex-col justify-end pb-20">
+          <div className="w-full mx-auto max-w-[1920px] pointer-events-auto text-left">
+            <div className="bg-[#EBE9E4]/20 backdrop-blur-md py-5 px-10 md:py-8 md:px-16 max-w-2xl rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#D5D3CE]/50 inline-block">
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black"
+              >
+                DANH SÁCH SẢN PHẨM
+              </motion.h1>
+            </div>
+          </div>
         </div>
       </section>
 

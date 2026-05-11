@@ -77,14 +77,18 @@ function CompanyPageContent({ content }: { content: any }) {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/10" />
-        <div className="absolute bottom-20 left-6 md:left-24 bg-[#EBE9E4]/20 backdrop-blur-md p-10 md:p-16 max-w-2xl rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#D5D3CE]/50">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-sans font-bold tracking-tight uppercase leading-tight text-black"
-          >
-            {content.hero_title}
-          </motion.h1>
+        <div className="absolute inset-0 px-4 md:px-8 pointer-events-none flex flex-col justify-end pb-20">
+          <div className="w-full mx-auto max-w-[1920px] pointer-events-auto text-left">
+            <div className="bg-[#EBE9E4]/20 backdrop-blur-md py-5 px-10 md:py-8 md:px-16 max-w-2xl rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#D5D3CE]/50 inline-block">
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black"
+              >
+                {content.hero_title}
+              </motion.h1>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -132,8 +136,8 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-[1.75rem] font-sans font-bold tracking-tight text-black leading-tight uppercase">
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-2 md:py-3 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-[39px] font-sans font-normal tracking-tight text-black leading-tight uppercase">
                     {content.section1_title}
                   </h2>
                 </div>
@@ -166,8 +170,8 @@ function CompanyPageContent({ content }: { content: any }) {
                 />
               </div>
               <div className="lg:order-1 space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-[1.75rem] font-sans font-bold tracking-tight text-black leading-tight uppercase">
+                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-2 md:py-3 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
+                  <h2 className="text-[39px] font-sans font-normal tracking-tight text-black leading-tight uppercase">
                     {content.section2_title}
                   </h2>
                 </div>
@@ -218,8 +222,8 @@ function CompanyPageContent({ content }: { content: any }) {
           viewport={{ once: true }}
           className="pb-24 px-6 md:px-12 lg:px-24 w-full"
         >
-          <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-5 md:py-6 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block mb-12">
-            <h2 className="text-[1.75rem] font-sans font-bold tracking-tight uppercase leading-tight text-black">
+          <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-2 md:py-3 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block mb-12">
+            <h2 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black">
               Quick <br /> <span className="text-brand-gold">links</span>
             </h2>
             <p className="text-gray-600 font-light italic mt-4 max-w-md">

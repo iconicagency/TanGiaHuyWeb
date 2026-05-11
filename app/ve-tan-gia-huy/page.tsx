@@ -181,6 +181,30 @@ function CompanyPageContent({ content }: { content: any }) {
         </section>
       </div>
 
+      <div className="bg-white py-12 md:py-24">
+        {/* Video Section */}
+        <motion.section 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="rounded-[3rem] overflow-hidden px-6 md:px-12 lg:px-24 w-full"
+        >
+          <div className="relative w-full aspect-video bg-gray-200">
+            <img 
+               src={content.video_placeholder_image || "https://images.unsplash.com/photo-1542744173-8e7e53415acc?auto=format&fit=crop&q=80&w=1600"} 
+               alt="Video Placeholder"
+               className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+              <button className="bg-white/90 p-10 rounded-full text-black hover:scale-110 transition-transform shadow-2xl">
+                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
+          </div>
+        </motion.section>
+      </div>
+
       <Footer />
     </main>
   );

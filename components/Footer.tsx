@@ -2,18 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Accessibility, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const Footer = () => {
   const [quickLinkIndex, setQuickLinkIndex] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(1024);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
-    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const quickLinks = [
@@ -202,22 +210,15 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Floating action buttons */}
-        <div className="absolute right-6 bottom-32 flex flex-col gap-2">
-          <button className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors shadow-lg">
-            <Accessibility size={20} />
-          </button>
-          <button className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors shadow-lg">
-            <Mail size={20} />
-          </button>
-        </div>
-        
         {/* Back to top button */}
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="absolute right-6 bottom-6 w-10 h-10 bg-gray-400/20 rounded-full flex items-center justify-center text-white hover:bg-gray-400/40 transition-colors"
+          className={`fixed right-6 bottom-6 w-14 h-14 bg-[#1A1A1A] border-2 border-gray-600 rounded-full flex items-center justify-center text-white hover:bg-white hover:text-[#1A1A1A] hover:border-gray-200 transition-all duration-300 shadow-xl group z-50 ${
+            showBackToTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'
+          }`}
+          aria-label="Back to top"
         >
-          <span className="text-xl leading-none">&uarr;</span>
+          <ArrowLeft className="w-6 h-6 rotate-90 group-hover:-translate-y-1 transition-transform" />
         </button>
       </footer>
     </>

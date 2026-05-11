@@ -6,6 +6,8 @@ import Footer from '@/components/Footer';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function CompanyPage() {
   const [content, setContent] = useState<any>(null);
@@ -93,29 +95,33 @@ function CompanyPageContent({ content }: { content: any }) {
       </section>
 
       {/* Breadcrumbs and Intro Section */}
-      <section className="bg-[#F8F7F5] py-12 px-6 md:px-12 lg:px-24">
-        <div className="flex items-center gap-2 text-sm mb-12">
-          <span className="text-gray-500 font-sans">Home</span>
-          <span className="text-gray-300">•</span>
-          <span className="font-medium text-black underline underline-offset-4 font-sans">Company</span>
+      <section className="bg-[#F8F7F5] pt-12 pb-4 px-6 md:px-12 lg:px-24">
+        <div className="flex items-center gap-2 text-[15px] mb-4">
+          <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans font-light">Home</Link>
+          <span className="text-gray-300 font-light">•</span>
+          <span className="font-light text-black underline underline-offset-8 font-sans">Company</span>
+        </div>
+      </section>
+
+      <section className="bg-[#F8F7F5] pb-16 px-6 md:px-12 lg:px-24">
+        <div className="w-full mb-12">
+          <div>
+            <h2 className="text-[#1A1A1A] text-[20px] font-light font-sans mb-2 max-w-5xl">
+              {content.intro_vocation_text || "Our vocation for materials, in particular porcelain stoneware, has been guiding our work, our thoughts and our actions since the date of our establishment."}
+            </h2>
+            <p className="text-[#404040] text-[20px] font-light font-sans mt-2 max-w-5xl">
+              {content.intro_design_activity_text || "Our design activities have the purpose of creating ceramic surfaces that work towards the best in terms of technical performance and aesthetics."}
+            </p>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-4 mb-20">
-          <button className="border border-black px-8 py-3 rounded-xl flex items-center gap-2 font-medium hover:bg-white transition-colors font-sans text-xs uppercase tracking-widest">
-            {content.intro_cta1 || "About us"} <span>→</span>
+        <div className="flex gap-3">
+          <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+            {content.intro_cta1 || "About us"} <ArrowRight className="w-4 h-4 ml-1" />
           </button>
-          <button className="border border-black px-8 py-3 rounded-xl flex items-center gap-2 font-medium hover:bg-white transition-colors font-sans text-xs uppercase tracking-widest">
-            {content.intro_cta2 || "Caesar porcelain tiles"} <span>→</span>
+          <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+            {content.intro_cta2 || "Caesar porcelain tiles"} <ArrowRight className="w-4 h-4 ml-1" />
           </button>
-        </div>
-
-        <div className="w-full space-y-8 pb-12">
-          <p className="text-xl md:text-3xl text-gray-800 leading-relaxed font-sans font-bold tracking-tight uppercase">
-            {content.intro_vocation_text || "Our vocation for materials, in particular porcelain stoneware, has been guiding our work, our thoughts and our actions since the date of our establishment."}
-          </p>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed font-sans font-light max-w-5xl">
-            {content.intro_design_activity_text || "Our design activities have the purpose of creating ceramic surfaces that work towards the best in terms of technical performance and aesthetics."}
-          </p>
         </div>
       </section>
       

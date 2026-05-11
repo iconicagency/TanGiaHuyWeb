@@ -11,14 +11,13 @@ import Footer from '@/components/Footer';
 const CollectionsPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredSlideIndex, setFeaturedSlideIndex] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(1024);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
 
   const [magazineSlideIndex, setMagazineSlideIndex] = useState(0);
   const [solutionSlideIndex, setSolutionSlideIndex] = useState(0);
   const [spaceSlideIndex, setSpaceSlideIndex] = useState(0);
 
   useEffect(() => {
-    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -207,10 +206,10 @@ const CollectionsPage = () => {
 
       {/* Page Header / Breadcrumbs (like Company & Products page) */}
       <section className="bg-[#F8F7F5] pt-12 pb-4 px-6 md:px-12 lg:px-24">
-        <div className="flex items-center gap-2 text-sm mb-4">
-          <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans">Home</Link>
-          <span className="text-gray-300">•</span>
-          <span className="font-medium text-black underline underline-offset-4 font-sans">Collections</span>
+        <div className="flex items-center gap-2 text-[15px] mb-4">
+          <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans font-light">Home</Link>
+          <span className="text-gray-300 font-light">•</span>
+          <span className="font-light text-black underline underline-offset-8 font-sans">Collections</span>
         </div>
       </section>
 
@@ -218,14 +217,14 @@ const CollectionsPage = () => {
       <section className="pb-16 px-6 md:px-12 lg:px-24 bg-[#F8F7F5]">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Explore our collections</h2>
-            <p className="text-[#404040] text-[17px] font-normal font-sans">Inspirations, colors, and sizes for every design vision.</p>
+            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-[#1A1A1A] mb-2 tracking-tight leading-tight">Explore our collections</h2>
+            <p className="text-[#404040] text-[20px] font-light font-sans">Inspirations, colors, and sizes for every design vision.</p>
           </div>
           <div className="flex gap-3 mt-8 md:mt-0">
-            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all">
+            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
               Search Product <Search className="w-4 h-4 ml-1" />
             </button>
-            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all">
+            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
               All the collections <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>

@@ -41,7 +41,7 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const quickLinks = [
+  const quickLinks = footerData?.quickLinks || [
     { title: "Tìm đại lý", desc: "Khám phá đại lý Tân Gia Huy gần bạn nhất và trực tiếp trải nghiệm chất lượng bề mặt của chúng tôi." },
     { title: "Tài liệu", desc: "Truy cập nhanh hồ sơ kỹ thuật, catalogue, công cụ số và vật liệu hỗ trợ dự án của bạn." },
     { title: "Hướng dẫn kỹ thuật", desc: "Tham khảo tài liệu hướng dẫn kỹ thuật cần thiết để thiết kế, lắp đặt và bảo trì đúng quy chuẩn." },
@@ -82,7 +82,7 @@ const Footer = () => {
             }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {quickLinks.map((item, idx) => (
+            {quickLinks.map((item: any, idx: number) => (
               <motion.div 
                 key={idx}
                 className="bg-white rounded-[12px] border border-gray-200 flex flex-col flex-shrink-0 cursor-pointer hover:shadow-md transition-shadow p-8"

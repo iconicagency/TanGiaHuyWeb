@@ -2804,21 +2804,54 @@ const FooterManager = ({ data }: any) => {
                 className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
               />
             </div>
+          </div>
+        </div>
 
-            <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
-              <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-                Ghi chú vận hành
-              </h4>
-              <p className="text-[11px] text-zinc-500 leading-relaxed font-light">
-                Các liên kết trang (Về Tân Gia Huy, Sản phẩm, Bộ sưu tập...)
-                được đồng bộ từ thanh Menu để đảm bảo tính nhất quán trên toàn
-                hệ thống. Để thay đổi các liên kết này, vui lòng truy cập tab{" "}
-                <span className="text-white font-medium italic">
-                  &quot;Thanh Menu&quot;
-                </span>
-                .
-              </p>
-            </div>
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">
+            Liên kết nhanh (Quick Links)
+          </h3>
+          <div className="space-y-4">
+            {(data.quickLinks || []).map((link: any, idx: number) => (
+              <div key={idx} className="p-4 bg-zinc-800/50 rounded-xl space-y-2 text-[11px]">
+                <input
+                  defaultValue={link.title}
+                  onBlur={(e) => {
+                    const newLinks = [...(data.quickLinks || [])];
+                    newLinks[idx] = { ...newLinks[idx], title: e.target.value };
+                    updateFooter("quickLinks", newLinks);
+                  }}
+                  className="w-full bg-transparent border-b border-white/10 p-1"
+                  placeholder="Tiêu đề"
+                />
+                <textarea
+                  defaultValue={link.desc}
+                  onBlur={(e) => {
+                    const newLinks = [...(data.quickLinks || [])];
+                    newLinks[idx] = { ...newLinks[idx], desc: e.target.value };
+                    updateFooter("quickLinks", newLinks);
+                  }}
+                  className="w-full bg-transparent border border-white/10 p-1 rounded-lg"
+                  placeholder="Mô tả"
+                  rows={2}
+                />
+                <button
+                  onClick={() => {
+                    const newLinks = (data.quickLinks || []).filter((_: any, i: number) => i !== idx);
+                    updateFooter("quickLinks", newLinks);
+                  }}
+                  className="text-red-500 font-bold mt-2"
+                >
+                  Xóa
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={() => updateFooter("quickLinks", [...(data.quickLinks || []), { title: "", desc: "" }])}
+              className="w-full py-2 bg-white/5 rounded-lg text-[10px] uppercase font-bold"
+            >
+              + Thêm liên kết
+            </button>
           </div>
         </div>
       </div>

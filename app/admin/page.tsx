@@ -2631,6 +2631,73 @@ const FooterManager = ({ data }: any) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">
+            Địa điểm (Locations)
+          </h3>
+          <div className="space-y-4">
+            {(data.locations || []).map((loc: any, idx: number) => (
+              <div key={idx} className="p-4 bg-zinc-800/50 rounded-xl grid grid-cols-2 gap-2 text-[11px]">
+                <input
+                  defaultValue={loc.name}
+                  onBlur={(e) => {
+                    const newLocs = [...(data.locations || [])];
+                    newLocs[idx] = { ...newLocs[idx], name: e.target.value };
+                    updateFooter("locations", newLocs);
+                  }}
+                  className="bg-transparent border-b border-white/10 p-1 col-span-2"
+                  placeholder="Tên địa điểm"
+                />
+                <input
+                  defaultValue={loc.type}
+                  onBlur={(e) => {
+                    const newLocs = [...(data.locations || [])];
+                    newLocs[idx] = { ...newLocs[idx], type: e.target.value };
+                    updateFooter("locations", newLocs);
+                  }}
+                  className="bg-transparent border-b border-white/10 p-1"
+                  placeholder="Loại (HEADQUARTERS...)"
+                />
+                <input
+                  defaultValue={loc.phone}
+                  onBlur={(e) => {
+                    const newLocs = [...(data.locations || [])];
+                    newLocs[idx] = { ...newLocs[idx], phone: e.target.value };
+                    updateFooter("locations", newLocs);
+                  }}
+                  className="bg-transparent border-b border-white/10 p-1"
+                  placeholder="Phone"
+                />
+                <input
+                  defaultValue={loc.address}
+                  onBlur={(e) => {
+                    const newLocs = [...(data.locations || [])];
+                    newLocs[idx] = { ...newLocs[idx], address: e.target.value };
+                    updateFooter("locations", newLocs);
+                  }}
+                  className="bg-transparent border-b border-white/10 p-1 col-span-2"
+                  placeholder="Địa chỉ"
+                />
+                <button
+                  onClick={() => {
+                    const newLocs = (data.locations || []).filter((_: any, i: number) => i !== idx);
+                    updateFooter("locations", newLocs);
+                  }}
+                  className="text-red-500 font-bold col-span-2 mt-2"
+                >
+                  Xóa
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={() => updateFooter("locations", [...(data.locations || []), { name: "", type: "", address: "", phone: "" }])}
+              className="w-full py-2 bg-white/5 rounded-lg text-[10px] uppercase font-bold"
+            >
+              + Thêm địa điểm
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">
             Thông tin chung
           </h3>
           <div className="space-y-4">

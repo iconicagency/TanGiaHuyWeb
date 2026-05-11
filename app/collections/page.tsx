@@ -14,6 +14,10 @@ import { doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/fires
 const CollectionsPage = () => {
   const [content, setContent] = useState<any>(null);
   const [collectionSlides, setCollectionSlides] = useState<any[]>([]);
+  const [solutionSlides, setSolutionSlides] = useState<any[]>([]);
+  const [spaceSlides, setSpaceSlides] = useState<any[]>([]);
+  const [inspirationItems, setInspirationItems] = useState<any[]>([]);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredSlideIndex, setFeaturedSlideIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -56,6 +60,18 @@ const CollectionsPage = () => {
         const slidesSnap = await getDocs(query(collection(db, 'collection_slides'), orderBy('order', 'asc')));
         setCollectionSlides(slidesSnap.docs.map(d => ({ id: d.id, ...d.data() })));
 
+        // Fetch solution slides
+        const solutionsSnap = await getDocs(query(collection(db, 'solution_slides'), orderBy('order', 'asc')));
+        setSolutionSlides(solutionsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+
+        // Fetch space slides
+        const spacesSnap = await getDocs(query(collection(db, 'space_slides'), orderBy('order', 'asc')));
+        setSpaceSlides(spacesSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+
+        // Fetch inspiration items
+        const inspirationSnap = await getDocs(query(collection(db, 'inspiration_slides'), orderBy('order', 'asc')));
+        setInspirationItems(inspirationSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+
       } catch (e) {
         console.error("Error fetching collections data:", e);
       }
@@ -69,7 +85,7 @@ const CollectionsPage = () => {
 
   if (!content) return <div className="h-screen bg-white flex items-center justify-center font-serif text-2xl uppercase tracking-widest text-black">Loading...</div>;
 
-  const featuredSlides = [
+  const defaultFeaturedSlides = [
     {
       id: 1,
       title: "Connections",
@@ -90,7 +106,7 @@ const CollectionsPage = () => {
     }
   ];
 
-  const solutionSlides = [
+  const defaultSolutionSlides = [
     {
       id: 1,
       title: "Sàn ngoài trời",
@@ -112,7 +128,8 @@ const CollectionsPage = () => {
   ];
 
   const nextSolutionSlide = () => {
-    if (solutionSlideIndex < solutionSlides.length - 1) {
+    const total = solutionSlides.length > 0 ? solutionSlides.length : defaultSolutionSlides.length;
+    if (solutionSlideIndex < total - 1) {
       setSolutionSlideIndex(prev => prev + 1);
     }
   };
@@ -123,7 +140,7 @@ const CollectionsPage = () => {
     }
   };
 
-  const spaceItems = [
+  const defaultSpaceItems = [
     { title: "BIỆT THỰ TƯ NHÂN", img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop" },
     { title: "CĂN HỘ CAO CẤP", img: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=800&auto=format&fit=crop" },
     { title: "SÂN BAY QUỐC TẾ KING SHAKA", img: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop" },
@@ -131,8 +148,9 @@ const CollectionsPage = () => {
   ];
 
   const nextSpaceSlide = () => {
+    const total = spaceSlides.length > 0 ? spaceSlides.length : defaultSpaceItems.length;
     const itemsPerView = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
-    if (spaceSlideIndex < spaceItems.length - itemsPerView) {
+    if (spaceSlideIndex < total - itemsPerView) {
       setSpaceSlideIndex(prev => prev + 1);
     }
   };
@@ -144,7 +162,8 @@ const CollectionsPage = () => {
   };
 
   const nextFeaturedSlide = () => {
-    if (featuredSlideIndex < featuredSlides.length - 1) {
+    const total = collectionSlides.length > 0 ? collectionSlides.length : defaultFeaturedSlides.length;
+    if (featuredSlideIndex < total - 1) {
       setFeaturedSlideIndex(prev => prev + 1);
     }
   };
@@ -154,6 +173,21 @@ const CollectionsPage = () => {
       setFeaturedSlideIndex(prev => prev - 1);
     }
   };
+
+  const categories = [
+    { name: "Cảm hứng Cẩm thạch", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop" },
+    { name: "Cảm hứng Gỗ tự nhiên", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" },
+    { name: "Cảm hứng Đá tự nhiên", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
+    { name: "Bê tông & Kim loại", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop" },
+    { name: "Giải pháp Trang trí", img: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?q=80&w=800&auto=format&fit=crop" },
+  ];
+
+  const defaultInspirationItems = [
+    { title: "Gạch porcelain phòng tắm", desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.", img: categories[0].img },
+    { title: "Gạch porcelain phòng bếp", desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.", img: categories[1].img },
+    { title: "Gạch porcelain hồ bơi", desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.", img: categories[2].img },
+    { title: "Không gian thương mại", desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.", img: categories[3].img }
+  ];
 
   const heroSlides = [
     {
@@ -168,14 +202,6 @@ const CollectionsPage = () => {
       subtitle: "Bản sắc xúc giác của vật liệu",
       image: "https://images.unsplash.com/photo-1600607687940-47a04b629571?q=80&w=2070&auto=format&fit=crop",
     }
-  ];
-
-  const categories = [
-    { name: "Cảm hứng Cẩm thạch", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop" },
-    { name: "Cảm hứng Gỗ tự nhiên", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" },
-    { name: "Cảm hứng Đá tự nhiên", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
-    { name: "Bê tông & Kim loại", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop" },
-    { name: "Giải pháp Trang trí", img: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?q=80&w=800&auto=format&fit=crop" },
   ];
 
   const magazineItems = [
@@ -318,7 +344,7 @@ const CollectionsPage = () => {
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              {(collectionSlides.length > 0 ? collectionSlides : featuredSlides).map((slide, index) => {
+              {(collectionSlides.length > 0 ? collectionSlides : defaultFeaturedSlides).map((slide, index) => {
                 const isActive = index === featuredSlideIndex;
                 return (
                   <motion.div 
@@ -370,7 +396,7 @@ const CollectionsPage = () => {
             <button 
               onClick={nextFeaturedSlide}
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
-                featuredSlideIndex === featuredSlides.length - 1 
+                featuredSlideIndex === (collectionSlides.length > 0 ? collectionSlides.length : defaultFeaturedSlides.length) - 1 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
                   : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
@@ -505,7 +531,7 @@ const CollectionsPage = () => {
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             >
-              {solutionSlides.map((slide, index) => {
+              {(solutionSlides.length > 0 ? solutionSlides : defaultSolutionSlides).map((slide, index) => {
                 const isActive = index === solutionSlideIndex;
                 return (
                   <motion.div 
@@ -556,7 +582,7 @@ const CollectionsPage = () => {
             <button 
               onClick={nextSolutionSlide}
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
-                solutionSlideIndex === solutionSlides.length - 1 
+                solutionSlideIndex === (solutionSlides.length > 0 ? solutionSlides.length : defaultSolutionSlides.length) - 1 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
                   : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
@@ -587,7 +613,7 @@ const CollectionsPage = () => {
             }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
-            {spaceItems.map((item, idx) => (
+            {(spaceSlides.length > 0 ? spaceSlides : defaultSpaceItems).map((item, idx) => (
               <motion.div 
                 key={idx}
                 className="flex flex-col flex-shrink-0 relative group"
@@ -598,7 +624,7 @@ const CollectionsPage = () => {
               >
                 <div className="aspect-[4/3] relative w-full overflow-hidden shrink-0 rounded-[2rem] mb-6">
                   <Image
-                    src={item.img}
+                    src={item.image || item.img}
                     alt={item.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -635,7 +661,7 @@ const CollectionsPage = () => {
           <button 
             onClick={nextSpaceSlide}
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-              spaceSlideIndex >= spaceItems.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
+              spaceSlideIndex >= (spaceSlides.length > 0 ? spaceSlides.length : defaultSpaceItems.length) - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
                 : 'bg-transparent border border-gray-900 text-black hover:bg-gray-100 cursor-pointer'
             }`}
@@ -675,19 +701,14 @@ const CollectionsPage = () => {
 
         {/* Categories Detail Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 items-start">
-          {[
-            { title: "Gạch porcelain phòng tắm", desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.", img: categories[0].img },
-            { title: "Gạch porcelain phòng bếp", desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.", img: categories[1].img },
-            { title: "Gạch porcelain hồ bơi", desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.", img: categories[2].img },
-            { title: "Không gian thương mại", desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.", img: categories[3].img }
-          ].map((cat, idx) => (
+          {(inspirationItems.length > 0 ? inspirationItems : defaultInspirationItems).map((cat, idx) => (
             <div key={idx} className="bg-white rounded-[12px] overflow-hidden border border-gray-200 flex flex-col group transition-all duration-500 hover:shadow-[0_20px_40px_rgba(0,0,0,0.06)] hover:-translate-y-1">
-              <div className="aspect-[16/10] relative w-full overflow-hidden shrink-0">
-                <Image src={cat.img} alt={cat.title} fill className="object-cover" referrerPolicy="no-referrer" />
-              </div>
-              <div className="p-6 md:p-8 flex flex-col items-center text-center">
-                <h5 className="text-[19px] font-sans font-normal mb-3 text-black tracking-tight">{cat.title}</h5>
-                <p className="text-[#404040] text-[15px] leading-relaxed font-sans font-normal">{cat.desc}</p>
+                <div className="aspect-[16/10] relative w-full overflow-hidden shrink-0">
+                  <Image src={cat.image || cat.img} alt={cat.title} fill className="object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div className="p-6 md:p-8 flex flex-col items-center text-center">
+                  <h5 className="text-[19px] font-sans font-normal mb-3 text-black tracking-tight">{cat.title}</h5>
+                  <p className="text-[#404040] text-[15px] leading-relaxed font-sans font-normal">{cat.description || cat.desc}</p>
                 <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out w-full">
                   <div className="overflow-hidden w-full flex justify-center">
                     <div className="pt-6">

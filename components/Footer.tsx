@@ -203,13 +203,14 @@ const Footer = () => {
 
             <div className="flex gap-4">
               {footerData?.socials?.map((social: any, i: number) => {
-                const Icon = {
+                const icons: any = {
                   facebook: Facebook,
                   instagram: Instagram,
                   linkedin: Linkedin,
                   youtube: Youtube,
                   twitter: Send
-                }[social.platform.toLowerCase()] || Send;
+                };
+                const Icon = icons[social.platform.toLowerCase()] || Send;
 
                 return (
                   <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-white hover:text-black transition-all">

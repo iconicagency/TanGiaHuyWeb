@@ -80,7 +80,19 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu" | "products" | "about_home" | "collections_page" | "products_page" | "footer"
+    | "general"
+    | "hero"
+    | "collections"
+    | "projects"
+    | "news"
+    | "contact"
+    | "company"
+    | "menu"
+    | "products"
+    | "about_home"
+    | "collections_page"
+    | "products_page"
+    | "footer"
   >("general");
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
@@ -96,9 +108,13 @@ const AdminPage = () => {
   const [navLinks, setNavLinks] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [aboutHome, setAboutHome] = useState<any>(null);
-  const [collectionsPageContent, setCollectionsPageContent] = useState<any>(null);
+  const [collectionsPageContent, setCollectionsPageContent] =
+    useState<any>(null);
   const [productsPageContent, setProductsPageContent] = useState<any>(null);
   const [footerContent, setFooterContent] = useState<any>(null);
+  const [solutionSlides, setSolutionSlides] = useState<any[]>([]);
+  const [spaceSlides, setSpaceSlides] = useState<any[]>([]);
+  const [inspirationItems, setInspirationItems] = useState<any[]>([]);
 
   useEffect(() => {
     console.log("Admin: Auth checking...");
@@ -134,8 +150,8 @@ const AdminPage = () => {
   }, [user]);
 
   const isAdmin =
-    userAdmin?.authorized || 
-    user?.email === "thanhnt.ads@gmail.com" || 
+    userAdmin?.authorized ||
+    user?.email === "thanhnt.ads@gmail.com" ||
     user?.email === "hyperlinkec@gmail.com";
 
   useEffect(() => {
@@ -211,7 +227,8 @@ const AdminPage = () => {
           setNavLinks([]);
         }
       },
-      (err) => handleFirestoreError(err, OperationType.GET, "settings/navigation"),
+      (err) =>
+        handleFirestoreError(err, OperationType.GET, "settings/navigation"),
     );
 
     const unsubProducts = onSnapshot(
@@ -229,19 +246,45 @@ const AdminPage = () => {
     const unsubCollectionsPage = onSnapshot(
       doc(db, "cms", "collections_page"),
       (snap) => setCollectionsPageContent(snap.exists() ? snap.data() : null),
-      (err) => handleFirestoreError(err, OperationType.GET, "cms/collections_page"),
+      (err) =>
+        handleFirestoreError(err, OperationType.GET, "cms/collections_page"),
     );
 
     const unsubProductsPage = onSnapshot(
       doc(db, "cms", "products_page"),
       (snap) => setProductsPageContent(snap.exists() ? snap.data() : null),
-      (err) => handleFirestoreError(err, OperationType.GET, "cms/products_page"),
+      (err) =>
+        handleFirestoreError(err, OperationType.GET, "cms/products_page"),
     );
 
     const unsubFooter = onSnapshot(
       doc(db, "settings", "footer"),
       (snap) => setFooterContent(snap.exists() ? snap.data() : null),
       (err) => handleFirestoreError(err, OperationType.GET, "settings/footer"),
+    );
+
+    const unsubSolutions = onSnapshot(
+      query(collection(db, "solution_slides"), orderBy("order")),
+      (snap) =>
+        setSolutionSlides(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (err) =>
+        handleFirestoreError(err, OperationType.LIST, "solution_slides"),
+    );
+
+    const unsubSpaces = onSnapshot(
+      query(collection(db, "space_slides"), orderBy("order")),
+      (snap) =>
+        setSpaceSlides(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (err) =>
+        handleFirestoreError(err, OperationType.LIST, "space_slides"),
+    );
+
+    const unsubInspiration = onSnapshot(
+      query(collection(db, "inspiration_slides"), orderBy("order")),
+      (snap) =>
+        setInspirationItems(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (err) =>
+        handleFirestoreError(err, OperationType.LIST, "inspiration_slides"),
     );
 
     return () => {
@@ -259,6 +302,9 @@ const AdminPage = () => {
       unsubCollectionsPage();
       unsubProductsPage();
       unsubFooter();
+      unsubSolutions();
+      unsubSpaces();
+      unsubInspiration();
     };
   }, [isAdmin]);
 
@@ -508,8 +554,8 @@ const AdminPage = () => {
                     <strong className="text-white">
                       1. Pexels (Khuyên dùng):
                     </strong>{" "}
-                    Ổn định nhất. Chuột phải vào video {">"} &quot;Sao chép địa chỉ
-                    video&quot;.
+                    Ổn định nhất. Chuột phải vào video {">"} &quot;Sao chép địa
+                    chỉ video&quot;.
                   </p>
                   <p>
                     <strong className="text-white">2. Dropbox:</strong> Rất tốt.
@@ -539,7 +585,6 @@ const AdminPage = () => {
               </div>
             </div>
           </div>
-          �
         </div>
       </div>
 
@@ -575,12 +620,50 @@ const AdminPage = () => {
         )}
         {activeTab === "news" && <NewsManager items={newsItems} />}
         {activeTab === "contact" && <ContactManager data={contactInfo} />}
-        {activeTab === "company" && <CompanyContentManager data={companyContent} />}
+        {activeTab === "company" && (
+          <CompanyContentManager data={companyContent} />
+        )}
         {activeTab === "menu" && <MenuManager items={navLinks} />}
         {activeTab === "products" && <ProductManager items={products} />}
         {activeTab === "about_home" && <AboutHomeManager data={aboutHome} />}
-        {activeTab === "collections_page" && <CollectionsPageManager data={collectionsPageContent} />}
-        {activeTab === "products_page" && <ProductsPageManager data={productsPageContent} />}
+        {activeTab === "collections_page" && (
+          <div className="space-y-12">
+            <CollectionsPageManager data={collectionsPageContent} />
+            <div className="pt-12 border-t border-zinc-800">
+               <h2 className="text-2xl font-bold text-white mb-8">Dữ liệu Sliders & Grids</h2>
+               <div className="space-y-20">
+                  <section>
+                    <h3 className="text-lg font-medium text-zinc-400 mb-4">Mục 6: Giải pháp kiến trúc (Slides)</h3>
+                    <SlideManager 
+                      type="solution" 
+                      items={solutionSlides} 
+                      collectionName="solution_slides" 
+                    />
+                  </section>
+                  <section>
+                    <h3 className="text-lg font-medium text-zinc-400 mb-4">Mục 7: Không gian kiến trúc (Slides)</h3>
+                    <SlideManager 
+                      type="space" 
+                      items={spaceSlides} 
+                      collectionName="space_slides" 
+                    />
+                  </section>
+                  <section>
+                    <h3 className="text-lg font-medium text-zinc-400 mb-4">Mục 8: Giải pháp khơi nguồn cảm hứng (Gird 4 Items)</h3>
+                    <SlideManager 
+                      type="inspiration" 
+                      items={inspirationItems} 
+                      collectionName="inspiration_slides"
+                      description
+                    />
+                  </section>
+               </div>
+            </div>
+          </div>
+        )}
+        {activeTab === "products_page" && (
+          <ProductsPageManager data={productsPageContent} />
+        )}
         {activeTab === "footer" && <FooterManager data={footerContent} />}
       </main>
     </div>
@@ -606,12 +689,18 @@ const GeneralSettingsManager = ({ data }: any) => {
   const handleInitialize = async () => {
     try {
       await setDoc(doc(db, "settings", "general"), {
-        logoUrl: "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
-        section2Bg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1920",
-        section3Bg: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920",
-        section4Bg: "https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80&w=1920",
-        section5Bg: "https://images.unsplash.com/photo-1600585154542-6379b1d359ee?auto=format&fit=crop&q=80&w=1920",
-        section6Bg: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&q=80&w=1920"
+        logoUrl:
+          "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
+        section2Bg:
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1920",
+        section3Bg:
+          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920",
+        section4Bg:
+          "https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80&w=1920",
+        section5Bg:
+          "https://images.unsplash.com/photo-1600585154542-6379b1d359ee?auto=format&fit=crop&q=80&w=1920",
+        section6Bg:
+          "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&q=80&w=1920",
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
@@ -1350,7 +1439,11 @@ const ContactManager = ({ data }: any) => {
 const MenuManager = ({ items }: { items: any[] }) => {
   const updateLinks = async (newLinks: any[]) => {
     try {
-      await setDoc(doc(db, "settings", "navigation"), { links: newLinks }, { merge: true });
+      await setDoc(
+        doc(db, "settings", "navigation"),
+        { links: newLinks },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "settings/navigation");
     }
@@ -1373,24 +1466,36 @@ const MenuManager = ({ items }: { items: any[] }) => {
     updateLinks(newLinks);
   };
 
-  const moveItem = (idx: number, direction: 'up' | 'down') => {
-    if (direction === 'up' && idx === 0) return;
-    if (direction === 'down' && idx === items.length - 1) return;
-    
+  const moveItem = (idx: number, direction: "up" | "down") => {
+    if (direction === "up" && idx === 0) return;
+    if (direction === "down" && idx === items.length - 1) return;
+
     const newLinks = [...items];
-    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    const targetIdx = direction === "up" ? idx - 1 : idx + 1;
     [newLinks[idx], newLinks[targetIdx]] = [newLinks[targetIdx], newLinks[idx]];
     updateLinks(newLinks);
   };
 
   const initializeDefault = () => {
     const defaultLinks = [
-      { name: 'TRANG CHỦ', href: '/', desc: 'Kiến tạo không gian sống' },
-      { name: 'VỀ TÂN GIA HUY', href: '/ve-tan-gia-huy', desc: 'Hành trình và sứ mệnh' },
-      { name: 'SẢN PHẨM', href: '/products', desc: 'Tinh hoa vật liệu cao cấp' },
-      { name: 'BỘ SƯU TẬP', href: '/collections', desc: 'Đẳng cấp và khác biệt' },
-      { name: 'TIN TỨC', href: '/', desc: 'Cập nhật xu hướng mới nhất' },
-      { name: 'LIÊN HỆ', href: '/contact', desc: 'Kết nối cùng chúng tôi' },
+      { name: "TRANG CHỦ", href: "/", desc: "Kiến tạo không gian sống" },
+      {
+        name: "VỀ TÂN GIA HUY",
+        href: "/ve-tan-gia-huy",
+        desc: "Hành trình và sứ mệnh",
+      },
+      {
+        name: "SẢN PHẨM",
+        href: "/products",
+        desc: "Tinh hoa vật liệu cao cấp",
+      },
+      {
+        name: "BỘ SƯU TẬP",
+        href: "/collections",
+        desc: "Đẳng cấp và khác biệt",
+      },
+      { name: "TIN TỨC", href: "/", desc: "Cập nhật xu hướng mới nhất" },
+      { name: "LIÊN HỆ", href: "/contact", desc: "Kết nối cùng chúng tôi" },
     ];
     updateLinks(defaultLinks);
   };
@@ -1399,12 +1504,24 @@ const MenuManager = ({ items }: { items: any[] }) => {
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex items-end justify-between">
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Menu Navigation</h2>
-          <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý các đề mục trên thanh điều hướng chính.</p>
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+            Menu Navigation
+          </h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">
+            Quản lý các đề mục trên thanh điều hướng chính.
+          </p>
         </div>
         <div className="space-x-4">
-          <button onClick={initializeDefault} className="text-xs text-zinc-500 hover:text-white transition-colors">Reset về mặc định</button>
-          <button onClick={addItem} className="bg-white text-black px-6 py-2 rounded-lg font-bold flex items-center space-x-2 text-sm hover:scale-105 transition-all">
+          <button
+            onClick={initializeDefault}
+            className="text-xs text-zinc-500 hover:text-white transition-colors"
+          >
+            Reset về mặc định
+          </button>
+          <button
+            onClick={addItem}
+            className="bg-white text-black px-6 py-2 rounded-lg font-bold flex items-center space-x-2 text-sm hover:scale-105 transition-all"
+          >
             <Plus className="w-4 h-4" />
             <span>Thêm mục mới</span>
           </button>
@@ -1415,52 +1532,75 @@ const MenuManager = ({ items }: { items: any[] }) => {
         {items.length === 0 && (
           <div className="p-20 text-center space-y-4">
             <p className="text-zinc-500 italic">Chưa có mục menu nào.</p>
-            <button onClick={initializeDefault} className="bg-zinc-800 text-white px-6 py-2 rounded-lg text-sm">Khởi tạo nhanh</button>
+            <button
+              onClick={initializeDefault}
+              className="bg-zinc-800 text-white px-6 py-2 rounded-lg text-sm"
+            >
+              Khởi tạo nhanh
+            </button>
           </div>
         )}
         <div className="divide-y divide-white/5">
           {items.map((item, idx) => (
-            <div key={idx} className="p-6 flex items-start gap-6 hover:bg-white/5 transition-colors group">
+            <div
+              key={idx}
+              className="p-6 flex items-start gap-6 hover:bg-white/5 transition-colors group"
+            >
               <div className="flex flex-col gap-2 pt-2">
-                <button onClick={() => moveItem(idx, 'up')} className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors">
+                <button
+                  onClick={() => moveItem(idx, "up")}
+                  className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors"
+                >
                   <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-bottom-[6px] border-bottom-current rotate-180" />
                   <ChevronDown className="w-4 h-4 rotate-180" />
                 </button>
-                <button onClick={() => moveItem(idx, 'down')} className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors">
+                <button
+                  onClick={() => moveItem(idx, "down")}
+                  className="p-1 hover:bg-zinc-800 rounded text-zinc-600 hover:text-white transition-colors"
+                >
                   <ChevronDown className="w-4 h-4" />
                 </button>
               </div>
-              
+
               <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Tên hiển thị</label>
-                  <input 
-                    value={item.name} 
-                    onChange={(e) => updateItem(idx, 'name', e.target.value)}
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">
+                    Tên hiển thị
+                  </label>
+                  <input
+                    value={item.name}
+                    onChange={(e) => updateItem(idx, "name", e.target.value)}
                     className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Đường dẫn (Link)</label>
-                  <input 
-                    value={item.href} 
-                    onChange={(e) => updateItem(idx, 'href', e.target.value)}
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">
+                    Đường dẫn (Link)
+                  </label>
+                  <input
+                    value={item.href}
+                    onChange={(e) => updateItem(idx, "href", e.target.value)}
                     className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
                     placeholder="/abc hoặc https://..."
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Mô tả ngắn</label>
-                  <input 
-                    value={item.desc} 
-                    onChange={(e) => updateItem(idx, 'desc', e.target.value)}
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">
+                    Mô tả ngắn
+                  </label>
+                  <input
+                    value={item.desc}
+                    onChange={(e) => updateItem(idx, "desc", e.target.value)}
                     className="w-full bg-zinc-800 border border-white/5 px-4 py-2 rounded-lg text-sm text-white focus:border-brand-gold outline-none transition-all"
                     placeholder="Dòng chữ nhỏ dưới menu..."
                   />
                 </div>
               </div>
 
-              <button onClick={() => removeItem(idx)} className="mt-6 p-2 text-zinc-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+              <button
+                onClick={() => removeItem(idx)}
+                className="mt-6 p-2 text-zinc-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+              >
                 <Trash2 className="w-5 h-5" />
               </button>
             </div>
@@ -1605,7 +1745,9 @@ const ProductManager = ({ items }: any) => {
                   type="number"
                   defaultValue={item.order}
                   onBlur={(e) =>
-                    updateProduct(item.id, { order: parseInt(e.target.value) || 0 })
+                    updateProduct(item.id, {
+                      order: parseInt(e.target.value) || 0,
+                    })
                   }
                   className="w-16 bg-zinc-800/50 px-3 py-2 rounded-lg border border-white/5 outline-none text-center text-sm"
                 />
@@ -1622,7 +1764,9 @@ const ProductManager = ({ items }: any) => {
         {items.length === 0 && (
           <div className="text-center py-20 bg-zinc-900 rounded-3xl border border-dashed border-zinc-800">
             <Database className="w-10 h-10 text-zinc-700 mx-auto mb-4" />
-            <p className="text-zinc-500 text-xs uppercase tracking-widest">Chưa có sản phẩm nào.</p>
+            <p className="text-zinc-500 text-xs uppercase tracking-widest">
+              Chưa có sản phẩm nào.
+            </p>
           </div>
         )}
       </div>
@@ -1633,7 +1777,11 @@ const ProductManager = ({ items }: any) => {
 const AboutHomeManager = ({ data }: any) => {
   const updateContent = async (field: string, value: string) => {
     try {
-      await setDoc(doc(db, "cms", "about_home"), { [field]: value }, { merge: true });
+      await setDoc(
+        doc(db, "cms", "about_home"),
+        { [field]: value },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "cms/about_home");
     }
@@ -1643,10 +1791,14 @@ const AboutHomeManager = ({ data }: any) => {
     try {
       await setDoc(doc(db, "cms", "about_home"), {
         title: "VỀ TÂN GIA HUY",
-        leftText1: "Với 10 năm kinh nghiệm trên thị trường gạch ốp lát và thiết bị vệ sinh, cùng tôn chỉ kinh doanh “Uy Tín – Tận Tâm – Chất Lượng”, Chúng tôi luôn mang đến cho Quý khách hàng những sản phẩm tốt nhất, cập nhật những xu hướng hiện đại và chất lượng dịch vụ hàng đầu.",
-        leftText2: "Tân Gia Huy tự hào là đơn vị có phạm vi hoạt động trên khắp các tỉnh miền Bắc với hàng trăm Đại lý và Nhà Phân Phối tại các tỉnh thành như: Sơn La, Hà Giang, Yên Bái, Thái Nguyên, Quảng Bình, Hà Nam, Ninh Bình, Nam Định… phân phối đa dạng các ngành hàng với nhiều phân khúc sản phẩm khác nhau. Chúng tôi vinh dự là đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
-        rightText1: "Tân Gia Huy cam kết sẽ mang Tín – Tâm – Chất từ mọi nguồn lực để đem đến những trải nghiệm về không gian sống đầy cảm hứng và đậm dấu ấn cá nhân. Chúng tôi luôn nỗ lực không ngừng để giữ vững vị trí tiên phong trên thị trường cũng như trong lòng khách hàng về chất lượng sản phẩm và cả dịch vụ tư vấn.",
-        rightText2: "Chúng tôi hy vọng được hợp tác và phục vụ Quý khách hàng, Quý đối tác trong những cơ hội đầu tư mới, và những trải nghiệm sống đẳng cấp mới."
+        leftText1:
+          "Với 10 năm kinh nghiệm trên thị trường gạch ốp lát và thiết bị vệ sinh, cùng tôn chỉ kinh doanh “Uy Tín – Tận Tâm – Chất Lượng”, Chúng tôi luôn mang đến cho Quý khách hàng những sản phẩm tốt nhất, cập nhật những xu hướng hiện đại và chất lượng dịch vụ hàng đầu.",
+        leftText2:
+          "Tân Gia Huy tự hào là đơn vị có phạm vi hoạt động trên khắp các tỉnh miền Bắc với hàng trăm Đại lý và Nhà Phân Phối tại các tỉnh thành như: Sơn La, Hà Giang, Yên Bái, Thái Nguyên, Quảng Bình, Hà Nam, Ninh Bình, Nam Định… phân phối đa dạng các ngành hàng với nhiều phân khúc sản phẩm khác nhau. Chúng tôi vinh dự là đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
+        rightText1:
+          "Tân Gia Huy cam kết sẽ mang Tín – Tâm – Chất từ mọi nguồn lực để đem đến những trải nghiệm về không gian sống đầy cảm hứng và đậm dấu ấn cá nhân. Chúng tôi luôn nỗ lực không ngừng để giữ vững vị trí tiên phong trên thị trường cũng như trong lòng khách hàng về chất lượng sản phẩm và cả dịch vụ tư vấn.",
+        rightText2:
+          "Chúng tôi hy vọng được hợp tác và phục vụ Quý khách hàng, Quý đối tác trong những cơ hội đầu tư mới, và những trải nghiệm sống đẳng cấp mới.",
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
@@ -1658,7 +1810,9 @@ const AboutHomeManager = ({ data }: any) => {
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
-        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Về TGH Home</h3>
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">
+          Chưa có nội dung Về TGH Home
+        </h3>
         <button
           onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
@@ -1672,59 +1826,73 @@ const AboutHomeManager = ({ data }: any) => {
   return (
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="space-y-2">
-        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Trang chủ (Về TGH)</h2>
-        <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý nội dung giới thiệu tại Section 2 trang chủ.</p>
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+          Trang chủ (Về TGH)
+        </h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">
+          Quản lý nội dung giới thiệu tại Section 2 trang chủ.
+        </p>
       </div>
 
       <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-4">
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
-                <input
-                  defaultValue={data.title}
-                  onBlur={(e) => updateContent("title", e.target.value)}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột trái 1</label>
-                <textarea
-                  defaultValue={data.leftText1}
-                  onBlur={(e) => updateContent("leftText1", e.target.value)}
-                  rows={4}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột trái 2</label>
-                <textarea
-                  defaultValue={data.leftText2}
-                  onBlur={(e) => updateContent("leftText2", e.target.value)}
-                  rows={4}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
-                />
-             </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề (Title)
+              </label>
+              <input
+                defaultValue={data.title}
+                onBlur={(e) => updateContent("title", e.target.value)}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Văn bản cột trái 1
+              </label>
+              <textarea
+                defaultValue={data.leftText1}
+                onBlur={(e) => updateContent("leftText1", e.target.value)}
+                rows={4}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Văn bản cột trái 2
+              </label>
+              <textarea
+                defaultValue={data.leftText2}
+                onBlur={(e) => updateContent("leftText2", e.target.value)}
+                rows={4}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+              />
+            </div>
           </div>
           <div className="space-y-4">
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột phải 1</label>
-                <textarea
-                  defaultValue={data.rightText1}
-                  onBlur={(e) => updateContent("rightText1", e.target.value)}
-                  rows={4}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột phải 2 (Chữ ký/Slogan)</label>
-                <textarea
-                  defaultValue={data.rightText2}
-                  onBlur={(e) => updateContent("rightText2", e.target.value)}
-                  rows={4}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light italic"
-                />
-             </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Văn bản cột phải 1
+              </label>
+              <textarea
+                defaultValue={data.rightText1}
+                onBlur={(e) => updateContent("rightText1", e.target.value)}
+                rows={4}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Văn bản cột phải 2 (Chữ ký/Slogan)
+              </label>
+              <textarea
+                defaultValue={data.rightText2}
+                onBlur={(e) => updateContent("rightText2", e.target.value)}
+                rows={4}
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light italic"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -1735,7 +1903,11 @@ const AboutHomeManager = ({ data }: any) => {
 const CollectionsPageManager = ({ data }: any) => {
   const updateContent = async (field: string, value: any) => {
     try {
-      await setDoc(doc(db, "cms", "collections_page"), { [field]: value }, { merge: true });
+      await setDoc(
+        doc(db, "cms", "collections_page"),
+        { [field]: value },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "cms/collections_page");
     }
@@ -1745,37 +1917,41 @@ const CollectionsPageManager = ({ data }: any) => {
     try {
       await setDoc(doc(db, "cms", "collections_page"), {
         hero_title: "BỘ SƯU TẬP",
-        hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+        hero_image:
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
         explore: {
           title: "Explore our collections",
-          description: "Inspirations, colors, and sizes for every design vision.",
+          description:
+            "Inspirations, colors, and sizes for every design vision.",
           buttonText: "MORE INFORMATION",
-          image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070"
+          image:
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
         },
         featured: {
           title: "Featured",
           subtitle: "Explore the different look of the collections.",
-          buttonText: "XEM CHI TIẾT"
+          buttonText: "XEM CHI TIẾT",
         },
         research: {
           title: "Nghiên cứu Vật liệu",
-          description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
-          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+          description:
+            "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
+          videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         },
         newsContent: {
           title: "Từ chuyên mục tin tức",
           subtitle: "Vật liệu của các dự án",
-          buttonText: "XEM TẤT CẢ"
+          buttonText: "XEM TẤT CẢ",
         },
         solutions: {
           title: "Giải pháp kiến trúc",
           subtitle: "Phòng tắm",
-          buttonText: "KHÁM PHÁ NGAY"
+          buttonText: "KHÁM PHÁ NGAY",
         },
         space: {
           title: "Không gian kiến trúc",
           subtitle: "Living",
-          buttonText: "Tất cả dự án"
+          buttonText: "Tất cả dự án",
         },
         inspiration: {
           title: "Giải pháp khơi nguồn",
@@ -1785,15 +1961,31 @@ const CollectionsPageManager = ({ data }: any) => {
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
             "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c",
             "https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e",
-            "https://images.unsplash.com/photo-1600585154542-6379b1d359ee"
+            "https://images.unsplash.com/photo-1600585154542-6379b1d359ee",
           ],
           categories: [
-            { title: "Gạch porcelain phòng tắm", desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6" },
-            { title: "Gạch porcelain phòng bếp", desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" },
-            { title: "Gạch porcelain hồ bơi", desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae" },
-            { title: "Không gian thương mại", desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af" }
-          ]
-        }
+            {
+              title: "Gạch porcelain phòng tắm",
+              desc: "Đảm bảo hiệu suất vượt trội và giá trị thẩm mỹ cao, dù là lát sàn, ốp tường hay các mục đích đặc biệt.",
+              img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6",
+            },
+            {
+              title: "Gạch porcelain phòng bếp",
+              desc: "Sự kết hợp giữa chất lượng kỹ thuật và thiết kế tỉ mỉ để tạo nên không gian hiệu quả và đẹp mắt.",
+              img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+            },
+            {
+              title: "Gạch porcelain hồ bơi",
+              desc: "Tự do trong thiết kế với tất cả các đặc tính tiên tiến của gạch porcelain cao cấp.",
+              img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae",
+            },
+            {
+              title: "Không gian thương mại",
+              desc: "Bề mặt quyến rũ và chất lượng kỹ thuật vượt trội cho các dự án thương mại và công cộng.",
+              img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af",
+            },
+          ],
+        },
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
@@ -1805,7 +1997,9 @@ const CollectionsPageManager = ({ data }: any) => {
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
-        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Bộ sưu tập</h3>
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">
+          Chưa có nội dung Trang Bộ sưu tập
+        </h3>
         <button
           onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
@@ -1820,18 +2014,26 @@ const CollectionsPageManager = ({ data }: any) => {
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex justify-between items-end border-b border-white/10 pb-6">
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Bộ sưu tập</h2>
-          <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung text và hình ảnh trên toàn bộ trang Bộ sưu tập.</p>
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+            Quản lý Trang Bộ sưu tập
+          </h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">
+            Thay đổi nội dung text và hình ảnh trên toàn bộ trang Bộ sưu tập.
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-12">
         {/* Section: Hero */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">1. Banner Hero</h3>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            1. Banner Hero
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-1">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề (Title)
+              </label>
               <input
                 defaultValue={data.hero_title}
                 onBlur={(e) => updateContent("hero_title", e.target.value)}
@@ -1839,194 +2041,427 @@ const CollectionsPageManager = ({ data }: any) => {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Banner</label>
-              <ImageUploader value={data.hero_image} onUpload={(url) => updateContent("hero_image", url)} folder="collections" />
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Ảnh Banner
+              </label>
+              <ImageUploader
+                value={data.hero_image}
+                onUpload={(url) => updateContent("hero_image", url)}
+                folder="collections"
+              />
             </div>
           </div>
         </div>
 
         {/* Section: Explore */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">2. Explore Our Collections</h3>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            2. Explore Our Collections
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Tiêu đề (Title)
+                </label>
                 <input
                   defaultValue={data.explore?.title}
-                  onBlur={(e) => updateContent("explore", { ...data.explore, title: e.target.value })}
+                  onBlur={(e) =>
+                    updateContent("explore", {
+                      ...data.explore,
+                      title: e.target.value,
+                    })
+                  }
                   className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Description)</label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Mô tả (Description)
+                </label>
                 <textarea
                   defaultValue={data.explore?.description}
-                  onBlur={(e) => updateContent("explore", { ...data.explore, description: e.target.value })}
+                  onBlur={(e) =>
+                    updateContent("explore", {
+                      ...data.explore,
+                      description: e.target.value,
+                    })
+                  }
                   rows={3}
                   className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút (Button)</label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Text Nút (Button)
+                </label>
                 <input
                   defaultValue={data.explore?.buttonText}
-                  onBlur={(e) => updateContent("explore", { ...data.explore, buttonText: e.target.value })}
+                  onBlur={(e) =>
+                    updateContent("explore", {
+                      ...data.explore,
+                      buttonText: e.target.value,
+                    })
+                  }
                   className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none focus:border-white transition-all text-sm"
                 />
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Phải</label>
-              <ImageUploader value={data.explore?.image} onUpload={(url) => updateContent("explore", { ...data.explore, image: url })} folder="collections" />
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Ảnh Phải
+              </label>
+              <ImageUploader
+                value={data.explore?.image}
+                onUpload={(url) =>
+                  updateContent("explore", { ...data.explore, image: url })
+                }
+                folder="collections"
+              />
             </div>
           </div>
         </div>
 
         {/* Section: Featured */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">3. Featured</h3>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            3. Featured
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
-                <input
-                  defaultValue={data.featured?.title}
-                  onBlur={(e) => updateContent("featured", { ...data.featured, title: e.target.value })}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Subtitle)</label>
-                <input
-                  defaultValue={data.featured?.subtitle}
-                  onBlur={(e) => updateContent("featured", { ...data.featured, subtitle: e.target.value })}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút</label>
-                <input
-                  defaultValue={data.featured?.buttonText}
-                  onBlur={(e) => updateContent("featured", { ...data.featured, buttonText: e.target.value })}
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                />
-             </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề (Title)
+              </label>
+              <input
+                defaultValue={data.featured?.title}
+                onBlur={(e) =>
+                  updateContent("featured", {
+                    ...data.featured,
+                    title: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Mô tả (Subtitle)
+              </label>
+              <input
+                defaultValue={data.featured?.subtitle}
+                onBlur={(e) =>
+                  updateContent("featured", {
+                    ...data.featured,
+                    subtitle: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Text Nút
+              </label>
+              <input
+                defaultValue={data.featured?.buttonText}
+                onBlur={(e) =>
+                  updateContent("featured", {
+                    ...data.featured,
+                    buttonText: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+              />
+            </div>
           </div>
-          <p className="text-[10px] text-zinc-500 uppercase italic">Lưu ý: Các ảnh của phần này được quản lý qua tab "Bộ sưu tập (Slider)" để linh hoạt thêm/xóa/sửa.</p>
+          <p className="text-[10px] text-zinc-500 uppercase italic">
+            Lưu ý: Các ảnh của phần này được quản lý qua tab &quot;Bộ sưu tập
+            (Slider)&quot; để linh hoạt thêm/xóa/sửa.
+          </p>
         </div>
 
         {/* Section: Research */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">4. Nghiên cứu Vật liệu (Video)</h3>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            4. Nghiên cứu Vật liệu (Video)
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div className="space-y-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
-                  <input
-                    defaultValue={data.research?.title}
-                    onBlur={(e) => updateContent("research", { ...data.research, title: e.target.value })}
-                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Link Video (Youtube/Dropbox/Pexels)</label>
-                  <input
-                    defaultValue={data.research?.videoUrl}
-                    onBlur={(e) => updateContent("research", { ...data.research, videoUrl: e.target.value })}
-                    placeholder="Link trực tiếp mp4 hoặc embed"
-                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả (Description)</label>
-                  <textarea
-                    defaultValue={data.research?.description}
-                    onBlur={(e) => updateContent("research", { ...data.research, description: e.target.value })}
-                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
-                    rows={3}
-                  />
-                </div>
-             </div>
-             <div className="bg-zinc-950 rounded-2xl flex items-center justify-center p-4">
-                <p className="text-[10px] text-zinc-600 text-center uppercase tracking-widest">Xem trợ giúp Video ở sidebar bên trái để biết cách lấy link chuẩn.</p>
-             </div>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Tiêu đề (Title)
+                </label>
+                <input
+                  defaultValue={data.research?.title}
+                  onBlur={(e) =>
+                    updateContent("research", {
+                      ...data.research,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Link Video (Youtube/Dropbox/Pexels)
+                </label>
+                <input
+                  defaultValue={data.research?.videoUrl}
+                  onBlur={(e) =>
+                    updateContent("research", {
+                      ...data.research,
+                      videoUrl: e.target.value,
+                    })
+                  }
+                  placeholder="Link trực tiếp mp4 hoặc embed"
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                  Mô tả (Description)
+                </label>
+                <textarea
+                  defaultValue={data.research?.description}
+                  onBlur={(e) =>
+                    updateContent("research", {
+                      ...data.research,
+                      description: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 text-white outline-none"
+                  rows={3}
+                />
+              </div>
+            </div>
+            <div className="bg-zinc-950 rounded-2xl flex items-center justify-center p-4">
+              <p className="text-[10px] text-zinc-600 text-center uppercase tracking-widest">
+                Xem trợ giúp Video ở sidebar bên trái để biết cách lấy link
+                chuẩn.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Section: News */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">5. Từ chuyên mục tin tức</h3>
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề</label>
-                <input defaultValue={data.newsContent?.title} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, title: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề phụ</label>
-                <input defaultValue={data.newsContent?.subtitle} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, subtitle: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Text Nút</label>
-                <input defaultValue={data.newsContent?.buttonText} onBlur={(e) => updateContent("newsContent", { ...data.newsContent, buttonText: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-              </div>
-           </div>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            5. Từ chuyên mục tin tức
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề
+              </label>
+              <input
+                defaultValue={data.newsContent?.title}
+                onBlur={(e) =>
+                  updateContent("newsContent", {
+                    ...data.newsContent,
+                    title: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề phụ
+              </label>
+              <input
+                defaultValue={data.newsContent?.subtitle}
+                onBlur={(e) =>
+                  updateContent("newsContent", {
+                    ...data.newsContent,
+                    subtitle: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Text Nút
+              </label>
+              <input
+                defaultValue={data.newsContent?.buttonText}
+                onBlur={(e) =>
+                  updateContent("newsContent", {
+                    ...data.newsContent,
+                    buttonText: e.target.value,
+                  })
+                }
+                className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Section: Solutions & Space */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-           <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-             <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">6. Giải pháp kiến trúc</h3>
-             <div className="space-y-4">
-                <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
-                   <input placeholder="Tiêu đề (Giải pháp kiến trúc)" defaultValue={data.solutions?.title} onBlur={(e) => updateContent("solutions", { ...data.solutions, title: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                   <input placeholder="Tiêu đề phụ (Phòng tắm)" defaultValue={data.solutions?.subtitle} onBlur={(e) => updateContent("solutions", { ...data.solutions, subtitle: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                   <input placeholder="Text nút" defaultValue={data.solutions?.buttonText} onBlur={(e) => updateContent("solutions", { ...data.solutions, buttonText: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                </div>
-             </div>
-           </div>
-
-           <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">7. Không gian kiến trúc</h3>
-              <div className="space-y-4">
-                 <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
-                   <input placeholder="Tiêu đề (Không gian kiến trúc)" defaultValue={data.space?.title} onBlur={(e) => updateContent("space", { ...data.space, title: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                   <input placeholder="Tiêu đề phụ (Living)" defaultValue={data.space?.subtitle} onBlur={(e) => updateContent("space", { ...data.space, subtitle: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                   <input placeholder="Text nút (Tất cả dự án)" defaultValue={data.space?.buttonText} onBlur={(e) => updateContent("space", { ...data.space, buttonText: e.target.value })} className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5" />
-                </div>
+          <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+              6. Giải pháp kiến trúc
+            </h3>
+            <div className="space-y-4">
+              <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
+                <input
+                  placeholder="Tiêu đề (Giải pháp kiến trúc)"
+                  defaultValue={data.solutions?.title}
+                  onBlur={(e) =>
+                    updateContent("solutions", {
+                      ...data.solutions,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Tiêu đề phụ (Phòng tắm)"
+                  defaultValue={data.solutions?.subtitle}
+                  onBlur={(e) =>
+                    updateContent("solutions", {
+                      ...data.solutions,
+                      subtitle: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Text nút"
+                  defaultValue={data.solutions?.buttonText}
+                  onBlur={(e) =>
+                    updateContent("solutions", {
+                      ...data.solutions,
+                      buttonText: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
               </div>
-           </div>
+            </div>
+          </div>
+
+          <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+              7. Không gian kiến trúc
+            </h3>
+            <div className="space-y-4">
+              <div className="p-4 bg-zinc-800/50 rounded-xl space-y-4">
+                <input
+                  placeholder="Tiêu đề (Không gian kiến trúc)"
+                  defaultValue={data.space?.title}
+                  onBlur={(e) =>
+                    updateContent("space", {
+                      ...data.space,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Tiêu đề phụ (Living)"
+                  defaultValue={data.space?.subtitle}
+                  onBlur={(e) =>
+                    updateContent("space", {
+                      ...data.space,
+                      subtitle: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Text nút (Tất cả dự án)"
+                  defaultValue={data.space?.buttonText}
+                  onBlur={(e) =>
+                    updateContent("space", {
+                      ...data.space,
+                      buttonText: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-900 px-4 py-2 rounded-lg border border-white/5"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Section: Inspiration */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">8. Giải pháp khơi nguồn cảm hứng (Inspiration)</h3>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-4">
-                 <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase">Tiêu đề & Chữ chạy</label>
-                    <input defaultValue={data.inspiration?.title} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, title: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-                    <input placeholder="Subtitle" defaultValue={data.inspiration?.subtitle} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, subtitle: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-                    <input placeholder="Nút chính" defaultValue={data.inspiration?.buttonText} onBlur={(e) => updateContent("inspiration", { ...data.inspiration, buttonText: e.target.value })} className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5" />
-                 </div>
-                 <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase">4 Hình ảnh nhỏ cạnh Title</label>
-                    <div className="grid grid-cols-4 gap-2">
-                       {[0, 1, 2, 3].map((idx) => (
-                          <div key={idx} className="scale-75 origin-top-left -mb-10">
-                             <ImageUploader value={data.inspiration?.topImages?.[idx]} onUpload={(url) => {
-                                const imgs = [...(data.inspiration?.topImages || [])];
-                                imgs[idx] = url;
-                                updateContent("inspiration", { ...data.inspiration, topImages: imgs });
-                             }} />
-                          </div>
-                       ))}
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+            8. Giải pháp khơi nguồn cảm hứng (Inspiration)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-zinc-500 uppercase">
+                  Tiêu đề & Chữ chạy
+                </label>
+                <input
+                  defaultValue={data.inspiration?.title}
+                  onBlur={(e) =>
+                    updateContent("inspiration", {
+                      ...data.inspiration,
+                      title: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Subtitle"
+                  defaultValue={data.inspiration?.subtitle}
+                  onBlur={(e) =>
+                    updateContent("inspiration", {
+                      ...data.inspiration,
+                      subtitle: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+                />
+                <input
+                  placeholder="Nút chính"
+                  defaultValue={data.inspiration?.buttonText}
+                  onBlur={(e) =>
+                    updateContent("inspiration", {
+                      ...data.inspiration,
+                      buttonText: e.target.value,
+                    })
+                  }
+                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-zinc-500 uppercase">
+                  4 Hình ảnh nhỏ cạnh Title
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <div key={idx} className="scale-75 origin-top-left -mb-10">
+                      <ImageUploader
+                        value={data.inspiration?.topImages?.[idx]}
+                        onUpload={(url) => {
+                          const imgs = [...(data.inspiration?.topImages || [])];
+                          imgs[idx] = url;
+                          updateContent("inspiration", {
+                            ...data.inspiration,
+                            topImages: imgs,
+                          });
+                        }}
+                      />
                     </div>
-                 </div>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-4">
-                 <p className="text-[10px] text-zinc-500 uppercase italic">Ghi chú: Slides slide ảnh lớn cuộn ngang ở các phần 6, 7 & 8 được lấy tự động hoặc quản lý tại code để duy trì hiệu ứng đặc biệt của trang này.</p>
-              </div>
-           </div>
+            </div>
+            <div className="space-y-4">
+              <p className="text-[10px] text-zinc-500 uppercase italic">
+                Ghi chú: Slides slide ảnh lớn cuộn ngang ở các phần 6, 7 & 8
+                được lấy tự động hoặc quản lý tại code để duy trì hiệu ứng đặc
+                biệt của trang này.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2036,7 +2471,11 @@ const CollectionsPageManager = ({ data }: any) => {
 const ProductsPageManager = ({ data }: any) => {
   const updateContent = async (field: string, value: any) => {
     try {
-      await setDoc(doc(db, "cms", "products_page"), { [field]: value }, { merge: true });
+      await setDoc(
+        doc(db, "cms", "products_page"),
+        { [field]: value },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "cms/products_page");
     }
@@ -2046,7 +2485,8 @@ const ProductsPageManager = ({ data }: any) => {
     try {
       await setDoc(doc(db, "cms", "products_page"), {
         hero_title: "DANH SÁCH SẢN PHẨM",
-        hero_image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+        hero_image:
+          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920",
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
@@ -2058,7 +2498,9 @@ const ProductsPageManager = ({ data }: any) => {
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
-        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Sản phẩm</h3>
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">
+          Chưa có nội dung Trang Sản phẩm
+        </h3>
         <button
           onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
@@ -2072,31 +2514,41 @@ const ProductsPageManager = ({ data }: any) => {
   return (
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="space-y-2">
-        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Sản phẩm</h2>
-        <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung hero banner trên trang danh sách sản phẩm.</p>
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+          Quản lý Trang Sản phẩm
+        </h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">
+          Thay đổi nội dung hero banner trên trang danh sách sản phẩm.
+        </p>
       </div>
 
       <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-12">
         <section className="space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">Hero Section</h3>
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">
+            Hero Section
+          </h3>
           <div className="space-y-4">
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề chính</label>
-                <input
-                  defaultValue={data.hero_title}
-                  onBlur={(e) => updateContent("hero_title", e.target.value)}
-                  placeholder="DANH SÁCH SẢN PHẨM"
-                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
-                />
-             </div>
-             <div className="space-y-1">
-                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Hero</label>
-                <ImageUploader 
-                  value={data.hero_image} 
-                  onUpload={(url) => updateContent("hero_image", url)}
-                  folder="products_page"
-                />
-             </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Tiêu đề chính
+              </label>
+              <input
+                defaultValue={data.hero_title}
+                onBlur={(e) => updateContent("hero_title", e.target.value)}
+                placeholder="DANH SÁCH SẢN PHẨM"
+                className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                Ảnh Hero
+              </label>
+              <ImageUploader
+                value={data.hero_image}
+                onUpload={(url) => updateContent("hero_image", url)}
+                folder="products_page"
+              />
+            </div>
           </div>
         </section>
       </div>
@@ -2104,12 +2556,14 @@ const ProductsPageManager = ({ data }: any) => {
   );
 };
 
-export default AdminPage;
-
 const FooterManager = ({ data }: any) => {
   const updateFooter = async (field: string, value: any) => {
     try {
-      await setDoc(doc(db, "settings", "footer"), { [field]: value }, { merge: true });
+      await setDoc(
+        doc(db, "settings", "footer"),
+        { [field]: value },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "settings/footer");
     }
@@ -2118,8 +2572,10 @@ const FooterManager = ({ data }: any) => {
   const handleInitialize = async () => {
     try {
       await setDoc(doc(db, "settings", "footer"), {
-        logoUrl: "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
-        description: "Đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
+        logoUrl:
+          "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
+        description:
+          "Đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
         address: "Thôn Thượng – Xã Cửu Cao – Huyện Văn Giang – Tỉnh Hưng Yên",
         phone: "0904.225.899",
         email: "tangiahuyvn@gmail.com",
@@ -2130,164 +2586,220 @@ const FooterManager = ({ data }: any) => {
         quickLinks: [
           { label: "Về Tân Gia Huy", url: "/ve-tan-gia-huy" },
           { label: "Sản phẩm", url: "/products" },
-          { label: "Bộ sưu tập", url: "/collections" }
+          { label: "Bộ sưu tập", url: "/collections" },
         ],
         servicesLinks: [
           { label: "Chỉnh sách bảo hành", url: "#" },
           { label: "Chính sách đổi trả", url: "#" },
-          { label: "Chính sách vận chuyển", url: "#" }
-        ]
+          { label: "Chính sách vận chuyển", url: "#" },
+        ],
       });
       alert("Khởi tạo thành công!");
     } catch (e) {
-       alert("Lỗi: " + e);
+      alert("Lỗi: " + e);
     }
   };
 
-  if (!data) return (
-     <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
-        <h3 className="text-xl font-bold uppercase tracking-widest text-white mb-6">Chưa có dữ liệu Footer</h3>
-        <button onClick={handleInitialize} className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">Khởi tạo Footer</button>
-     </div>
-  );
+  if (!data)
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <h3 className="text-xl font-bold uppercase tracking-widest text-white mb-6">
+          Chưa có dữ liệu Footer
+        </h3>
+        <button
+          onClick={handleInitialize}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs"
+        >
+          Khởi tạo Footer
+        </button>
+      </div>
+    );
 
   return (
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex justify-between items-end border-b border-white/10 pb-6">
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Footer</h2>
-          <p className="text-zinc-500 text-xs font-light tracking-wide">Thiết lập thông tin liên hệ, logo và các liên kết chân trang.</p>
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+            Quản lý Footer
+          </h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">
+            Thiết lập thông tin liên hệ, logo và các liên kết chân trang.
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">Thông tin chung</h3>
-           <div className="space-y-4">
-              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Logo Footer</label>
-              <ImageUploader value={data.logoUrl} onUpload={(url) => updateFooter("logoUrl", url)} folder="footer" />
-              
+          <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">
+            Thông tin chung
+          </h3>
+          <div className="space-y-4">
+            <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+              Logo Footer
+            </label>
+            <ImageUploader
+              value={data.logoUrl}
+              onUpload={(url) => updateFooter("logoUrl", url)}
+              folder="footer"
+            />
+
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Mô tả công ty
+              </label>
+              <textarea
+                defaultValue={data.description}
+                onBlur={(e) => updateFooter("description", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Địa chỉ
+              </label>
+              <input
+                defaultValue={data.address}
+                onBlur={(e) => updateFooter("address", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Mô tả công ty</label>
-                <textarea 
-                  defaultValue={data.description} 
-                  onBlur={(e) => updateFooter("description", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                  rows={3} 
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                  Điện thoại
+                </label>
+                <input
+                  defaultValue={data.phone}
+                  onBlur={(e) => updateFooter("phone", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
                 />
               </div>
-
               <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Địa chỉ</label>
-                <input 
-                  defaultValue={data.address} 
-                  onBlur={(e) => updateFooter("address", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
+                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                  Email
+                </label>
+                <input
+                  defaultValue={data.email}
+                  onBlur={(e) => updateFooter("email", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
                 />
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Điện thoại</label>
-                  <input 
-                    defaultValue={data.phone} 
-                    onBlur={(e) => updateFooter("phone", e.target.value)} 
-                    className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Email</label>
-                  <input 
-                    defaultValue={data.email} 
-                    onBlur={(e) => updateFooter("email", e.target.value)} 
-                    className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Copyright text</label>
-                <input 
-                  defaultValue={data.copyright} 
-                  onBlur={(e) => updateFooter("copyright", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                />
-              </div>
-           </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Copyright text
+              </label>
+              <input
+                defaultValue={data.copyright}
+                onBlur={(e) => updateFooter("copyright", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-           <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">Mạng xã hội</h3>
-           <div className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Facebook URL</label>
-                <input 
-                  defaultValue={data.facebookUrl} 
-                  onBlur={(e) => updateFooter("facebookUrl", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Youtube URL</label>
-                <input 
-                  defaultValue={data.youtubeUrl} 
-                  onBlur={(e) => updateFooter("youtubeUrl", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">Zalo URL</label>
-                <input 
-                  defaultValue={data.zaloUrl} 
-                  onBlur={(e) => updateFooter("zaloUrl", e.target.value)} 
-                  className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm" 
-                />
-              </div>
-              
-              <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
-                 <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Ghi chú vận hành</h4>
-                 <p className="text-[11px] text-zinc-500 leading-relaxed font-light">
-                    Các liên kết trang (Về Tân Gia Huy, Sản phẩm, Bộ sưu tập...) được đồng bộ từ thanh Menu để đảm bảo tính nhất quán trên toàn hệ thống. Để thay đổi các liên kết này, vui lòng truy cập tab <span className="text-white font-medium italic">&quot;Thanh Menu&quot;</span>.
-                 </p>
-              </div>
-           </div>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-brand-gold">
+            Mạng xã hội
+          </h3>
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Facebook URL
+              </label>
+              <input
+                defaultValue={data.facebookUrl}
+                onBlur={(e) => updateFooter("facebookUrl", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Youtube URL
+              </label>
+              <input
+                defaultValue={data.youtubeUrl}
+                onBlur={(e) => updateFooter("youtubeUrl", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] uppercase text-zinc-500 font-bold ml-1">
+                Zalo URL
+              </label>
+              <input
+                defaultValue={data.zaloUrl}
+                onBlur={(e) => updateFooter("zaloUrl", e.target.value)}
+                className="w-full bg-zinc-800/50 px-4 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm"
+              />
+            </div>
+
+            <div className="pt-6 mt-6 border-t border-white/5 space-y-4">
+              <h4 className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                Ghi chú vận hành
+              </h4>
+              <p className="text-[11px] text-zinc-500 leading-relaxed font-light">
+                Các liên kết trang (Về Tân Gia Huy, Sản phẩm, Bộ sưu tập...)
+                được đồng bộ từ thanh Menu để đảm bảo tính nhất quán trên toàn
+                hệ thống. Để thay đổi các liên kết này, vui lòng truy cập tab{" "}
+                <span className="text-white font-medium italic">
+                  &quot;Thanh Menu&quot;
+                </span>
+                .
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminPage;
-
 const CompanyContentManager = ({ data }: any) => {
   const updateContent = async (field: string, value: string) => {
     try {
-      await setDoc(doc(db, "cms", "company_page"), { [field]: value }, { merge: true });
+      await setDoc(
+        doc(db, "cms", "company_page"),
+        { [field]: value },
+        { merge: true },
+      );
     } catch (e) {
       handleFirestoreError(e, OperationType.WRITE, "cms/company_page");
     }
   };
 
-  if (!data) return (
-     <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+  if (!data)
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
         <button
           onClick={async () => {
             try {
               await setDoc(doc(db, "cms", "company_page"), {
                 hero_title: "Về Tân Gia Huy",
-                hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
-                intro_vocation_text: "Chúng tôi là đơn vị tiên phong trong lĩnh vực gạch kiến trúc và thiết bị nội thất cao cấp...",
-                intro_design_activity_text: "Với đội ngũ kiến trúc sư tâm huyết và mạng lưới đối tác toàn cầu...",
+                hero_image:
+                  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
+                intro_vocation_text:
+                  "Chúng tôi là đơn vị tiên phong trong lĩnh vực gạch kiến trúc và thiết bị nội thất cao cấp...",
+                intro_design_activity_text:
+                  "Với đội ngũ kiến trúc sư tâm huyết và mạng lưới đối tác toàn cầu...",
                 intro_cta1: "XEM DỰ ÁN",
                 intro_cta2: "LIÊN HỆ",
                 section1_title: "Tầm nhìn",
-                section1_description: "Trở thành biểu tượng chất lượng trong ngành vật liệu xây dựng...",
+                section1_description:
+                  "Trở thành biểu tượng chất lượng trong ngành vật liệu xây dựng...",
                 section2_title: "Sứ mệnh",
-                section2_description: "Kiến tạo không gian sống đẳng cấp, mang lại giá trị bền vững cho khách hàng..."
+                section2_description:
+                  "Kiến tạo không gian sống đẳng cấp, mang lại giá trị bền vững cho khách hàng...",
               });
               alert("Khởi tạo thành công!");
             } catch (e) {
-              alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+              alert(
+                "Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)),
+              );
               handleFirestoreError(e, OperationType.WRITE, "cms/company_page");
             }
           }}
@@ -2295,36 +2807,80 @@ const CompanyContentManager = ({ data }: any) => {
         >
           Khởi tạo nội dung trang
         </button>
-     </div>
-  );
+      </div>
+    );
 
   return (
     <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Về Tân Gia Huy</h2>
+      <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+        Về Tân Gia Huy
+      </h2>
       <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
         {[
           { id: "hero_title", label: "Hero Title", type: "text" },
           { id: "hero_image", label: "Hero Image", type: "image" },
-          { id: "intro_vocation_text", label: "Intro Vocation Text", type: "textarea" },
-          { id: "intro_design_activity_text", label: "Intro Design Activity Text", type: "textarea" },
+          {
+            id: "intro_vocation_text",
+            label: "Intro Vocation Text",
+            type: "textarea",
+          },
+          {
+            id: "intro_design_activity_text",
+            label: "Intro Design Activity Text",
+            type: "textarea",
+          },
           { id: "intro_cta1", label: "Intro CTA 1 Text", type: "text" },
           { id: "intro_cta2", label: "Intro CTA 2 Text", type: "text" },
           { id: "section1_title", label: "Section 1 Title", type: "text" },
-          { id: "section1_description", label: "Section 1 Description", type: "textarea" },
+          {
+            id: "section1_description",
+            label: "Section 1 Description",
+            type: "textarea",
+          },
           { id: "section1_image", label: "Section 1 Image", type: "image" },
           { id: "section2_title", label: "Section 2 Title", type: "text" },
-          { id: "section2_description", label: "Section 2 Description", type: "textarea" },
+          {
+            id: "section2_description",
+            label: "Section 2 Description",
+            type: "textarea",
+          },
           { id: "section2_image", label: "Section 2 Image", type: "image" },
-          { id: "video_placeholder_image", label: "Video Placeholder", type: "image" },
+          {
+            id: "video_placeholder_image",
+            label: "Video Placeholder",
+            type: "image",
+          },
         ].map((field) => (
           <div key={field.id} className="space-y-3">
-             <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">{field.label}</label>
-             {field.type === 'text' && <input defaultValue={data[field.id]} onBlur={(e) => updateContent(field.id, e.target.value)} className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none"/>}
-             {field.type === 'textarea' && <textarea defaultValue={data[field.id]} onBlur={(e) => updateContent(field.id, e.target.value)} className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none" rows={4}/>}
-             {field.type === 'image' && <ImageUploader value={data[field.id]} onUpload={(url) => updateContent(field.id, url)} />}
+            <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">
+              {field.label}
+            </label>
+            {field.type === "text" && (
+              <input
+                defaultValue={data[field.id]}
+                onBlur={(e) => updateContent(field.id, e.target.value)}
+                className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none"
+              />
+            )}
+            {field.type === "textarea" && (
+              <textarea
+                defaultValue={data[field.id]}
+                onBlur={(e) => updateContent(field.id, e.target.value)}
+                className="w-full bg-zinc-800/50 px-6 py-4 rounded-xl border border-white/5 outline-none"
+                rows={4}
+              />
+            )}
+            {field.type === "image" && (
+              <ImageUploader
+                value={data[field.id]}
+                onUpload={(url) => updateContent(field.id, url)}
+              />
+            )}
           </div>
         ))}
       </div>
     </div>
   );
 };
+
+export default AdminPage;

@@ -73,7 +73,7 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
           referrerPolicy="no-referrer"
         />
         {/* Dark overlay to match section 2 */}
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* Main Content Reveal */}

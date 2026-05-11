@@ -74,86 +74,100 @@ const ProductCard = ({ name, specs, image }: { name: string; specs: string; imag
   </Link>
 );
 
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, onSnapshot, doc, getDoc } from 'firebase/firestore';
+
 const ProductsPage = () => {
   const [layout, setLayout] = useState<'grid' | 'list'>('grid');
   const [openCategory, setOpenCategory] = useState<string | null>("Loại hình ứng dụng");
   const [activeFilters, setActiveFilters] = useState<Record<string, boolean>>({});
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [content, setContent] = useState<any>({
+    hero_title: "DANH SÁCH SẢN PHẨM",
+    hero_image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+  });
+
+  React.useEffect(() => {
+    const q = query(collection(db, 'products'), orderBy('order'));
+    const unsub = onSnapshot(q, (snap) => {
+      setProducts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setLoading(false);
+    });
+
+    const fetchPageContent = async () => {
+      try {
+        const snap = await getDoc(doc(db, "cms", "products_page"));
+        if (snap.exists()) {
+          setContent(snap.data());
+        }
+      } catch (e) {
+        console.error("Error fetching products page content:", e);
+      }
+    };
+    fetchPageContent();
+
+    return () => unsub();
+  }, []);
 
   const toggleFilter = (id: string) => {
     setActiveFilters(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const categoriesData = [
+  // Hierarchy requested by user
+  const filterSpecs = [
     {
-      title: "Gạch",
-      options: [
-        { label: "Gạch lát nền", count: 420 },
-        { label: "Gạch ốp tường", count: 310 },
-        { label: "Gạch trang trí", count: 150 },
-        { label: "Gạch vân gỗ", count: 100 }
-      ]
+      title: "GẠCH",
+      options: ["Gạch lát nền", "Gạch ốp tường", "Gạch trang trí", "Gạch vân gỗ"]
     },
     {
-      title: "Ngói lợp",
-      options: [
-        { label: "Ngói tráng men", count: 45 },
-        { label: "Ngói đất nung", count: 30 }
-      ]
+      title: "NGÓI LỢP",
+      options: [] // Single item category if options is empty
     },
     {
-      title: "Thiết bị phòng bếp",
-      options: [
-        { label: "Bếp từ", count: 85 },
-        { label: "Chậu rửa bát", count: 120 },
-        { label: "Máy hút mùi", count: 65 },
-        { label: "Vòi rửa bát", count: 90 }
-      ]
+      title: "THIẾT BỊ PHÒNG BẾP",
+      options: ["Bếp từ", "Chậu rửa bát", "Máy hút mùi", "Vòi rửa bát"]
     },
     {
-      title: "Thiết bị phòng tắm",
-      options: [
-        { label: "Bồn cầu", count: 110 },
-        { label: "Bồn tắm", count: 40 },
-        { label: "Chậu lavabo", count: 150 },
-        { label: "Nội thất và phụ kiện", count: 200 },
-        { label: "Sen tắm", count: 130 },
-        { label: "Vòi lavabo", count: 140 }
-      ]
+      title: "THIẾT BỊ PHÒNG TẮM",
+      options: ["Bồn cầu", "Bồn tắm", "Chậu lavabo", "Nội thất và phụ kiện", "Sen tắm", "Vòi lavabo"]
     },
     {
-      title: "Thương Hiệu",
-      options: [
-        { label: "Amalif", count: 50 },
-        { label: "Beuer", count: 35 },
-        { label: "Caesar", count: 180 },
-        { label: "D&K", count: 95 },
-        { label: "Koenl", count: 40 },
-        { label: "Monalisa", count: 120 },
-        { label: "Toto", count: 210 },
-        { label: "Viglacera", count: 190 },
-        { label: "Vitto", count: 110 }
-      ]
+      title: "THƯƠNG HIỆU",
+      options: ["Amalif", "Beuer", "Caesar", "D&K", "Koenl", "Monalisa", "Toto", "Viglacera", "Vitto"]
     }
   ];
 
-  const products = [
-    { name: "Alchemy Argent", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Argent", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Argent", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Argent", specs: "60×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Copper", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Copper", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Copper", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=800" },
-    { name: "Alchemy Copper", specs: "120×278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=800" },
-    { name: "Join Platinum", specs: "60x120, 9mm, Silk, RT, R9 A", image: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?auto=format&fit=crop&q=80&w=800" },
-    { name: "Join Platinum", specs: "80x80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=800" },
-    { name: "Wide Vento", specs: "120x278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800" },
-    { name: "Wide Vento", specs: "120x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753190-17f0abc2a6c4?auto=format&fit=crop&q=80&w=800" },
-    { name: "Anima Graphite", specs: "60x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&q=80&w=800" },
-    { name: "Anima Graphite", specs: "30x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1518481612222-68bbe828eba1?auto=format&fit=crop&q=80&w=800" },
-    { name: "Icon Bone", specs: "60x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6f3ea?auto=format&fit=crop&q=80&w=800" },
-    { name: "Icon Bone", specs: "60x60, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" },
-  ];
+  const categoriesData = filterSpecs.map(section => ({
+    title: section.title,
+    options: section.options.length > 0 
+      ? section.options.map(opt => ({
+          label: opt,
+          count: products.filter(p => p.category === opt || p.brand === opt).length
+        }))
+      : [{
+          label: section.title,
+          count: products.filter(p => p.category === section.title).length
+        }]
+  }));
+
+  // Apply filters
+  const filteredProducts = products.filter(p => {
+    const activeFiltersList = Object.keys(activeFilters).filter(k => activeFilters[k]);
+    if (activeFiltersList.length === 0) return true;
+
+    // Check if product matches any active filter
+    return activeFiltersList.some(filterKey => {
+      const [sectionTitle, label] = filterKey.split('||');
+      if (sectionTitle === "THƯƠNG HIỆU") {
+        return p.brand === label;
+      } else {
+        return p.category === label || (sectionTitle === label && p.category === sectionTitle);
+      }
+    });
+  });
+
+  if (loading) return <div className="h-screen flex items-center justify-center font-sans tracking-widest text-zinc-400">LOADING PRODUCTS...</div>;
 
   return (
     <main className="bg-white min-h-screen selection:bg-brand-gold/30">
@@ -162,35 +176,36 @@ const ProductsPage = () => {
       {/* Hero Header Section */}
       <section className="relative h-[85vh] w-full overflow-hidden">
         <Image 
-          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+          src={content.hero_image || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"}
           alt="Products Hero"
           fill
           className="object-cover"
           priority
+          referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-black/10" />
         <div className="absolute inset-0 px-6 md:px-12 lg:px-24 pointer-events-none flex flex-col justify-end pb-24 lg:pb-32">
           <div className="w-full mx-auto max-w-[1920px] pointer-events-auto text-left">
+            <div className="bg-[#EBE9E4]/20 backdrop-blur-md py-5 px-10 md:py-8 md:px-16 max-w-2xl rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-[#D5D3CE]/50 inline-block">
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black"
+              >
+                {content.hero_title}
+              </motion.h1>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Breadcrumbs */}
       <section className="bg-[#F8F7F5] pt-12 pb-4 px-6 md:px-12 lg:px-24">
-        <div className="flex items-center gap-2 text-[15px] mb-8">
+        <div className="flex items-center gap-2 text-[15px] mb-4">
           <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans font-light">Home</Link>
           <span className="text-gray-300 font-light">•</span>
-          <span className="font-light text-black underline underline-offset-8 font-sans">Danh sách sản phẩm</span>
+          <span className="font-light text-black underline underline-offset-8 font-sans transition-all">Danh sách sản phẩm</span>
         </div>
-        
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-[39px] font-sans font-bold tracking-tight uppercase leading-tight text-black mb-8"
-        >
-          DANH SÁCH <span className="text-brand-gold">SẢN PHẨM</span>
-        </motion.h1>
       </section>
 
       <div className="px-6 md:px-12 lg:px-24 pb-24 bg-[#F8F7F5]">
@@ -211,8 +226,8 @@ const ProductsPage = () => {
                       key={opt.label}
                       label={opt.label}
                       count={opt.count}
-                      active={!!activeFilters[`${category.title}-${opt.label}`]}
-                      onToggle={() => toggleFilter(`${category.title}-${opt.label}`)}
+                      active={!!activeFilters[`${category.title}||${opt.label}`]}
+                      onToggle={() => toggleFilter(`${category.title}||${opt.label}`)}
                     />
                   ))}
                 </FilterAccordion>
@@ -235,17 +250,17 @@ const ProductsPage = () => {
 
               <div className="flex justify-between items-center border-b border-gray-100 pb-6">
                 <div className="flex gap-2 items-center">
-                   <select className="bg-transparent text-sm font-bold uppercase tracking-widest outline-none cursor-pointer text-black hover:opacity-70 transition-all">
-                     <option>Sắp xếp mặc định</option>
-                     <option>Mới nhất</option>
-                     <option>Phổ biến nhất</option>
+                   <select className="bg-transparent text-sm font-bold uppercase tracking-widest outline-none cursor-pointer text-black border-none focus:ring-0 appearance-none">
+                     <option className="text-black bg-white">Sắp xếp mặc định</option>
+                     <option className="text-black bg-white">Mới nhất</option>
+                     <option className="text-black bg-white">Phổ biến nhất</option>
                    </select>
                    <ChevronDown className="w-4 h-4 text-gray-400" />
                 </div>
                 
                 <div className="flex items-center gap-8">
                   <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
-                    Tìm thấy <span className="text-black">1.180</span> kết quả
+                    Tìm thấy <span className="text-black">{filteredProducts.length}</span> kết quả
                   </span>
                   <div className="flex gap-4">
                     <button onClick={() => setLayout('grid')} className={`transition-colors ${layout === 'grid' ? 'text-black' : 'text-gray-300'}`}>
@@ -261,9 +276,14 @@ const ProductsPage = () => {
 
             {/* Product Grid */}
             <div className={`grid gap-x-8 gap-y-16 ${layout === 'grid' ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4' : 'grid-cols-1'}`}>
-              {products.map((p, idx) => (
-                <ProductCard key={idx} {...p} />
+              {filteredProducts.map((p) => (
+                <ProductCard key={p.id} {...p} />
               ))}
+              {filteredProducts.length === 0 && (
+                <div className="col-span-full py-20 text-center text-gray-400 font-sans tracking-widest uppercase text-xs">
+                  Không tìm thấy sản phẩm nào
+                </div>
+              )}
             </div>
 
             {/* Pagination Placeholder */}

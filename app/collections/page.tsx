@@ -8,7 +8,11 @@ import { ArrowLeft, ArrowRight, Play, ChevronRight, Search, Menu, Globe, User } 
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+import { db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+
 const CollectionsPage = () => {
+  const [content, setContent] = useState<any>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredSlideIndex, setFeaturedSlideIndex] = useState(0);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -18,10 +22,35 @@ const CollectionsPage = () => {
   const [spaceSlideIndex, setSpaceSlideIndex] = useState(0);
 
   useEffect(() => {
+    async function fetchData() {
+      const docRef = doc(db, 'cms', 'collections_page');
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setContent(docSnap.data());
+        } else {
+          setContent({
+            hero_title: "BỘ SƯU TẬP",
+            hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+            explore_title: "Explore our collections",
+            explore_description: "Inspirations, colors, and sizes for every design vision.",
+            research_title: "Nghiên cứu Vật liệu",
+            research_description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.",
+            research_image: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"
+          });
+        }
+      } catch (e) {
+        console.error("Error fetching collections data:", e);
+      }
+    }
+    fetchData();
+
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  if (!content) return <div className="h-screen bg-white flex items-center justify-center font-serif text-2xl uppercase tracking-widest text-black">Loading...</div>;
 
   const featuredSlides = [
     {
@@ -180,7 +209,7 @@ const CollectionsPage = () => {
       {/* Hero Image (like Company page) */}
       <section className="relative h-[85vh] w-full overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+          src={content.hero_image || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"}
           alt="Collections Hero"
           fill
           className="absolute inset-0 w-full h-full object-cover"
@@ -197,7 +226,7 @@ const CollectionsPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black"
               >
-                BỘ SƯU TẬP
+                {content.hero_title}
               </motion.h1>
             </div>
           </div>
@@ -217,8 +246,8 @@ const CollectionsPage = () => {
       <section className="pb-16 px-6 md:px-12 lg:px-24 bg-[#F8F7F5]">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-black mb-2 tracking-tight leading-tight">Explore our collections</h2>
-            <p className="text-[#404040] text-[20px] font-light font-sans">Inspirations, colors, and sizes for every design vision.</p>
+            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-black mb-2 tracking-tight leading-tight">{content.explore_title}</h2>
+            <p className="text-[#404040] text-[20px] font-light font-sans">{content.explore_description}</p>
           </div>
           <div className="flex gap-3 mt-8 md:mt-0">
             <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
@@ -336,12 +365,12 @@ const CollectionsPage = () => {
 
       {/* Exploring Material Section */}
       <section className="py-24 px-6 md:px-12 lg:px-24 text-center">
-        <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-4 tracking-tighter uppercase">Nghiên cứu Vật liệu</h2>
-        <p className="text-gray-500 mb-16 text-lg font-light">Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.</p>
+        <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-4 tracking-tighter uppercase">{content.research_title}</h2>
+        <p className="text-gray-500 mb-16 text-lg font-light">{content.research_description}</p>
         
         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden group shadow-2xl">
           <Image
-            src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"
+            src={content.research_image || "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=2070&auto=format&fit=crop"}
             alt="Nghiên cứu vật liệu"
             fill
             className="object-cover brightness-75 group-hover:scale-105 transition-transform duration-1000"

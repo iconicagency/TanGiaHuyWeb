@@ -63,7 +63,7 @@ const Navbar = () => {
         "fixed top-0 left-0 right-0 z-[60] px-4 md:px-8 transition-all duration-500 pointer-events-none",
         scrolled ? "py-4 md:py-6" : "py-4 md:py-6"
       )}>
-        <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-black transition-all duration-500 border border-[#D5D3CE]/50 overflow-hidden">
+        <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-white/98 backdrop-blur-md rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-black transition-all duration-500 border border-[#D5D3CE]/50 overflow-hidden">
           
           {/* Left Section: Logo */}
           <div className="flex-shrink-0 flex items-center">

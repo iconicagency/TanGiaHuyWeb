@@ -1,53 +1,159 @@
 {
   "entities": {
-    "CompanyContent": {
-      "title": "Company Page Content",
-      "description": "Content for the Company page",
+    "Setting": {
+      "title": "Setting",
+      "description": "Global or specific section settings",
       "type": "object",
       "properties": {
-        "hero_image": { "type": "string", "format": "uri" },
+        "logoUrl": { "type": "string" },
+        "section2Bg": { "type": "string" },
+        "section3Bg": { "type": "string" },
+        "section4Bg": { "type": "string" },
+        "section5Bg": { "type": "string" },
+        "section6Bg": { "type": "string" },
+        "videoUrl": { "type": "string" },
+        "links": { "type": "array" }
+      }
+    },
+    "HeroSlide": {
+      "title": "Hero Slide",
+      "description": "Slide for the hero section",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "subtitle": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "CollectionSlide": {
+      "title": "Collection Slide",
+      "description": "Slide for building/project collections",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "description": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "ProjectSlide": {
+      "title": "Project Slide",
+      "description": "Slide for featured projects/products",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "description": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "NewsItem": {
+      "title": "News Item",
+      "description": "News article or update",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "date": { "type": "string" },
+        "description": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+    "ContactInfo": {
+      "title": "Contact Info",
+      "description": "Business contact details",
+      "type": "object",
+      "properties": {
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "mapUrl": { "type": "string" },
+        "facebook": { "type": "string" },
+        "youtube": { "type": "string" },
+        "zalo": { "type": "string" }
+      }
+    },
+    "CompanyPage": {
+      "title": "Company Page",
+      "description": "Content for About/Company page",
+      "type": "object",
+      "properties": {
+        "hero_image": { "type": "string" },
         "hero_title": { "type": "string" },
-        "section1_image": { "type": "string", "format": "uri" },
+        "intro_vocation_text": { "type": "string" },
+        "intro_design_activity_text": { "type": "string" },
+        "intro_cta1": { "type": "string" },
+        "intro_cta2": { "type": "string" },
+        "section1_image": { "type": "string" },
         "section1_title": { "type": "string" },
         "section1_description": { "type": "string" },
-        "section2_image": { "type": "string", "format": "uri" },
+        "section2_image": { "type": "string" },
         "section2_title": { "type": "string" },
         "section2_description": { "type": "string" },
-        "video_placeholder_image": { "type": "string", "format": "uri" }
-      },
-      "required": ["hero_title", "section1_title", "section2_title"]
+        "video_placeholder_image": { "type": "string" }
+      }
     },
-    "NavLink": {
-      "title": "Navigation Link",
+    "Product": {
+      "title": "Product",
+      "description": "Product item for the store",
       "type": "object",
       "properties": {
         "name": { "type": "string" },
-        "href": { "type": "string" },
-        "desc": { "type": "string" }
-      },
-      "required": ["name", "href"]
+        "specs": { "type": "string" },
+        "image": { "type": "string" },
+        "category": { "type": "string" },
+        "brand": { "type": "string" },
+        "order": { "type": "number" }
+      }
     },
-    "NavigationSettings": {
-      "title": "Navigation Settings",
-      "description": "Main menu navigation links",
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized admin users",
       "type": "object",
       "properties": {
-        "links": {
-          "type": "array",
-          "items": { "$ref": "NavLink" }
-        }
-      },
-      "required": ["links"]
+        "email": { "type": "string" },
+        "authorized": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
-    "/cms/company_page": {
-      "schema": "CompanyContent",
-      "description": "Content for the About Us page"
+    "settings/{settingId}": {
+      "schema": "Setting",
+      "description": "Global and hero settings"
     },
-    "/settings/navigation": {
-      "schema": "NavigationSettings",
-      "description": "Main header navigation menu"
+    "hero_slides/{slideId}": {
+      "schema": "HeroSlide",
+      "description": "Slides for the hero section"
+    },
+    "collection_slides/{slideId}": {
+      "schema": "CollectionSlide",
+      "description": "Building/project collections"
+    },
+    "project_slides/{slideId}": {
+      "schema": "ProjectSlide",
+      "description": "Featured projects/products on home"
+    },
+    "news_items/{newsId}": {
+      "schema": "NewsItem",
+      "description": "News articles"
+    },
+    "contact/info": {
+      "schema": "ContactInfo",
+      "description": "Contact details"
+    },
+    "cms/company_page": {
+      "schema": "CompanyPage",
+      "description": "About page content"
+    },
+    "products/{productId}": {
+      "schema": "Product",
+      "description": "Product catalogue"
+    },
+    "admins/{userId}": {
+      "schema": "Admin",
+      "description": "Admin authorization list"
     }
   }
 }

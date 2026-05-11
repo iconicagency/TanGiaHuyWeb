@@ -32,6 +32,8 @@ import {
   Settings,
   ExternalLink,
   ChevronDown,
+  Grid as GridIcon,
+  Database,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -78,7 +80,7 @@ const AdminPage = () => {
   const [userAdmin, setUserAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu"
+    "general" | "hero" | "collections" | "projects" | "news" | "contact" | "company" | "menu" | "products" | "about_home" | "collections_page" | "products_page"
   >("general");
   const [errorStatus, setErrorStatus] = useState<string | null>(null);
 
@@ -92,6 +94,10 @@ const AdminPage = () => {
   const [contactInfo, setContactInfo] = useState<any>(null);
   const [companyContent, setCompanyContent] = useState<any>(null);
   const [navLinks, setNavLinks] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [aboutHome, setAboutHome] = useState<any>(null);
+  const [collectionsPageContent, setCollectionsPageContent] = useState<any>(null);
+  const [productsPageContent, setProductsPageContent] = useState<any>(null);
 
   useEffect(() => {
     console.log("Admin: Auth checking...");
@@ -207,6 +213,30 @@ const AdminPage = () => {
       (err) => handleFirestoreError(err, OperationType.GET, "settings/navigation"),
     );
 
+    const unsubProducts = onSnapshot(
+      query(collection(db, "products"), orderBy("order")),
+      (snap) => setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (err) => handleFirestoreError(err, OperationType.LIST, "products"),
+    );
+
+    const unsubAboutHome = onSnapshot(
+      doc(db, "cms", "about_home"),
+      (snap) => setAboutHome(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, "cms/about_home"),
+    );
+
+    const unsubCollectionsPage = onSnapshot(
+      doc(db, "cms", "collections_page"),
+      (snap) => setCollectionsPageContent(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, "cms/collections_page"),
+    );
+
+    const unsubProductsPage = onSnapshot(
+      doc(db, "cms", "products_page"),
+      (snap) => setProductsPageContent(snap.exists() ? snap.data() : null),
+      (err) => handleFirestoreError(err, OperationType.GET, "cms/products_page"),
+    );
+
     return () => {
       unsubGeneral();
       unsubHero();
@@ -217,6 +247,10 @@ const AdminPage = () => {
       unsubContact();
       unsubCompany();
       unsubNavigation();
+      unsubProducts();
+      unsubAboutHome();
+      unsubCollectionsPage();
+      unsubProductsPage();
     };
   }, [isAdmin]);
 
@@ -381,11 +415,15 @@ const AdminPage = () => {
             { id: "general", label: "Global (Logo/BG)", icon: ExternalLink },
             { id: "menu", label: "Thanh Menu (Header)", icon: Layout },
             { id: "hero", label: "Trang chủ (Video)", icon: Layout },
+            { id: "about_home", label: "Trang chủ (Về TGH)", icon: Layout },
             { id: "projects", label: "Sản phẩm mới", icon: Layout },
             { id: "collections", label: "Bộ sưu tập", icon: ImageIcon },
             { id: "news", label: "Tin tức", icon: ImageIcon },
+            { id: "collections_page", label: "Trang Bộ sưu tập", icon: Layout },
+            { id: "products_page", label: "Banner Sản phẩm", icon: Layout },
             { id: "contact", label: "Thông tin liên hệ", icon: Settings },
             { id: "company", label: "Về Tân Gia Huy", icon: Layout },
+            { id: "products", label: "Danh sách sản phẩm", icon: GridIcon },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -530,6 +568,10 @@ const AdminPage = () => {
         {activeTab === "contact" && <ContactManager data={contactInfo} />}
         {activeTab === "company" && <CompanyContentManager data={companyContent} />}
         {activeTab === "menu" && <MenuManager items={navLinks} />}
+        {activeTab === "products" && <ProductManager items={products} />}
+        {activeTab === "about_home" && <AboutHomeManager data={aboutHome} />}
+        {activeTab === "collections_page" && <CollectionsPageManager data={collectionsPageContent} />}
+        {activeTab === "products_page" && <ProductsPageManager data={productsPageContent} />}
       </main>
     </div>
   );
@@ -1397,6 +1439,413 @@ const MenuManager = ({ items }: { items: any[] }) => {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ProductManager = ({ items }: any) => {
+  const addProduct = async () => {
+    const id = Date.now().toString();
+    try {
+      await setDoc(doc(db, "products", id), {
+        name: "Sản phẩm mới",
+        specs: "40×80, 9mm, Matt, RT, R9 A",
+        image: "https://picsum.photos/800/1200",
+        category: "Gạch",
+        brand: "Caesar",
+        order: items.length,
+      });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "products");
+    }
+  };
+
+  const removeProduct = async (id: string) => {
+    if (!confirm("Xóa sản phẩm này?")) return;
+    try {
+      await deleteDoc(doc(db, "products", id));
+    } catch (e) {
+      handleFirestoreError(e, OperationType.DELETE, `products/${id}`);
+    }
+  };
+
+  const updateProduct = async (id: string, data: any) => {
+    try {
+      await setDoc(doc(db, "products", id), data, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, `products/${id}`);
+    }
+  };
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex items-end justify-between">
+        <div className="space-y-2">
+          <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">
+            Danh sách sản phẩm
+          </h2>
+          <p className="text-zinc-500 text-xs font-light tracking-wide">
+            Quản lý tất cả sản phẩm hiển thị trên trang sản phẩm.
+          </p>
+        </div>
+        <button
+          onClick={addProduct}
+          className="bg-white text-black px-6 py-3 rounded-full flex items-center space-x-2 font-bold uppercase tracking-widest text-[10px] hover:scale-105 transition-all shadow-xl"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Thêm sản phẩm</span>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        {items.map((item: any) => (
+          <div
+            key={item.id}
+            className="bg-zinc-900 p-8 rounded-3xl border border-white/5 flex gap-10 hover:border-white/10 transition-all"
+          >
+            <div className="w-56 flex-shrink-0">
+              <ImageUploader
+                value={item.image}
+                onUpload={(url) => updateProduct(item.id, { image: url })}
+                folder="products"
+              />
+            </div>
+            <div className="flex-1 grid grid-cols-2 gap-8 pt-4">
+              <div className="space-y-6">
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                    Tên sản phẩm
+                  </label>
+                  <input
+                    defaultValue={item.name}
+                    onBlur={(e) =>
+                      updateProduct(item.id, { name: e.target.value })
+                    }
+                    placeholder="Tên sản phẩm"
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                    Thông số kỹ thuật
+                  </label>
+                  <input
+                    defaultValue={item.specs}
+                    onBlur={(e) =>
+                      updateProduct(item.id, { specs: e.target.value })
+                    }
+                    placeholder="VD: 40×80, 9mm, Matt..."
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                  />
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                    Phân loại (Category)
+                  </label>
+                  <input
+                    defaultValue={item.category}
+                    onBlur={(e) =>
+                      updateProduct(item.id, { category: e.target.value })
+                    }
+                    placeholder="Gạch, Ngói, Thiết bị..."
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold ml-1">
+                    Thương hiệu
+                  </label>
+                  <input
+                    defaultValue={item.brand}
+                    onBlur={(e) =>
+                      updateProduct(item.id, { brand: e.target.value })
+                    }
+                    placeholder="Caesar, Toto..."
+                    className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col justify-between py-4">
+              <div className="space-y-1">
+                <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">
+                  Thứ tự
+                </label>
+                <input
+                  type="number"
+                  defaultValue={item.order}
+                  onBlur={(e) =>
+                    updateProduct(item.id, { order: parseInt(e.target.value) || 0 })
+                  }
+                  className="w-16 bg-zinc-800/50 px-3 py-2 rounded-lg border border-white/5 outline-none text-center text-sm"
+                />
+              </div>
+              <button
+                onClick={() => removeProduct(item.id)}
+                className="text-zinc-600 hover:text-red-500 p-2 hover:bg-red-500/10 rounded-lg transition-all"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        ))}
+        {items.length === 0 && (
+          <div className="text-center py-20 bg-zinc-900 rounded-3xl border border-dashed border-zinc-800">
+            <Database className="w-10 h-10 text-zinc-700 mx-auto mb-4" />
+            <p className="text-zinc-500 text-xs uppercase tracking-widest">Chưa có sản phẩm nào.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const AboutHomeManager = ({ data }: any) => {
+  const updateContent = async (field: string, value: string) => {
+    try {
+      await setDoc(doc(db, "cms", "about_home"), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "cms/about_home");
+    }
+  };
+
+  if (!data) {
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Về TGH Home</h3>
+        <button
+          onClick={() => updateContent("title", "VỀ TÂN GIA HUY")}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+        >
+          Khởi tạo ngay
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Trang chủ (Về TGH)</h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">Quản lý nội dung giới thiệu tại Section 2 trang chủ.</p>
+      </div>
+
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4">
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề (Title)</label>
+                <input
+                  defaultValue={data.title}
+                  onBlur={(e) => updateContent("title", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột trái 1</label>
+                <textarea
+                  defaultValue={data.leftText1}
+                  onBlur={(e) => updateContent("leftText1", e.target.value)}
+                  rows={4}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột trái 2</label>
+                <textarea
+                  defaultValue={data.leftText2}
+                  onBlur={(e) => updateContent("leftText2", e.target.value)}
+                  rows={4}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                />
+             </div>
+          </div>
+          <div className="space-y-4">
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột phải 1</label>
+                <textarea
+                  defaultValue={data.rightText1}
+                  onBlur={(e) => updateContent("rightText1", e.target.value)}
+                  rows={4}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Văn bản cột phải 2 (Chữ ký/Slogan)</label>
+                <textarea
+                  defaultValue={data.rightText2}
+                  onBlur={(e) => updateContent("rightText2", e.target.value)}
+                  rows={4}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light italic"
+                />
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CollectionsPageManager = ({ data }: any) => {
+  const updateContent = async (field: string, value: any) => {
+    try {
+      await setDoc(doc(db, "cms", "collections_page"), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "cms/collections_page");
+    }
+  };
+
+  if (!data) {
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Bộ sưu tập</h3>
+        <button
+          onClick={() => updateContent("hero_title", "BỘ SƯU TẬP")}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+        >
+          Khởi tạo ngay
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Bộ sưu tập</h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung text và hình ảnh trên toàn bộ trang Bộ sưu tập.</p>
+      </div>
+
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-12">
+        {/* Section: Hero */}
+        <section className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">1. Hero Section</h3>
+          <div className="space-y-4">
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề chính (Hero Title)</label>
+                <input
+                  defaultValue={data.hero_title}
+                  onBlur={(e) => updateContent("hero_title", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Hero</label>
+                <ImageUploader 
+                  value={data.hero_image} 
+                  onUpload={(url) => updateContent("hero_image", url)}
+                  folder="collections"
+                />
+             </div>
+          </div>
+        </section>
+
+        {/* Section: Explore */}
+        <section className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">2. Explore Section</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề Explore</label>
+                <input
+                  defaultValue={data.explore_title}
+                  onBlur={(e) => updateContent("explore_title", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả Explore</label>
+                <input
+                  defaultValue={data.explore_description}
+                  onBlur={(e) => updateContent("explore_description", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+          </div>
+        </section>
+
+        {/* Section: Material Research */}
+        <section className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">3. Nghiên cứu Vật liệu</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề</label>
+                <input
+                  defaultValue={data.research_title}
+                  onBlur={(e) => updateContent("research_title", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Mô tả</label>
+                <input
+                  defaultValue={data.research_description}
+                  onBlur={(e) => updateContent("research_description", e.target.value)}
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+const ProductsPageManager = ({ data }: any) => {
+  const updateContent = async (field: string, value: any) => {
+    try {
+      await setDoc(doc(db, "cms", "products_page"), { [field]: value }, { merge: true });
+    } catch (e) {
+      handleFirestoreError(e, OperationType.WRITE, "cms/products_page");
+    }
+  };
+
+  if (!data) {
+    return (
+      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
+        <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Sản phẩm</h3>
+        <button
+          onClick={() => updateContent("hero_title", "DANH SÁCH SẢN PHẨM")}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
+        >
+          Khởi tạo ngay
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-10 w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold uppercase tracking-[0.2em] text-white">Quản lý Trang Sản phẩm</h2>
+        <p className="text-zinc-500 text-xs font-light tracking-wide">Thay đổi nội dung hero banner trên trang danh sách sản phẩm.</p>
+      </div>
+
+      <div className="bg-zinc-900 p-10 rounded-3xl border border-white/5 space-y-12">
+        <section className="space-y-6">
+          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold border-b border-white/5 pb-2">Hero Section</h3>
+          <div className="space-y-4">
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Tiêu đề chính</label>
+                <input
+                  defaultValue={data.hero_title}
+                  onBlur={(e) => updateContent("hero_title", e.target.value)}
+                  placeholder="DANH SÁCH SẢN PHẨM"
+                  className="w-full bg-zinc-800/50 px-5 py-3 rounded-xl border border-white/5 outline-none focus:border-white transition-all text-sm font-light text-white"
+                />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold ml-1">Ảnh Hero</label>
+                <ImageUploader 
+                  value={data.hero_image} 
+                  onUpload={(url) => updateContent("hero_image", url)}
+                  folder="products_page"
+                />
+             </div>
+          </div>
+        </section>
       </div>
     </div>
   );

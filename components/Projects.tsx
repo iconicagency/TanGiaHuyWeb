@@ -105,7 +105,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
               referrerPolicy="no-referrer"
             />
             {/* Dark overlay to match section 2 */}
-            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-black/20" />
           </motion.div>
         </AnimatePresence>
       </div>

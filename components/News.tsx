@@ -85,11 +85,13 @@ const News: React.FC<NewsProps> = ({ isActive }) => {
           src={bgImage}
           alt=""
           className={cn(
-            "w-full h-full object-cover scale-110 transition-all duration-[2000ms] ease-in-out",
-            isRevealed ? "blur-2xl opacity-40" : "blur-none opacity-100"
+            "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
+            isRevealed ? "scale-105 opacity-60" : "scale-100 opacity-100"
           )}
           referrerPolicy="no-referrer"
         />
+        {/* Dark overlay to match section 2 */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <motion.div 

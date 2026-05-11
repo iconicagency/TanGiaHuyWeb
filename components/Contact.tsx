@@ -68,10 +68,12 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
           alt="Vintage background"
           className={cn(
             "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
-            isRevealed ? "blur-xl opacity-40 grayscale" : "blur-none opacity-100 grayscale-0"
+            isRevealed ? "scale-105 opacity-60 grayscale" : "scale-100 opacity-100 grayscale-0"
           )}
           referrerPolicy="no-referrer"
         />
+        {/* Dark overlay to match section 2 */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Main Content Reveal */}

@@ -10,6 +10,85 @@ import Footer from '@/components/Footer';
 
 const CollectionsPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [featuredSlideIndex, setFeaturedSlideIndex] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(1024);
+
+  const [magazineSlideIndex, setMagazineSlideIndex] = useState(0);
+
+  const [solutionSlideIndex, setSolutionSlideIndex] = useState(0);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const featuredSlides = [
+    {
+      id: 1,
+      title: "Connections",
+      buttonText: "Discover more",
+      image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=2070&auto=format&fit=crop",
+    },
+    {
+      id: 2,
+      title: "Virtual Room",
+      buttonText: "Try Caesar tiles in your rooms",
+      image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=2070&auto=format&fit=crop",
+    },
+    {
+      id: 3,
+      title: "Caesar Urban Lab London",
+      buttonText: "Book visit",
+      image: "https://www.caesar.it/assets/Uploads/_resampled/CroppedFocusedImageWyIxMDI0IiwiNTc2Il0/DSC-5646.jpg",
+    }
+  ];
+
+  const solutionSlides = [
+    {
+      id: 1,
+      title: "Sàn ngoài trời",
+      buttonText: "Xem chi tiết",
+      image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070&auto=format&fit=crop",
+    },
+    {
+      id: 2,
+      title: "Giải pháp kỹ thuật",
+      buttonText: "Xem chi tiết",
+      image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2069&auto=format&fit=crop",
+    },
+    {
+      id: 3,
+      title: "Mặt tiền thông gió",
+      buttonText: "Xem chi tiết",
+      image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2069&auto=format&fit=crop",
+    }
+  ];
+
+  const nextSolutionSlide = () => {
+    if (solutionSlideIndex < solutionSlides.length - 1) {
+      setSolutionSlideIndex(prev => prev + 1);
+    }
+  };
+
+  const prevSolutionSlide = () => {
+    if (solutionSlideIndex > 0) {
+      setSolutionSlideIndex(prev => prev - 1);
+    }
+  };
+
+  const nextFeaturedSlide = () => {
+    if (featuredSlideIndex < featuredSlides.length - 1) {
+      setFeaturedSlideIndex(prev => prev + 1);
+    }
+  };
+
+  const prevFeaturedSlide = () => {
+    if (featuredSlideIndex > 0) {
+      setFeaturedSlideIndex(prev => prev - 1);
+    }
+  };
 
   const heroSlides = [
     {
@@ -49,8 +128,31 @@ const CollectionsPage = () => {
       date: "06 Tháng 3 2026",
       title: 'Sự tiến hóa của vật liệu: Tân Gia Huy tại triễn lãm Las Vegas',
       img: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      date: "20 Tháng 2 2026",
+      title: 'Tân Gia Huy giới thiệu bộ sưu tập gạch porcelain khổ lớn',
+      img: "https://images.unsplash.com/photo-1600607687940-47a04b629571?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      date: "15 Tháng 1 2026",
+      title: 'Xu hướng vật liệu sinh thái trong kiến trúc hiện đại',
+      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop"
     }
   ];
+
+  const nextMagazineSlide = () => {
+    const itemsPerView = windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3;
+    if (magazineSlideIndex < magazineItems.length - itemsPerView) {
+      setMagazineSlideIndex(prev => prev + 1);
+    }
+  };
+
+  const prevMagazineSlide = () => {
+    if (magazineSlideIndex > 0) {
+      setMagazineSlideIndex(prev => prev - 1);
+    }
+  };
 
   return (
     <main className="bg-white min-h-screen font-sans selection:bg-brand-gold/30">
@@ -84,30 +186,27 @@ const CollectionsPage = () => {
       </section>
 
       {/* Page Header / Breadcrumbs (like Company & Products page) */}
-      <section className="bg-[#F8F7F5] py-12 px-6 md:px-12 lg:px-24">
+      <section className="bg-[#F8F7F5] pt-12 pb-4 px-6 md:px-12 lg:px-24">
         <div className="flex items-center gap-2 text-sm mb-4">
           <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans">Home</Link>
           <span className="text-gray-300">•</span>
           <span className="font-medium text-black underline underline-offset-4 font-sans">Collections</span>
         </div>
-        <p className="text-gray-500 max-w-xl text-lg font-light italic mt-8">
-          &quot;Cảm hứng, màu sắc và kích thước cho mọi phong cách thiết kế.&quot;
-        </p>
       </section>
 
       {/* Explore our collections */}
-      <section className="py-24 px-6 md:px-12 lg:px-24">
+      <section className="pb-16 px-6 md:px-12 lg:px-24 bg-[#F8F7F5]">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-4 tracking-tight uppercase">Khám phá bộ sưu tập</h2>
-            <p className="text-gray-500 max-w-xl text-lg font-light italic">Cảm hứng, màu sắc và kích thước cho mọi phong cách thiết kế.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Explore our collections</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">Inspirations, colors, and sizes for every design vision.</p>
           </div>
-          <div className="flex gap-4 mt-8 md:mt-0">
-            <button className="px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:border-black transition-all group">
-              <Search className="w-4 h-4 group-hover:scale-110 transition-transform" /> Tìm kiếm sản phẩm
+          <div className="flex gap-3 mt-8 md:mt-0">
+            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all">
+              Search Product <Search className="w-4 h-4 ml-1" />
             </button>
-            <button className="px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:border-black transition-all">
-              Tất cả bộ sưu tập <ChevronRight className="w-4 h-4" />
+            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all">
+              All the collections <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
         </div>
@@ -135,55 +234,83 @@ const CollectionsPage = () => {
       </section>
 
       {/* Featured Section */}
-      <section className="py-24 bg-gray-50/50">
-        <div className="px-6 md:px-12 lg:px-24 mb-16">
-          <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-4 tracking-tight uppercase">Các dòng tiêu biểu</h2>
-          <p className="text-gray-500 max-w-xl text-lg font-light">Sản phẩm, xu hướng và cảm hứng được lựa chọn cho dự án tiếp theo của bạn.</p>
-        </div>
-
-        <div className="px-6 md:px-12 lg:px-24 grid md:grid-cols-2 gap-12">
-          {/* Main card */}
-          <div className="group cursor-pointer">
-            <div className="aspect-[16/9] relative overflow-hidden rounded-[2.5rem] mb-8 shadow-sm group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-700">
-              <Image
-                src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=2070&auto=format&fit=crop"
-                alt="Gạch phòng tắm"
-                fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <h3 className="text-3xl font-sans font-bold mb-4 uppercase tracking-tighter">Kết nối không gian</h3>
-            <button className="px-8 py-3 border border-gray-900 rounded-full text-[10px] font-extrabold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all shadow-sm">
-              Khám phá thêm
-            </button>
+      <section className="py-20 relative overflow-hidden bg-[#F8F7F5]">
+        {/* Diagonal background element */}
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-white [clip-path:polygon(0_0,100%_0,70%_100%,0_100%)] z-0 hidden md:block"></div>
+        
+        <div className="relative z-10 w-full">
+          <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Featured</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">Products, trends, and news selected to inspire your next project.</p>
           </div>
 
-          {/* Side card */}
-          <div className="group cursor-pointer">
-            <div className="aspect-[16/9] relative overflow-hidden rounded-[2.5rem] mb-8 shadow-sm group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-700">
-              <Image
-                src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=2070&auto=format&fit=crop"
-                alt="Phòng ảo"
-                fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <h3 className="text-3xl font-sans font-bold mb-4 uppercase tracking-tighter">Phòng trải nghiệm ảo</h3>
-            <button className="px-8 py-3 border border-gray-900 rounded-full text-[10px] font-extrabold uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all shadow-sm">
-              Trải nghiệm trong không gian của bạn
+          <div className="pl-6 md:pl-12 lg:pl-24 w-full mt-10 md:mt-8 overflow-hidden">
+            <motion.div 
+              className="md:ml-[33%] flex min-w-max pr-6"
+              animate={{
+                x: `calc(-${featuredSlideIndex * (windowWidth < 768 ? 85 : 35)}vw - ${featuredSlideIndex * 24}px)`
+              }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              {featuredSlides.map((slide, index) => {
+                const isActive = index === featuredSlideIndex;
+                return (
+                  <motion.div 
+                    key={slide.id}
+                    className="flex-shrink-0 group cursor-pointer"
+                    animate={{
+                      width: isActive ? (windowWidth < 768 ? '85vw' : '55vw') : (windowWidth < 768 ? '85vw' : '35vw'),
+                      marginRight: 24,
+                    }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  >
+                    <motion.div 
+                      className="relative overflow-hidden rounded-[12px] mb-4 shadow-sm group-hover:shadow-md transition-shadow"
+                      animate={{
+                        aspectRatio: isActive ? 16/10 : (windowWidth < 768 ? 16/10 : 10/10),
+                      }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                      <Image
+                        src={slide.image}
+                        alt={slide.title}
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                    </motion.div>
+                    <h3 className="text-[26px] font-sans font-normal mb-3 text-[#1A1A1A]">{slide.title}</h3>
+                    <button className="px-5 py-2 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                      {slide.buttonText}
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          <div className="flex justify-center mt-12 gap-4 relative z-10 w-full ml-0 md:ml-[15%]">
+            <button 
+              onClick={prevFeaturedSlide}
+              className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
+                featuredSlideIndex === 0 
+                  ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
+                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
+            </button>
+            <button 
+              onClick={nextFeaturedSlide}
+              className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
+                featuredSlideIndex === featuredSlides.length - 1 
+                  ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
+                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+              }`}
+            >
+              <ArrowRight className="w-5 h-5 stroke-[1.5]" />
             </button>
           </div>
-        </div>
-
-        <div className="flex justify-center mt-12 gap-4">
-          <button className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:border-black transition-all">
-            <ChevronRight className="w-6 h-6 rotate-180" />
-          </button>
-          <button className="w-14 h-14 rounded-full border border-gray-300 flex items-center justify-center hover:border-black transition-all">
-            <ChevronRight className="w-6 h-6" />
-          </button>
         </div>
       </section>
 
@@ -224,84 +351,159 @@ const CollectionsPage = () => {
       </section>
 
       {/* Magazine Section */}
-      <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#F8F8F8]">
-        <div className="flex justify-between items-end mb-16">
+      <section className="py-20 bg-[#F8F8F8] relative overflow-hidden">
+        <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full">
           <div>
-            <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-4 tracking-tight uppercase">Từ chuyên mục tin tức</h2>
-            <p className="text-gray-500 max-w-xl text-lg font-light">Những câu chuyện, ý tưởng và góc nhìn từ thế giới gốm sứ và thiết kế.</p>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Từ chuyên mục tin tức</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">Những câu chuyện, ý tưởng và góc nhìn từ thế giới gốm sứ và thiết kế.</p>
           </div>
-          <button className="px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:border-black transition-all">
-            Xem tất cả tin tức <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {magazineItems.map((item, idx) => (
-            <motion.div 
-              key={idx}
-              whileHover={{ y: -10 }}
-              className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
-            >
-              <div className="aspect-[4/3] relative overflow-hidden">
-                <Image
-                  src={item.img}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <div className="p-8">
-                <p className="text-gray-400 text-[10px] font-bold mb-3 uppercase tracking-widest">{item.date}</p>
-                <h3 className="text-xl font-sans font-bold text-gray-900 mb-6 leading-tight line-clamp-3 min-h-[4.5rem] uppercase tracking-tighter">
-                  {item.title}
-                </h3>
-                <button className="px-6 py-2 border border-gray-200 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
-                  Đọc thêm
-                </button>
-              </div>
-            </motion.div>
-          ))}
+        <div className="pl-6 md:pl-12 lg:pl-24 pr-6 w-full overflow-hidden relative z-10">
+          <motion.div 
+            className="flex min-w-max pr-6"
+            animate={{
+              x: `calc(-${magazineSlideIndex * (windowWidth < 768 ? 85 : windowWidth < 1024 ? 45 : 30)}vw - ${magazineSlideIndex * 24}px)`
+            }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            {magazineItems.map((item, idx) => (
+              <motion.div 
+                key={idx}
+                className="flex flex-col flex-shrink-0 relative group"
+                style={{ 
+                  width: windowWidth < 768 ? '85vw' : windowWidth < 1024 ? '45vw' : '30vw',
+                  marginRight: 24 
+                }}
+              >
+                <div className="aspect-[16/10] relative w-full overflow-hidden shrink-0 rounded-[12px] mb-4">
+                  <Image
+                    src={item.img}
+                    alt={item.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="flex flex-col flex-1 pl-1">
+                  <div className="mb-2">
+                    <p className="text-[#404040] text-[13px] font-normal font-sans">{item.date}</p>
+                  </div>
+                  <h3 className="text-[19px] font-sans font-normal text-[#1A1A1A] mb-5 leading-snug line-clamp-2">
+                    {item.title}
+                  </h3>
+                  <div className="mt-auto">
+                    <button className="px-5 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                      Read more
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+        
+        {/* Navigation buttons */}
+        <div className="flex justify-center gap-4 mt-12 relative z-10 w-full">
+          <button 
+            onClick={prevMagazineSlide}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+              magazineSlideIndex === 0 
+                ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
+                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+            }`}
+          >
+            <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
+          </button>
+          <button 
+            onClick={nextMagazineSlide}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+              magazineSlideIndex >= magazineItems.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
+                ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
+                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+            }`}
+          >
+            <ArrowRight className="w-5 h-5 stroke-[1.5]" />
+          </button>
         </div>
       </section>
 
       {/* Solutions Section */}
-      <section className="py-24 px-6 md:px-12 lg:px-24">
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-5xl font-sans font-bold text-gray-900 mb-4 tracking-tight uppercase">Giải pháp kiến trúc</h2>
-          <p className="text-gray-500 max-w-xl text-lg font-light">Sự giao thao hoàn hảo giữa tính thẩm mỹ và công năng sử dụng.</p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          <div className="group cursor-pointer">
-            <div className="aspect-[16/10] relative overflow-hidden rounded-[2.5rem] mb-8 shadow-sm group-hover:shadow-2xl transition-all duration-700">
-              <Image
-                src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=2070&auto=format&fit=crop"
-                alt="Sàn ngoài trời"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <h3 className="text-3xl font-sans font-bold mb-4 text-gray-900 uppercase tracking-tighter">Sàn ngoài trời</h3>
-            <button className="px-8 py-3 border border-gray-900 rounded-full text-[10px] font-extrabold uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
-              Xem chi tiết
-            </button>
+      <section className="py-20 relative overflow-hidden bg-white">
+        {/* Diagonal background element */}
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-[#F8F7F5] [clip-path:polygon(0_0,100%_0,70%_100%,0_100%)] z-0 hidden md:block"></div>
+        
+        <div className="relative z-10 w-full">
+          <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Giải pháp kiến trúc</h2>
+            <p className="text-[#404040] text-[17px] font-normal font-sans">Sự giao thao hoàn hảo giữa tính thẩm mỹ và công năng sử dụng.</p>
           </div>
 
-          <div className="group cursor-pointer">
-            <div className="aspect-[16/10] relative overflow-hidden rounded-[2.5rem] mb-8 shadow-sm group-hover:shadow-2xl transition-all duration-700">
-              <Image
-                src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2069&auto=format&fit=crop"
-                alt="Giải pháp kỹ thuật"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-1000"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <h3 className="text-3xl font-sans font-bold mb-4 text-gray-900 uppercase tracking-tighter">Giải pháp kỹ thuật</h3>
-            <button className="px-8 py-3 border border-gray-900 rounded-full text-[10px] font-extrabold uppercase tracking-widest hover:bg-gray-900 hover:text-white transition-all">
-              Xem chi tiết
+          <div className="pl-6 md:pl-12 lg:pl-24 w-full mt-10 md:mt-8 overflow-hidden">
+            <motion.div 
+              className="md:ml-[33%] flex min-w-max pr-6"
+              animate={{
+                x: `calc(-${solutionSlideIndex * (windowWidth < 768 ? 85 : 35)}vw - ${solutionSlideIndex * 24}px)`
+              }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              {solutionSlides.map((slide, index) => {
+                const isActive = index === solutionSlideIndex;
+                return (
+                  <motion.div 
+                    key={slide.id}
+                    className="flex-shrink-0 group cursor-pointer"
+                    animate={{
+                      width: isActive ? (windowWidth < 768 ? '85vw' : '55vw') : (windowWidth < 768 ? '85vw' : '35vw'),
+                      marginRight: 24,
+                    }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  >
+                    <motion.div 
+                      className="relative overflow-hidden rounded-[12px] mb-4 shadow-sm group-hover:shadow-md transition-shadow"
+                      animate={{
+                        aspectRatio: isActive ? 16/10 : (windowWidth < 768 ? 16/10 : 10/10),
+                      }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    >
+                      <Image
+                        src={slide.image}
+                        alt={slide.title}
+                        fill
+                        className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                    </motion.div>
+                    <h3 className="text-[26px] font-sans font-normal mb-3 text-[#1A1A1A]">{slide.title}</h3>
+                    <button className="px-5 py-2 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                      {slide.buttonText}
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          <div className="flex justify-center mt-12 gap-4 relative z-10 w-full ml-0 md:ml-[15%]">
+            <button 
+              onClick={prevSolutionSlide}
+              className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
+                solutionSlideIndex === 0 
+                  ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
+                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
+            </button>
+            <button 
+              onClick={nextSolutionSlide}
+              className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
+                solutionSlideIndex === solutionSlides.length - 1 
+                  ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
+                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+              }`}
+            >
+              <ArrowRight className="w-5 h-5 stroke-[1.5]" />
             </button>
           </div>
         </div>

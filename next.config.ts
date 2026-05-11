@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.caesar.it',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   output: 'standalone',

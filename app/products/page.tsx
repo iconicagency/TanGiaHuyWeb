@@ -85,61 +85,53 @@ const ProductsPage = () => {
 
   const categoriesData = [
     {
-      title: "Loại hình ứng dụng",
+      title: "Gạch",
       options: [
-        { label: "Indoor flooring", count: 850 },
-        { label: "Outdoor flooring", count: 320 },
-        { label: "Wall tiles", count: 420 },
-        { label: "Residential", count: 910 },
-        { label: "Commercial", count: 650 }
+        { label: "Gạch lát nền", count: 420 },
+        { label: "Gạch ốp tường", count: 310 },
+        { label: "Gạch trang trí", count: 150 },
+        { label: "Gạch vân gỗ", count: 100 }
       ]
     },
     {
-      title: "Thiết kế bề mặt (Look)",
+      title: "Ngói lợp",
       options: [
-        { label: "Marble", count: 210 },
-        { label: "Stone", count: 345 },
-        { label: "Wood", count: 180 },
-        { label: "Concrete", count: 290 },
-        { label: "Metal", count: 110 }
+        { label: "Ngói tráng men", count: 45 },
+        { label: "Ngói đất nung", count: 30 }
       ]
     },
     {
-      title: "Màu sắc",
+      title: "Thiết bị phòng bếp",
       options: [
-        { label: "Beige", count: 195 },
-        { label: "Black", count: 33 },
-        { label: "Brown", count: 121 },
-        { label: "Grey", count: 542 },
-        { label: "White", count: 181 },
-        { label: "others", count: 108 }
+        { label: "Bếp từ", count: 85 },
+        { label: "Chậu rửa bát", count: 120 },
+        { label: "Máy hút mùi", count: 65 },
+        { label: "Vòi rửa bát", count: 90 }
       ]
     },
     {
-      title: "Kích thước (cm)",
+      title: "Thiết bị phòng tắm",
       options: [
-        { label: "60x60", count: 140 },
-        { label: "60x120", count: 210 },
-        { label: "80x80", count: 95 },
-        { label: "120x120", count: 120 },
-        { label: "120x278", count: 45 }
+        { label: "Bồn cầu", count: 110 },
+        { label: "Bồn tắm", count: 40 },
+        { label: "Chậu lavabo", count: 150 },
+        { label: "Nội thất và phụ kiện", count: 200 },
+        { label: "Sen tắm", count: 130 },
+        { label: "Vòi lavabo", count: 140 }
       ]
     },
     {
-      title: "Độ dày (mm)",
+      title: "Thương Hiệu",
       options: [
-        { label: "6mm", count: 80 },
-        { label: "9mm", count: 650 },
-        { label: "20mm", count: 120 }
-      ]
-    },
-    {
-      title: "Hoàn thiện (Finish)",
-      options: [
-        { label: "Matt", count: 780 },
-        { label: "Soft", count: 140 },
-        { label: "Silk", count: 90 },
-        { label: "Grip", count: 110 }
+        { label: "Amalif", count: 50 },
+        { label: "Beuer", count: 35 },
+        { label: "Caesar", count: 180 },
+        { label: "D&K", count: 95 },
+        { label: "Koenl", count: 40 },
+        { label: "Monalisa", count: 120 },
+        { label: "Toto", count: 210 },
+        { label: "Viglacera", count: 190 },
+        { label: "Vitto", count: 110 }
       ]
     }
   ];
@@ -243,7 +235,7 @@ const ProductsPage = () => {
 
               <div className="flex justify-between items-center border-b border-gray-100 pb-6">
                 <div className="flex gap-2 items-center">
-                   <select className="bg-transparent text-sm font-bold uppercase tracking-widest outline-none cursor-pointer hover:text-brand-gold transition-colors">
+                   <select className="bg-transparent text-sm font-bold uppercase tracking-widest outline-none cursor-pointer text-black hover:opacity-70 transition-all">
                      <option>Sắp xếp mặc định</option>
                      <option>Mới nhất</option>
                      <option>Phổ biến nhất</option>

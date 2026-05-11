@@ -109,8 +109,8 @@ service cloud.firestore {
       allow write: if isAdmin() && isValidContact(incoming());
     }
 
-    // Company Page Content
-    match /cms/company_page {
+    // CMS Page Contents
+    match /cms/{pageId} {
       allow read: if true;
       allow write: if isAdmin();
     }

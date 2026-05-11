@@ -593,6 +593,23 @@ const GeneralSettingsManager = ({ data }: any) => {
     }
   };
 
+  const handleInitialize = async () => {
+    try {
+      await setDoc(doc(db, "settings", "general"), {
+        logoUrl: "https://tangiahuy.vn/wp-content/uploads/2023/12/logo-tan-gia-huy.png",
+        section2Bg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1920",
+        section3Bg: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920",
+        section4Bg: "https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80&w=1920",
+        section5Bg: "https://images.unsplash.com/photo-1600585154542-6379b1d359ee?auto=format&fit=crop&q=80&w=1920",
+        section6Bg: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?auto=format&fit=crop&q=80&w=1920"
+      });
+      alert("Khởi tạo thành công!");
+    } catch (e) {
+      alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+      handleFirestoreError(e, OperationType.WRITE, "settings/general");
+    }
+  };
+
   const sections = [
     { id: "logoUrl", label: "Logo Image" },
     { id: "section2Bg", label: "Section 2 (About) Background" },
@@ -627,7 +644,7 @@ const GeneralSettingsManager = ({ data }: any) => {
           ngay để bắt đầu thiết lập Logo và Hình nền.
         </p>
         <button
-          onClick={() => updateSettings("logoUrl", "")}
+          onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
         >
           Khởi tạo ngay
@@ -1612,12 +1629,28 @@ const AboutHomeManager = ({ data }: any) => {
     }
   };
 
+  const handleInitialize = async () => {
+    try {
+      await setDoc(doc(db, "cms", "about_home"), {
+        title: "VỀ TÂN GIA HUY",
+        leftText1: "Với 10 năm kinh nghiệm trên thị trường gạch ốp lát và thiết bị vệ sinh, cùng tôn chỉ kinh doanh “Uy Tín – Tận Tâm – Chất Lượng”, Chúng tôi luôn mang đến cho Quý khách hàng những sản phẩm tốt nhất, cập nhật những xu hướng hiện đại và chất lượng dịch vụ hàng đầu.",
+        leftText2: "Tân Gia Huy tự hào là đơn vị có phạm vi hoạt động trên khắp các tỉnh miền Bắc với hàng trăm Đại lý và Nhà Phân Phối tại các tỉnh thành như: Sơn La, Hà Giang, Yên Bái, Thái Nguyên, Quảng Bình, Hà Nam, Ninh Bình, Nam Định… phân phối đa dạng các ngành hàng với nhiều phân khúc sản phẩm khác nhau. Chúng tôi vinh dự là đối tác đồng hành cùng nhiều thương hiệu nổi tiếng như ToTo, Caesar, Viglacera, D&K, Inax, Bauer,…..vv.",
+        rightText1: "Tân Gia Huy cam kết sẽ mang Tín – Tâm – Chất từ mọi nguồn lực để đem đến những trải nghiệm về không gian sống đầy cảm hứng và đậm dấu ấn cá nhân. Chúng tôi luôn nỗ lực không ngừng để giữ vững vị trí tiên phong trên thị trường cũng như trong lòng khách hàng về chất lượng sản phẩm và cả dịch vụ tư vấn.",
+        rightText2: "Chúng tôi hy vọng được hợp tác và phục vụ Quý khách hàng, Quý đối tác trong những cơ hội đầu tư mới, và những trải nghiệm sống đẳng cấp mới."
+      });
+      alert("Khởi tạo thành công!");
+    } catch (e) {
+      alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+      handleFirestoreError(e, OperationType.WRITE, "cms/about_home");
+    }
+  };
+
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
         <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Về TGH Home</h3>
         <button
-          onClick={() => updateContent("title", "VỀ TÂN GIA HUY")}
+          onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
         >
           Khởi tạo ngay
@@ -1698,12 +1731,29 @@ const CollectionsPageManager = ({ data }: any) => {
     }
   };
 
+  const handleInitialize = async () => {
+    try {
+      await setDoc(doc(db, "cms", "collections_page"), {
+        hero_title: "BỘ SƯU TẬP",
+        hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+        explore_title: "Explore our collections",
+        explore_description: "Inspirations, colors, and sizes for every design vision.",
+        research_title: "Nghiên cứu Vật liệu",
+        research_description: "Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế."
+      });
+      alert("Khởi tạo thành công!");
+    } catch (e) {
+      alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+      handleFirestoreError(e, OperationType.WRITE, "cms/collections_page");
+    }
+  };
+
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
         <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Bộ sưu tập</h3>
         <button
-          onClick={() => updateContent("hero_title", "BỘ SƯU TẬP")}
+          onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
         >
           Khởi tạo ngay
@@ -1802,12 +1852,25 @@ const ProductsPageManager = ({ data }: any) => {
     }
   };
 
+  const handleInitialize = async () => {
+    try {
+      await setDoc(doc(db, "cms", "products_page"), {
+        hero_title: "DANH SÁCH SẢN PHẨM",
+        hero_image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+      });
+      alert("Khởi tạo thành công!");
+    } catch (e) {
+      alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+      handleFirestoreError(e, OperationType.WRITE, "cms/products_page");
+    }
+  };
+
   if (!data) {
     return (
       <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
         <h3 className="text-xl font-bold mb-8 uppercase tracking-widest text-white">Chưa có nội dung Trang Sản phẩm</h3>
         <button
-          onClick={() => updateContent("hero_title", "DANH SÁCH SẢN PHẨM")}
+          onClick={handleInitialize}
           className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
         >
           Khởi tạo ngay
@@ -1865,8 +1928,27 @@ const CompanyContentManager = ({ data }: any) => {
   if (!data) return (
      <div className="bg-zinc-900/50 p-12 rounded-3xl border border-white/5 text-center max-w-lg mx-auto">
         <button
-          onClick={() => updateContent("hero_title", "Về Tân Gia Huy")}
-          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs"
+          onClick={async () => {
+            try {
+              await setDoc(doc(db, "cms", "company_page"), {
+                hero_title: "Về Tân Gia Huy",
+                hero_image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
+                intro_vocation_text: "Chúng tôi là đơn vị tiên phong trong lĩnh vực gạch kiến trúc và thiết bị nội thất cao cấp...",
+                intro_design_activity_text: "Với đội ngũ kiến trúc sư tâm huyết và mạng lưới đối tác toàn cầu...",
+                intro_cta1: "XEM DỰ ÁN",
+                intro_cta2: "LIÊN HỆ",
+                section1_title: "Tầm nhìn",
+                section1_description: "Trở thành biểu tượng chất lượng trong ngành vật liệu xây dựng...",
+                section2_title: "Sứ mệnh",
+                section2_description: "Kiến tạo không gian sống đẳng cấp, mang lại giá trị bền vững cho khách hàng..."
+              });
+              alert("Khởi tạo thành công!");
+            } catch (e) {
+              alert("Lỗi khởi tạo: " + (e instanceof Error ? e.message : String(e)));
+              handleFirestoreError(e, OperationType.WRITE, "cms/company_page");
+            }
+          }}
+          className="bg-white text-black px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:scale-105 transition-all shadow-xl"
         >
           Khởi tạo nội dung trang
         </button>

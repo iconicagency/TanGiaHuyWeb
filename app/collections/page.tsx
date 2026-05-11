@@ -667,30 +667,6 @@ const CollectionsPage = () => {
         </div>
       </section>
 
-      {/* Quick Links */}
-      <section className="py-24 px-6 md:px-12 lg:px-24 bg-[#F8F8F8] border-t border-gray-200">
-        <h2 className="text-3xl md:text-5xl font-sans font-bold mb-6 uppercase tracking-tight">Liên kết nhanh</h2>
-        <p className="text-zinc-500 mb-16 text-lg max-w-2xl font-light italic">Truy cập nhanh vào các chuyên mục hữu ích nhất.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {[
-            { title: "Tìm đại lý", desc: "Khám phá các đại lý Tân Gia Huy gần bạn nhất để trực tiếp trải nghiệm chất lượng sản phẩm." },
-            { title: "Tài liệu", desc: "Truy cập nhanh hồ sơ kỹ thuật, catalogue, công cụ số và vật liệu hỗ trợ dự án của bạn." },
-            { title: "Hướng dẫn kỹ thuật", desc: "Tham khảo thông tin kỹ thuật cần thiết để thiết kế, lắp đặt và bảo trì đúng quy chuẩn." },
-            { title: "Đăng ký nhận tin", desc: "Cập nhật những tin tức, bộ sưu tập và xu hướng mới nhất từ thế giới Tân Gia Huy." }
-          ].map((link, idx) => (
-            <div key={idx} className="group cursor-pointer">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2 uppercase tracking-tighter">
-                {link.title}
-              </h3>
-              <p className="text-zinc-500 text-[13px] leading-relaxed mb-6 font-light">{link.desc}</p>
-              <button className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-brand-gold hover:border-brand-gold transition-colors">
-                Xem ngay →
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <Footer />
     </main>
   );

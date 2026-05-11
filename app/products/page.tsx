@@ -167,19 +167,41 @@ const ProductsPage = () => {
     <main className="bg-white min-h-screen selection:bg-brand-gold/30">
       <Navbar />
 
-      {/* Page Header */}
-      <div className="pt-32 pb-16 px-6 md:px-12 lg:px-24">
-        <nav className="flex gap-2 text-xs font-medium text-gray-400 mb-8 uppercase tracking-widest">
-          <Link href="/" className="hover:text-black transition-colors">Home</Link>
-          <span>•</span>
-          <span className="text-gray-900">Search Product</span>
-        </nav>
-        <h1 className="text-5xl md:text-7xl font-sans font-bold text-gray-900 tracking-tight leading-none uppercase">
-          TÌM KIẾM <span className="text-brand-gold">SẢN PHẨM</span>
-        </h1>
-      </div>
+      {/* Hero Header Section */}
+      <section className="relative h-[85vh] w-full overflow-hidden">
+        <Image 
+          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+          alt="Products Hero"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 px-6 md:px-12 lg:px-24 pointer-events-none flex flex-col justify-end pb-24 lg:pb-32">
+          <div className="w-full mx-auto max-w-[1920px] pointer-events-auto text-left">
+          </div>
+        </div>
+      </section>
 
-      <div className="px-6 md:px-12 lg:px-24 pb-24">
+      {/* Breadcrumbs */}
+      <section className="bg-[#F8F7F5] pt-12 pb-4 px-6 md:px-12 lg:px-24">
+        <div className="flex items-center gap-2 text-[15px] mb-8">
+          <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans font-light">Home</Link>
+          <span className="text-gray-300 font-light">•</span>
+          <span className="font-light text-black underline underline-offset-8 font-sans">Danh sách sản phẩm</span>
+        </div>
+        
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-[39px] font-sans font-bold tracking-tight uppercase leading-tight text-[#0F172A] mb-8"
+        >
+          DANH SÁCH <span className="text-brand-gold">SẢN PHẨM</span>
+        </motion.h1>
+      </section>
+
+      <div className="px-6 md:px-12 lg:px-24 pb-24 bg-[#F8F7F5]">
         <div className="flex flex-col lg:flex-row gap-16">
           
           {/* Sidebar Filters */}
@@ -265,11 +287,6 @@ const ProductsPage = () => {
       </div>
 
       <Footer />
-      
-      {/* Scroll to Top */}
-      <button className="fixed bottom-12 right-12 w-14 h-14 bg-white/80 backdrop-blur-xl border border-gray-100 rounded-full flex items-center justify-center shadow-2xl hover:bg-black hover:text-white transition-all z-50">
-        <ArrowUp className="w-5 h-5" />
-      </button>
     </main>
   );
 };

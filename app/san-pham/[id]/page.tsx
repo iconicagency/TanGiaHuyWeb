@@ -75,29 +75,32 @@ const ProductDetailPage = () => {
       <Navbar />
 
       {/* Hero Header Section */}
-      <div className="relative h-[450px] w-full flex items-center justify-center overflow-hidden">
-         <Image 
+      <section className="relative h-[85vh] w-full overflow-hidden">
+        <Image 
           src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920"
-          alt="Hero Background"
+          alt={productData.name}
           fill
           className="object-cover"
           priority
-         />
-         <div className="absolute inset-0 bg-black/5" />
-         <div className="relative z-10 text-center px-6">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="bg-white/30 backdrop-blur-xl px-10 py-12 md:px-24 md:py-20 rounded-xl border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] inline-block max-w-[90vw] md:min-w-[600px]"
-            >
-              <h1 className="text-3xl md:text-6xl font-sans font-normal leading-tight mb-4 tracking-[0.15em] text-[#1A1A1A] uppercase">
-                {productData.name}
-              </h1>
-              <p className="text-lg md:text-2xl font-light text-gray-700 italic font-sans opacity-80">{productData.subtitle}</p>
-            </motion.div>
-         </div>
-      </div>
+        />
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 px-4 md:px-8 pointer-events-none flex flex-col justify-end pb-20 lg:pb-32">
+          <div className="w-full mx-auto max-w-[1920px] pointer-events-auto text-left">
+            <div className="bg-[#EBE9E4]/20 backdrop-blur-md py-6 px-10 md:py-10 md:px-16 max-w-3xl rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.08)] border border-white/40 inline-block">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <h1 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-[#1A1A1A] mb-3">
+                  {productData.name}
+                </h1>
+                <p className="text-[20px] font-light text-gray-700 italic font-sans opacity-90">{productData.subtitle}</p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Breadcrumbs */}
       <div className="max-w-7xl mx-auto px-6 py-4 font-sans text-[13px] font-normal text-gray-500 flex items-center gap-2 border-b border-gray-100">

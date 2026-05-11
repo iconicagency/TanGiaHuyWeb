@@ -127,7 +127,7 @@ const CollectionsPage = () => {
   const categories = [
     { name: "Cảm hứng Cẩm thạch", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop" },
     { name: "Cảm hứng Gỗ tự nhiên", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800&auto=format&fit=crop" },
-    { name: "Cảm hứng Đá tự nhiên", img: "https://images.unsplash.com/photo-1541604193435-22287d32c2c2?q=80&w=800&auto=format&fit=crop" },
+    { name: "Cảm hứng Đá tự nhiên", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
     { name: "Bê tông & Kim loại", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800&auto=format&fit=crop" },
     { name: "Giải pháp Trang trí", img: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?q=80&w=800&auto=format&fit=crop" },
   ];

@@ -9,7 +9,7 @@ import { collection, onSnapshot, doc } from 'firebase/firestore';
 
 const DEFAULT_NEWS: any = {
   'left': {
-      image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80",
+      image: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80",
       title: "[DỰ ÁN TÂN GIA HUY] TN HOME - KHÔNG GIAN SỐNG MANG HƠI THỞ INDOCHINE GIỮA LÒNG HỘI AN",
       description: "Nằm tại thành phố Hội An, tỉnh Quảng Nam, TN Home là một công trình nhà ở có diện tích hơn 300m²...",
       category: "TIN DỰ ÁN"

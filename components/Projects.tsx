@@ -16,7 +16,7 @@ const DEFAULT_SLIDES = [
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0bb2a6c3e?auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80',
     title: 'Large Format Mộc Trà',
     description: 'Mang hơi thở của những cánh rừng già, Mộc Trà là sự kết tinh của thời gian và hơi ấm tự nhiên, mang lại cảm giác bình yên, thư thái cho mọi không gian sống.',
   },

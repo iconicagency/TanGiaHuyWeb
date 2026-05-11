@@ -100,7 +100,7 @@ function CompanyPageContent({ content }: { content: any }) {
       <section className="bg-[#F8F7F5] pb-16 px-6 md:px-12 lg:px-24">
         <div className="w-full mb-12">
           <div>
-            <h2 className="text-[#1A1A1A] text-[20px] font-light font-sans mb-2 max-w-5xl">
+            <h2 className="text-black text-[20px] font-light font-sans mb-2 max-w-5xl">
               {content.intro_vocation_text || "Our vocation for materials, in particular porcelain stoneware, has been guiding our work, our thoughts and our actions since the date of our establishment."}
             </h2>
             <p className="text-[#404040] text-[20px] font-light font-sans mt-2 max-w-5xl">
@@ -110,10 +110,10 @@ function CompanyPageContent({ content }: { content: any }) {
         </div>
 
         <div className="flex gap-3">
-          <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+          <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
             {content.intro_cta1 || "About us"} <ArrowRight className="w-4 h-4 ml-1" />
           </button>
-          <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+          <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
             {content.intro_cta2 || "Caesar porcelain tiles"} <ArrowRight className="w-4 h-4 ml-1" />
           </button>
         </div>
@@ -137,7 +137,7 @@ function CompanyPageContent({ content }: { content: any }) {
               </div>
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-[18px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
+                  <h2 className="text-[18px] font-sans font-bold text-black mb-3 leading-tight tracking-tight">
                     {content.section1_title}
                   </h2>
                   <p className="text-[#404040] leading-relaxed text-[14px] font-sans font-normal max-w-[95%]">
@@ -145,7 +145,7 @@ function CompanyPageContent({ content }: { content: any }) {
                   </p>
                 </div>
                 <Link href="/products">
-                  <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                  <button className="px-4 py-2 bg-transparent border border-black rounded-md text-[13px] font-medium text-black hover:bg-black hover:text-white transition-all font-sans">
                     Read more
                   </button>
                 </Link>
@@ -167,7 +167,7 @@ function CompanyPageContent({ content }: { content: any }) {
               </div>
               <div className="lg:order-1 space-y-4">
                 <div>
-                  <h2 className="text-[18px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
+                  <h2 className="text-[18px] font-sans font-bold text-black mb-3 leading-tight tracking-tight">
                     {content.section2_title}
                   </h2>
                   <p className="text-[#404040] leading-relaxed text-[14px] font-sans font-normal max-w-[95%]">
@@ -175,7 +175,7 @@ function CompanyPageContent({ content }: { content: any }) {
                   </p>
                 </div>
                 <Link href="/products">
-                  <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                  <button className="px-4 py-2 bg-transparent border border-black rounded-md text-[13px] font-medium text-black hover:bg-black hover:text-white transition-all font-sans">
                     Khám phá bộ sưu tập
                   </button>
                 </Link>

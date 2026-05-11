@@ -52,7 +52,7 @@ const Footer = () => {
         
         <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-2 tracking-tight">Liên kết nhanh</h2>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-2 tracking-tight">Liên kết nhanh</h2>
             <p className="text-[#404040] text-[17px] font-normal font-sans">Truy cập nhanh vào một số chuyên mục hữu ích nhất của trang web.</p>
           </div>
         </div>
@@ -74,13 +74,13 @@ const Footer = () => {
                   marginRight: 24 
                 }}
               >
-                <h3 className="text-[19px] font-sans font-normal text-[#1A1A1A] mb-4">
+                <h3 className="text-[19px] font-sans font-normal text-black mb-4">
                   {item.title}
                 </h3>
                 <p className="text-[#404040] text-[15px] font-normal font-sans leading-relaxed mb-10 flex-1">
                   {item.desc}
                 </p>
-                <div className="text-[15px] font-medium text-[#1A1A1A] flex items-center group">
+                <div className="text-[15px] font-medium text-black flex items-center group">
                   Xem <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </motion.div>
@@ -95,7 +95,7 @@ const Footer = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               quickLinkIndex === 0 
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-[#1A1A1A] text-[#1A1A1A] hover:bg-black hover:text-white cursor-pointer'
+                : 'bg-transparent border border-black text-black hover:bg-black hover:text-white cursor-pointer'
             }`}
           >
             <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -105,7 +105,7 @@ const Footer = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               quickLinkIndex >= quickLinks.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 4)
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-[#1A1A1A] text-[#1A1A1A] hover:bg-black hover:text-white cursor-pointer'
+                : 'bg-transparent border border-black text-black hover:bg-black hover:text-white cursor-pointer'
             }`}
           >
             <ArrowRight className="w-5 h-5 stroke-[1.5]" />

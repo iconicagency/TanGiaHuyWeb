@@ -63,7 +63,7 @@ const Navbar = () => {
         "fixed top-0 left-0 right-0 z-[60] px-4 md:px-8 transition-all duration-500 pointer-events-none",
         scrolled ? "py-4 md:py-6" : "py-4 md:py-6"
       )}>
-        <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-[#EBE9E4]/20 backdrop-blur-md rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-[#1A1A1A] transition-all duration-500 border border-[#D5D3CE]/50 overflow-hidden">
+        <nav className="pointer-events-auto w-full mx-auto max-w-[1920px] bg-[#EBE9E4]/20 backdrop-blur-md rounded-lg flex items-center justify-between px-6 py-2 md:py-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)] text-black transition-all duration-500 border border-[#D5D3CE]/50 overflow-hidden">
           
           {/* Left Section: Logo */}
           <div className="flex-shrink-0 flex items-center">
@@ -72,7 +72,7 @@ const Navbar = () => {
                 <img src={logoUrl} alt="Logo" className="h-[45px] md:h-[60px] w-auto object-contain mix-blend-multiply origin-left ml-[8px] md:ml-[16px]" />
               ) : (
                 <div className="text-left flex flex-col items-center">
-                  <span className="text-2xl md:text-3xl font-serif tracking-tight leading-none text-[#1A1A1A] flex items-center gap-1">
+                  <span className="text-2xl md:text-3xl font-serif tracking-tight leading-none text-black flex items-center gap-1">
                     <span className="text-[16px]">✦</span>
                     TÂN GIA HUY
                     <span className="text-[16px]">✦</span>

@@ -197,7 +197,7 @@ const CollectionsPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black"
               >
-                DANH SÁCH SẢN PHẨM
+                BỘ SƯU TẬP
               </motion.h1>
             </div>
           </div>
@@ -209,7 +209,7 @@ const CollectionsPage = () => {
         <div className="flex items-center gap-2 text-[15px] mb-4">
           <Link href="/" className="text-gray-500 hover:text-black transition-colors font-sans font-light">Home</Link>
           <span className="text-gray-300 font-light">•</span>
-          <span className="font-light text-black underline underline-offset-8 font-sans">Collections</span>
+          <span className="font-light text-black underline underline-offset-8 font-sans">Bộ sưu tập</span>
         </div>
       </section>
 
@@ -217,14 +217,14 @@ const CollectionsPage = () => {
       <section className="pb-16 px-6 md:px-12 lg:px-24 bg-[#F8F7F5]">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12">
           <div>
-            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-[#1A1A1A] mb-2 tracking-tight leading-tight">Explore our collections</h2>
+            <h2 className="text-[40px] md:text-[56px] font-sans font-light text-black mb-2 tracking-tight leading-tight">Explore our collections</h2>
             <p className="text-[#404040] text-[20px] font-light font-sans">Inspirations, colors, and sizes for every design vision.</p>
           </div>
           <div className="flex gap-3 mt-8 md:mt-0">
-            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+            <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
               Search Product <Search className="w-4 h-4 ml-1" />
             </button>
-            <button className="px-5 py-2.5 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-normal text-[#1A1A1A] flex items-center gap-2 hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+            <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
               All the collections <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
@@ -260,7 +260,7 @@ const CollectionsPage = () => {
         
         <div className="relative z-10 w-full">
           <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Featured</h2>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Featured</h2>
             <p className="text-[#404040] text-[17px] font-normal font-sans">Products, trends, and news selected to inspire your next project.</p>
           </div>
 
@@ -299,8 +299,8 @@ const CollectionsPage = () => {
                         referrerPolicy="no-referrer"
                       />
                     </motion.div>
-                    <h3 className="text-[26px] font-sans font-normal mb-3 text-[#1A1A1A]">{slide.title}</h3>
-                    <button className="px-5 py-2 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                    <h3 className="text-[26px] font-sans font-normal mb-3 text-black">{slide.title}</h3>
+                    <button className="px-5 py-2 bg-white border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
                       {slide.buttonText}
                     </button>
                   </motion.div>
@@ -315,7 +315,7 @@ const CollectionsPage = () => {
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
                 featuredSlideIndex === 0 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
-                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+                  : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
             >
               <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -325,7 +325,7 @@ const CollectionsPage = () => {
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
                 featuredSlideIndex === featuredSlides.length - 1 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
-                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+                  : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
             >
               <ArrowRight className="w-5 h-5 stroke-[1.5]" />
@@ -336,7 +336,7 @@ const CollectionsPage = () => {
 
       {/* Exploring Material Section */}
       <section className="py-24 px-6 md:px-12 lg:px-24 text-center">
-        <h2 className="text-4xl md:text-6xl font-sans font-bold text-gray-900 mb-4 tracking-tighter uppercase">Nghiên cứu Vật liệu</h2>
+        <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-4 tracking-tighter uppercase">Nghiên cứu Vật liệu</h2>
         <p className="text-gray-500 mb-16 text-lg font-light">Một cuộc hành trình xuyên thấu bề mặt, nơi vật liệu bộc lộ chiều sâu qua nghiên cứu và thiết kế.</p>
         
         <div className="relative aspect-[21/9] w-full rounded-[3rem] overflow-hidden group shadow-2xl">
@@ -374,7 +374,7 @@ const CollectionsPage = () => {
       <section className="py-20 bg-[#F8F8F8] relative overflow-hidden">
         <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Từ chuyên mục tin tức</h2>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Từ chuyên mục tin tức</h2>
             <p className="text-[#404040] text-[17px] font-normal font-sans">Những câu chuyện, ý tưởng và góc nhìn từ thế giới gốm sứ và thiết kế.</p>
           </div>
         </div>
@@ -409,11 +409,11 @@ const CollectionsPage = () => {
                   <div className="mb-2">
                     <p className="text-[#404040] text-[13px] font-normal font-sans">{item.date}</p>
                   </div>
-                  <h3 className="text-[19px] font-sans font-normal text-[#1A1A1A] mb-5 leading-snug line-clamp-2">
+                  <h3 className="text-[19px] font-sans font-normal text-black mb-5 leading-snug line-clamp-2">
                     {item.title}
                   </h3>
                     <Link href="/products" className="mt-auto">
-                      <button className="px-5 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                      <button className="px-5 py-2 bg-transparent border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
                         Read more
                       </button>
                     </Link>
@@ -430,7 +430,7 @@ const CollectionsPage = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               magazineSlideIndex === 0 
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+                : 'bg-transparent border border-gray-900 text-black hover:bg-gray-100 cursor-pointer'
             }`}
           >
             <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -440,7 +440,7 @@ const CollectionsPage = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               magazineSlideIndex >= magazineItems.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+                : 'bg-transparent border border-gray-900 text-black hover:bg-gray-100 cursor-pointer'
             }`}
           >
             <ArrowRight className="w-5 h-5 stroke-[1.5]" />
@@ -455,7 +455,7 @@ const CollectionsPage = () => {
         
         <div className="relative z-10 w-full">
           <div className="px-6 md:px-12 lg:px-24 mb-10 w-full md:w-1/2">
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Giải pháp kiến trúc</h2>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Giải pháp kiến trúc</h2>
             <p className="text-[#404040] text-[17px] font-normal font-sans">Sự giao thao hoàn hảo giữa tính thẩm mỹ và công năng sử dụng.</p>
           </div>
 
@@ -494,8 +494,8 @@ const CollectionsPage = () => {
                         referrerPolicy="no-referrer"
                       />
                     </motion.div>
-                    <h3 className="text-[26px] font-sans font-normal mb-3 text-[#1A1A1A]">{slide.title}</h3>
-                    <button className="px-5 py-2 bg-white border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                    <h3 className="text-[26px] font-sans font-normal mb-3 text-black">{slide.title}</h3>
+                    <button className="px-5 py-2 bg-white border border-black rounded-md text-[14px] font-medium text-black hover:bg-black hover:text-white transition-all">
                       {slide.buttonText}
                     </button>
                   </motion.div>
@@ -510,7 +510,7 @@ const CollectionsPage = () => {
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
                 solutionSlideIndex === 0 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
-                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+                  : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
             >
               <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -520,7 +520,7 @@ const CollectionsPage = () => {
               className={`w-12 h-12 rounded-full bg-white flex items-center justify-center transition-all ${
                 solutionSlideIndex === solutionSlides.length - 1 
                   ? 'border border-gray-200 text-gray-300 cursor-not-allowed' 
-                  : 'border border-gray-300 text-[#1A1A1A] hover:border-black cursor-pointer'
+                  : 'border border-gray-300 text-black hover:border-black cursor-pointer'
               }`}
             >
               <ArrowRight className="w-5 h-5 stroke-[1.5]" />
@@ -533,7 +533,7 @@ const CollectionsPage = () => {
       <section className="py-20 bg-[#F0F0F0] relative overflow-hidden">
         <div className="px-6 md:px-12 lg:px-24 mb-10 relative z-10 w-full flex justify-between items-end">
           <div>
-            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-[#1A1A1A] mb-1 tracking-tight">Không gian kiến trúc</h2>
+            <h2 className="text-[32px] md:text-[40px] font-sans font-normal text-black mb-1 tracking-tight">Không gian kiến trúc</h2>
             <p className="text-[#404040] text-[17px] font-normal font-sans">Nơi kiến trúc quốc tế kể câu chuyện của vật liệu qua các công trình tiêu biểu.</p>
           </div>
           <button className="hidden md:flex px-6 py-2 border border-gray-300 rounded-full text-[10px] font-bold uppercase tracking-widest items-center gap-2 hover:border-black transition-all">
@@ -568,11 +568,11 @@ const CollectionsPage = () => {
                   />
                 </div>
                 <div className="flex flex-col flex-1 pl-1">
-                  <h4 className="text-[19px] font-sans font-bold text-[#1A1A1A] mb-5 leading-snug uppercase tracking-tight">
+                  <h4 className="text-[19px] font-sans font-bold text-black mb-5 leading-snug uppercase tracking-tight">
                     {item.title}
                   </h4>
                   <div className="mt-auto flex">
-                    <button className="px-6 py-2 bg-[#1A1A1A] border border-[#1A1A1A] rounded-md text-[12px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-[#1A1A1A] transition-all">
+                    <button className="px-6 py-2 bg-black border border-black rounded-md text-[12px] font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">
                       Xem dự án
                     </button>
                   </div>
@@ -589,7 +589,7 @@ const CollectionsPage = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               spaceSlideIndex === 0 
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+                : 'bg-transparent border border-gray-900 text-black hover:bg-gray-100 cursor-pointer'
             }`}
           >
             <ArrowLeft className="w-5 h-5 stroke-[1.5]" />
@@ -599,7 +599,7 @@ const CollectionsPage = () => {
             className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
               spaceSlideIndex >= spaceItems.length - (windowWidth < 768 ? 1 : windowWidth < 1024 ? 2 : 3)
                 ? 'bg-transparent border border-gray-300 text-gray-300 cursor-not-allowed' 
-                : 'bg-transparent border border-gray-900 text-[#1A1A1A] hover:bg-gray-100 cursor-pointer'
+                : 'bg-transparent border border-gray-900 text-black hover:bg-gray-100 cursor-pointer'
             }`}
           >
             <ArrowRight className="w-5 h-5 stroke-[1.5]" />
@@ -625,13 +625,13 @@ const CollectionsPage = () => {
              </div>
           </div>
           <div className="max-w-xl">
-            <h2 className="text-4xl md:text-6xl font-sans font-bold text-gray-900 mb-8 tracking-tighter leading-[1.1] uppercase">
+            <h2 className="text-4xl md:text-6xl font-sans font-bold text-black mb-8 tracking-tighter leading-[1.1] uppercase">
               Giải pháp khơi nguồn cảm hứng kiến trúc
             </h2>
             <p className="text-gray-500 mb-10 text-xl leading-relaxed font-light">
               Chúng tôi cung cấp những giải pháp vật liệu tối ưu để biến những ý tưởng táo bạo của bạn thành hiện thực rực rỡ.
             </p>
-            <button className="px-6 py-2.5 border border-[#1A1A1A] rounded-md text-[15px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+            <button className="px-6 py-2.5 border border-black rounded-md text-[15px] font-sans font-medium text-black hover:bg-black hover:text-white transition-all">
               Khám phá cảm hứng
             </button>
           </div>
@@ -650,13 +650,13 @@ const CollectionsPage = () => {
                 <Image src={cat.img} alt={cat.title} fill className="object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="p-6 md:p-8 flex flex-col items-center text-center">
-                <h5 className="text-[19px] font-sans font-normal mb-3 text-[#1A1A1A] tracking-tight">{cat.title}</h5>
+                <h5 className="text-[19px] font-sans font-normal mb-3 text-black tracking-tight">{cat.title}</h5>
                 <p className="text-[#404040] text-[15px] leading-relaxed font-sans font-normal">{cat.desc}</p>
                 <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out w-full">
                   <div className="overflow-hidden w-full flex justify-center">
                     <div className="pt-6">
                       <Link href="/products">
-                        <button className="px-6 py-2 border border-[#1A1A1A] rounded-md text-[14px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all opacity-0 group-hover:opacity-100 duration-300">
+                        <button className="px-6 py-2 border border-black rounded-md text-[14px] font-sans font-medium text-black hover:bg-black hover:text-white transition-all opacity-0 group-hover:opacity-100 duration-300">
                           Read more
                         </button>
                       </Link>

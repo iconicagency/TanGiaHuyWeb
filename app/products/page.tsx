@@ -68,7 +68,7 @@ const ProductCard = ({ name, specs, image }: { name: string; specs: string; imag
           referrerPolicy="no-referrer"
         />
       </div>
-      <h3 className="text-[16px] font-bold text-gray-900 mb-1 group-hover:text-brand-gold transition-colors tracking-tight">{name}</h3>
+      <h3 className="text-[16px] font-bold text-black mb-1 group-hover:text-brand-gold transition-colors tracking-tight">{name}</h3>
       <p className="text-[12px] text-gray-500 font-light leading-relaxed">{specs}</p>
     </motion.div>
   </Link>
@@ -195,7 +195,7 @@ const ProductsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-[39px] font-sans font-bold tracking-tight uppercase leading-tight text-[#0F172A] mb-8"
+          className="text-[39px] font-sans font-bold tracking-tight uppercase leading-tight text-black mb-8"
         >
           DANH SÁCH <span className="text-brand-gold">SẢN PHẨM</span>
         </motion.h1>
@@ -253,7 +253,7 @@ const ProductsPage = () => {
                 
                 <div className="flex items-center gap-8">
                   <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
-                    Tìm thấy <span className="text-gray-900">1.180</span> kết quả
+                    Tìm thấy <span className="text-black">1.180</span> kết quả
                   </span>
                   <div className="flex gap-4">
                     <button onClick={() => setLayout('grid')} className={`transition-colors ${layout === 'grid' ? 'text-black' : 'text-gray-300'}`}>

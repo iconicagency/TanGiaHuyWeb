@@ -92,7 +92,7 @@ const ProductDetailPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <h1 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-[#1A1A1A] mb-3">
+                <h1 className="text-[39px] font-sans font-normal tracking-tight uppercase leading-tight text-black mb-3">
                   {productData.name}
                 </h1>
                 <p className="text-[20px] font-light text-gray-700 italic font-sans opacity-90">{productData.subtitle}</p>
@@ -108,7 +108,7 @@ const ProductDetailPage = () => {
         <ChevronRight className="w-4 h-4 opacity-30" />
         <Link href="/products" className="hover:text-black">Sản phẩm</Link>
         <ChevronRight className="w-4 h-4 opacity-30" />
-        <span className="text-gray-900 truncate">{productData.name}</span>
+        <span className="text-black truncate">{productData.name}</span>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 pt-12 pb-24">
@@ -145,7 +145,7 @@ const ProductDetailPage = () => {
           {/* Details */}
           <div className="space-y-8">
             <div className="border-b border-gray-100 pb-6">
-              <h2 className="text-2xl md:text-3xl font-sans font-bold text-brand-green mb-4 leading-tight">
+              <h2 className="text-2xl md:text-3xl font-sans font-bold text-black mb-4 leading-tight">
                 {productData.name}
               </h2>
               <div className="text-2xl font-bold text-brand-gold">{productData.price}</div>
@@ -155,7 +155,7 @@ const ProductDetailPage = () => {
               {productData.specs.map((spec, i) => (
                 <div key={i} className="flex gap-4 text-[14px] font-sans items-center">
                   <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                    <spec.icon className="w-4 h-4 text-brand-green" />
+                    <spec.icon className="w-4 h-4 text-black" />
                   </div>
                   <span className="w-24 text-gray-800 shrink-0 font-bold">{spec.label}:</span>
                   <span className="text-gray-600">{spec.value}</span>
@@ -164,7 +164,7 @@ const ProductDetailPage = () => {
             </div>
 
             <div className="flex flex-wrap gap-4 pt-6">
-               <button className="flex-1 min-w-[200px] px-8 py-4 bg-brand-green text-white font-bold uppercase tracking-widest text-xs rounded hover:bg-brand-green/90 transition-all flex items-center justify-center gap-2">
+               <button className="flex-1 min-w-[200px] px-8 py-4 bg-black text-white font-bold uppercase tracking-widest text-xs rounded hover:bg-black/90 transition-all flex items-center justify-center gap-2">
                  <ShoppingBag className="w-4 h-4" /> Liên hệ báo giá
                </button>
                <button className="p-4 border border-gray-200 rounded flex items-center justify-center hover:bg-gray-50 transition-all">
@@ -180,14 +180,14 @@ const ProductDetailPage = () => {
         {/* Tabs & Full Specs */}
         <div className="mt-20">
           <div className="flex gap-8 mb-12 border-b border-gray-100">
-            <button className="pb-4 border-b-2 border-brand-green text-brand-green font-bold uppercase tracking-widest text-[14px] font-sans">
+            <button className="pb-4 border-b-2 border-black text-black font-bold uppercase tracking-widest text-[14px] font-sans">
               Mô tả
             </button>
           </div>
 
           <div className="space-y-16">
             <div>
-              <h3 className="text-lg font-bold font-sans uppercase mb-8 text-brand-green flex items-center gap-3">
+              <h3 className="text-lg font-bold font-sans uppercase mb-8 text-black flex items-center gap-3">
                 Thông số sản phẩm {productData.name}
               </h3>
               <div className="rounded overflow-hidden bg-white border border-gray-100">
@@ -205,7 +205,7 @@ const ProductDetailPage = () => {
             </div>
 
             <div>
-              <h3 className="text-lg font-bold font-sans uppercase mb-8 text-brand-green">
+              <h3 className="text-lg font-bold font-sans uppercase mb-8 text-black">
                 Mô tả sản phẩm {productData.name}
               </h3>
               <div className="text-gray-600 leading-[1.8] font-sans text-[15px] space-y-6 max-w-4xl">
@@ -220,7 +220,7 @@ const ProductDetailPage = () => {
         {/* Related Products */}
         <div className="mt-32 pt-20 border-t border-gray-100">
            <div className="text-center mb-16">
-             <h2 className="text-2xl font-sans font-bold text-brand-green uppercase tracking-[0.2em] relative inline-block pb-4">
+             <h2 className="text-2xl font-sans font-bold text-black uppercase tracking-[0.2em] relative inline-block pb-4">
                Sản phẩm liên quan
                <div className="absolute bottom-0 left-1/4 right-1/4 h-[3px] bg-brand-gold rounded-full" />
              </h2>
@@ -237,7 +237,7 @@ const ProductDetailPage = () => {
                    <Image src={p.image} alt={p.name} fill className="object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
                  </div>
                  <div className="p-6 text-center">
-                   <h3 className="text-[14px] font-bold text-gray-900 mb-2 group-hover:text-brand-gold transition-colors">{p.name}</h3>
+                   <h3 className="text-[14px] font-bold text-black mb-2 group-hover:text-brand-gold transition-colors">{p.name}</h3>
                    <p className="text-[10px] text-gray-400 mb-3 font-sans font-bold uppercase tracking-widest leading-none">Mã: {p.code}</p>
                    <p className="text-brand-gold font-bold text-[15px]">{p.price}</p>
                  </div>

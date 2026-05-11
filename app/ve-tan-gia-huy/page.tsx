@@ -58,14 +58,8 @@ function CompanyPageContent({ content }: { content: any }) {
     offset: ["start start", "end end"]
   });
 
-  const { scrollYProgress: s2Progress } = useScroll({
-    target: section2Ref,
-    offset: ["start end", "end start"]
-  });
-
-  const section1Opacity = useTransform(s1Progress, [0, 0.8, 1], [1, 1, 0]);
-  const section1Scale = useTransform(s1Progress, [0.5, 1], [1, 0.95]);
-  const section2Y = useTransform(s2Progress, [0, 0.5], ["100%", "0%"]);
+  const section1Opacity = useTransform(s1Progress, [0, 1], [1, 0.4]);
+  const section1Scale = useTransform(s1Progress, [0, 1], [1, 0.95]);
 
   return (
     <main className="relative bg-white text-black min-h-screen" ref={containerRef}>
@@ -128,12 +122,12 @@ function CompanyPageContent({ content }: { content: any }) {
       {/* Sequence Container */}
       <div className="relative bg-[#F5F3F1]">
         {/* Section 1: Material for your projects */}
-        <section ref={section1Ref} className="h-[120vh] relative">
+        <section ref={section1Ref} className="h-[200vh] relative z-10">
           <motion.div 
             style={{ opacity: section1Opacity, scale: section1Scale }}
             className="sticky top-0 h-screen bg-[#F5F3F1] py-24 px-6 md:px-12 lg:px-24 flex items-center"
           >
-            <div className="w-full grid lg:grid-cols-[62%_33%] gap-8 lg:gap-[5%] items-center">
+            <div className="w-full max-w-[1920px] mx-auto grid lg:grid-cols-[70%_25%] gap-8 lg:gap-[5%] items-center">
               <div className="overflow-hidden rounded-xl shadow-lg">
                 <img 
                   src={content.section1_image || "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=1200"}
@@ -143,14 +137,14 @@ function CompanyPageContent({ content }: { content: any }) {
               </div>
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-[20px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
+                  <h2 className="text-[18px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
                     {content.section1_title}
                   </h2>
-                  <p className="text-[#404040] leading-relaxed text-[15px] font-sans font-normal max-w-[90%]">
+                  <p className="text-[#404040] leading-relaxed text-[14px] font-sans font-normal max-w-[95%]">
                     {content.section1_description}
                   </p>
                 </div>
-                <button className="px-5 py-2.5 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
                   Read more
                 </button>
               </div>
@@ -159,34 +153,31 @@ function CompanyPageContent({ content }: { content: any }) {
         </section>
 
         {/* Section 2: Caesar porcelain tiles */}
-        <section ref={section2Ref} className="h-[120vh] relative z-20">
-          <motion.div 
-            style={{ y: section2Y }}
-            className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]"
-          >
-            <div className="w-full grid lg:grid-cols-[33%_62%] gap-8 lg:gap-[5%] items-center">
+        <section ref={section2Ref} className="h-[150vh] relative z-20 mt-[-100vh]">
+          <div className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]">
+            <div className="w-full max-w-[1920px] mx-auto grid lg:grid-cols-[25%_70%] gap-8 lg:gap-[5%] items-center">
               <div className="lg:order-2 overflow-hidden rounded-xl shadow-lg">
                 <img 
                   src={content.section2_image || "https://images.unsplash.com/photo-1574362848149-11d06bdad3f4?auto=format&fit=crop&q=80&w=1200"}
                   alt="Tiles"
-                  className="w-full h-auto object-cover aspect-[16/10]"
+                  className="w-full h-auto object-cover aspect-[21/9]"
                 />
               </div>
               <div className="lg:order-1 space-y-4">
                 <div>
-                  <h2 className="text-[20px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
+                  <h2 className="text-[18px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
                     {content.section2_title}
                   </h2>
-                  <p className="text-[#404040] leading-relaxed text-[15px] font-sans font-normal max-w-[90%]">
+                  <p className="text-[#404040] leading-relaxed text-[14px] font-sans font-normal max-w-[95%]">
                     {content.section2_description}
                   </p>
                 </div>
-                <button className="px-5 py-2.5 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                <button className="px-4 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[13px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
                   Khám phá bộ sưu tập
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         </section>
       </div>
 

@@ -133,29 +133,26 @@ function CompanyPageContent({ content }: { content: any }) {
             style={{ opacity: section1Opacity, scale: section1Scale }}
             className="sticky top-0 h-screen bg-[#F5F3F1] py-24 px-6 md:px-12 lg:px-24 flex items-center"
           >
-            <div className="w-full grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-              <div className="overflow-hidden rounded-3xl shadow-2xl">
+            <div className="w-full grid lg:grid-cols-[62%_33%] gap-8 lg:gap-[5%] items-center">
+              <div className="overflow-hidden rounded-xl shadow-lg">
                 <img 
                   src={content.section1_image || "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=1200"}
                   alt="Material"
                   className="w-full h-auto object-cover aspect-[16/10]"
                 />
               </div>
-              <div className="space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-2 md:py-3 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-[39px] font-sans font-normal tracking-tight text-black leading-tight uppercase">
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-[20px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
                     {content.section1_title}
                   </h2>
+                  <p className="text-[#404040] leading-relaxed text-[15px] font-sans font-normal max-w-[90%]">
+                    {content.section1_description}
+                  </p>
                 </div>
-                <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
-                  {content.section1_description}
-                </p>
-                <motion.button 
-                  whileHover={{ backgroundColor: "#000", color: "#fff" }}
-                  className="border-2 border-black px-12 py-5 transition-colors flex items-center gap-4 font-bold uppercase tracking-[0.2em] text-xs font-sans"
-                >
-                  Xem thêm <span>→</span>
-                </motion.button>
+                <button className="px-5 py-2.5 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                  Read more
+                </button>
               </div>
             </div>
           </motion.div>
@@ -167,29 +164,26 @@ function CompanyPageContent({ content }: { content: any }) {
             style={{ y: section2Y }}
             className="sticky top-0 h-screen bg-white py-24 px-6 md:px-12 lg:px-24 flex items-center shadow-[0_-20px_50px_rgba(0,0,0,0.08)]"
           >
-            <div className="w-full grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-              <div className="lg:order-2 overflow-hidden rounded-3xl shadow-2xl">
+            <div className="w-full grid lg:grid-cols-[33%_62%] gap-8 lg:gap-[5%] items-center">
+              <div className="lg:order-2 overflow-hidden rounded-xl shadow-lg">
                 <img 
                   src={content.section2_image || "https://images.unsplash.com/photo-1574362848149-11d06bdad3f4?auto=format&fit=crop&q=80&w=1200"}
                   alt="Tiles"
                   className="w-full h-auto object-cover aspect-[16/10]"
                 />
               </div>
-              <div className="lg:order-1 space-y-10">
-                <div className="bg-[#EBE9E4]/20 backdrop-blur-md px-8 md:px-12 py-2 md:py-3 rounded-lg border border-[#D5D3CE]/50 shadow-[0_4px_20px_rgba(0,0,0,0.05)] inline-block">
-                  <h2 className="text-[39px] font-sans font-normal tracking-tight text-black leading-tight uppercase">
+              <div className="lg:order-1 space-y-4">
+                <div>
+                  <h2 className="text-[20px] font-sans font-bold text-[#1A1A1A] mb-3 leading-tight tracking-tight">
                     {content.section2_title}
                   </h2>
+                  <p className="text-[#404040] leading-relaxed text-[15px] font-sans font-normal max-w-[90%]">
+                    {content.section2_description}
+                  </p>
                 </div>
-                <p className="text-gray-500 leading-relaxed text-lg max-w-xl font-sans font-light">
-                  {content.section2_description}
-                </p>
-                <motion.button 
-                  whileHover={{ backgroundColor: "#000", color: "#fff" }}
-                  className="border-2 border-black px-12 py-5 transition-colors flex items-center gap-4 font-bold uppercase tracking-[0.2em] text-xs font-sans"
-                >
-                  Khám phá bộ sưu tập <span>→</span>
-                </motion.button>
+                <button className="px-5 py-2.5 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all font-sans">
+                  Khám phá bộ sưu tập
+                </button>
               </div>
             </div>
           </motion.div>

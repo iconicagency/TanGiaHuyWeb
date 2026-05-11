@@ -412,11 +412,11 @@ const CollectionsPage = () => {
                   <h3 className="text-[19px] font-sans font-normal text-[#1A1A1A] mb-5 leading-snug line-clamp-2">
                     {item.title}
                   </h3>
-                  <div className="mt-auto">
-                    <button className="px-5 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
-                      Read more
-                    </button>
-                  </div>
+                    <Link href="/products" className="mt-auto">
+                      <button className="px-5 py-2 bg-transparent border border-[#1A1A1A] rounded-md text-[14px] font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all">
+                        Read more
+                      </button>
+                    </Link>
                 </div>
               </motion.div>
             ))}
@@ -655,9 +655,11 @@ const CollectionsPage = () => {
                 <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out w-full">
                   <div className="overflow-hidden w-full flex justify-center">
                     <div className="pt-6">
-                      <button className="px-6 py-2 border border-[#1A1A1A] rounded-md text-[14px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all opacity-0 group-hover:opacity-100 duration-300">
-                        Read more
-                      </button>
+                      <Link href="/products">
+                        <button className="px-6 py-2 border border-[#1A1A1A] rounded-md text-[14px] font-sans font-medium text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white transition-all opacity-0 group-hover:opacity-100 duration-300">
+                          Read more
+                        </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

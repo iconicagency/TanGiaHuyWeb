@@ -33,10 +33,10 @@ const ProductDetailPage = () => {
     subtitle: "Nhập Khẩu Trung Quốc",
     price: "620.000đ / m²",
     images: [
-      "https://images.unsplash.com/photo-1541604193435-22287d32c2c2?q=80&w=1200",
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800",
-      "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=800",
-      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800"
+      "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=1200",
+      "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
     ],
     specs: [
       { label: "Thương hiệu", value: "Nhập khẩu Trung Quốc", icon: Building2 },
@@ -65,9 +65,9 @@ const ProductDetailPage = () => {
   const [activeImage, setActiveImage] = useState(0);
 
   const relatedProducts = [
-    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-01", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800" },
-    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-02", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1523413555809-0fb8a4aef21d?q=80&w=800" },
-    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-03", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800" },
+    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-01", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
+    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-02", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800" },
+    { name: "Gạch 75x150 Nhập Khẩu Trung Quốc", code: "TG-HTS15-03", price: "620.000đ / m²", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=800" },
   ];
 
   return (
@@ -75,25 +75,26 @@ const ProductDetailPage = () => {
       <Navbar />
 
       {/* Hero Header Section */}
-      <div className="relative h-[300px] w-full flex items-center justify-center overflow-hidden pt-20">
+      <div className="relative h-[450px] w-full flex items-center justify-center overflow-hidden">
          <Image 
-          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1920"
+          src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920"
           alt="Hero Background"
           fill
           className="object-cover"
           priority
          />
-         <div className="absolute inset-0 bg-black/40" />
-         <div className="relative z-10 text-center text-white px-6">
+         <div className="absolute inset-0 bg-black/5" />
+         <div className="relative z-10 text-center px-6">
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/95 p-6 md:p-8 rounded shadow-lg max-w-2xl mx-auto"
+              transition={{ duration: 0.8 }}
+              className="bg-white/30 backdrop-blur-xl px-10 py-12 md:px-24 md:py-20 rounded-xl border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] inline-block max-w-[90vw] md:min-w-[600px]"
             >
-              <h1 className="text-2xl md:text-3xl font-sans font-bold leading-tight mb-2 tracking-tight text-gray-900">
+              <h1 className="text-3xl md:text-6xl font-sans font-normal leading-tight mb-4 tracking-[0.15em] text-[#1A1A1A] uppercase">
                 {productData.name}
               </h1>
-              <p className="text-lg md:text-xl font-light text-gray-600 italic">{productData.subtitle}</p>
+              <p className="text-lg md:text-2xl font-light text-gray-700 italic font-sans opacity-80">{productData.subtitle}</p>
             </motion.div>
          </div>
       </div>

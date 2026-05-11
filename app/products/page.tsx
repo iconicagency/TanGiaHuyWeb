@@ -145,22 +145,22 @@ const ProductsPage = () => {
   ];
 
   const products = [
-    { name: "Alchemy Argent", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1541604193435-22287d32c2c2?q=80&w=800" },
-    { name: "Alchemy Argent", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800" },
-    { name: "Alchemy Argent", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=800" },
-    { name: "Alchemy Argent", specs: "60×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800" },
-    { name: "Alchemy Copper", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=800" },
-    { name: "Alchemy Copper", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1523413555809-0fb8a4aef21d?q=80&w=800" },
-    { name: "Alchemy Copper", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800" },
-    { name: "Alchemy Copper", specs: "120×278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=800" },
-    { name: "Join Platinum", specs: "60x120, 9mm, Silk, RT, R9 A", image: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?q=80&w=800" },
-    { name: "Join Platinum", specs: "80x80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?q=80&w=800" },
-    { name: "Wide Vento", specs: "120x278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800" },
-    { name: "Wide Vento", specs: "120x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753190-17f0abc2a6c4?q=80&w=800" },
-    { name: "Anima Graphite", specs: "60x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?q=80&w=800" },
-    { name: "Anima Graphite", specs: "30x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1518481612222-68bbe828eba1?q=80&w=800" },
-    { name: "Icon Bone", specs: "60x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6f3ea?q=80&w=800" },
-    { name: "Icon Bone", specs: "60x60, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=800" },
+    { name: "Alchemy Argent", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Argent", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Argent", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Argent", specs: "60×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Copper", specs: "40×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Copper", specs: "80×80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Copper", specs: "120×120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&q=80&w=800" },
+    { name: "Alchemy Copper", specs: "120×278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=800" },
+    { name: "Join Platinum", specs: "60x120, 9mm, Silk, RT, R9 A", image: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?auto=format&fit=crop&q=80&w=800" },
+    { name: "Join Platinum", specs: "80x80, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=800" },
+    { name: "Wide Vento", specs: "120x278, 6mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800" },
+    { name: "Wide Vento", specs: "120x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753190-17f0abc2a6c4?auto=format&fit=crop&q=80&w=800" },
+    { name: "Anima Graphite", specs: "60x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&q=80&w=800" },
+    { name: "Anima Graphite", specs: "30x60, 9mm, Matt, RT, R10 B", image: "https://images.unsplash.com/photo-1518481612222-68bbe828eba1?auto=format&fit=crop&q=80&w=800" },
+    { name: "Icon Bone", specs: "60x120, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600566753086-00f18fb6f3ea?auto=format&fit=crop&q=80&w=800" },
+    { name: "Icon Bone", specs: "60x60, 9mm, Matt, RT, R9 A", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" },
   ];
 
   return (

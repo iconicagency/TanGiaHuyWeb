@@ -2104,6 +2104,47 @@ const CollectionsPageManager = ({ data }: any) => {
           </div>
         </div>
 
+        {/* Section: Explore 2.1 */}
+        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
+          <div className="flex flex-col">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+              2.1 - Explore Our Collections (Grid 4 Items)
+            </h3>
+            <p className="text-[10px] text-zinc-500 mt-1 uppercase">
+              Chỉnh sửa 4 ảnh nhỏ & Tên danh mục tại mục &quot;Xem Trọn Bộ Sưu Tập&quot;
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[0, 1, 2, 3].map((idx) => (
+              <div key={idx} className="bg-zinc-800/50 p-4 rounded-xl border border-white/5 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-zinc-500">ITEM {idx + 1}</span>
+                </div>
+                <ImageUploader
+                  value={data.explore?.gridItems?.[idx]?.img}
+                  onUpload={(url) => {
+                    const items = [...(data.explore?.gridItems || [])];
+                    items[idx] = { ...(items[idx] || {}), img: url };
+                    updateContent("explore", { ...data.explore, gridItems: items });
+                  }}
+                  folder="collections"
+                />
+                <input
+                  placeholder="Tên danh mục"
+                  defaultValue={data.explore?.gridItems?.[idx]?.name}
+                  onBlur={(e) => {
+                    const items = [...(data.explore?.gridItems || [])];
+                    items[idx] = { ...(items[idx] || {}), name: e.target.value };
+                    updateContent("explore", { ...data.explore, gridItems: items });
+                  }}
+                  className="w-full bg-zinc-900 px-3 py-1.5 rounded border border-white/5 text-xs text-white"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Section: Featured */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
@@ -2277,47 +2318,6 @@ const CollectionsPageManager = ({ data }: any) => {
                 className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
               />
             </div>
-          </div>
-        </div>
-
-        {/* Section: Explore 2.1 */}
-        <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <div className="flex flex-col">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
-              2.1 - 2. Explore Our Collections (Grid 4 Items)
-            </h3>
-            <p className="text-[10px] text-zinc-500 mt-1 uppercase">
-              Chỉnh sửa 4 ảnh nhỏ & Tên danh mục tại mục &quot;Xem Trọn Bộ Sưu Tập&quot;
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[0, 1, 2, 3].map((idx) => (
-              <div key={idx} className="bg-zinc-800/50 p-4 rounded-xl border border-white/5 space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-zinc-500">ITEM {idx + 1}</span>
-                </div>
-                <ImageUploader
-                  value={data.explore?.gridItems?.[idx]?.img}
-                  onUpload={(url) => {
-                    const items = [...(data.explore?.gridItems || [])];
-                    items[idx] = { ...(items[idx] || {}), img: url };
-                    updateContent("explore", { ...data.explore, gridItems: items });
-                  }}
-                  folder="collections"
-                />
-                <input
-                  placeholder="Tên danh mục"
-                  defaultValue={data.explore?.gridItems?.[idx]?.name}
-                  onBlur={(e) => {
-                    const items = [...(data.explore?.gridItems || [])];
-                    items[idx] = { ...(items[idx] || {}), name: e.target.value };
-                    updateContent("explore", { ...data.explore, gridItems: items });
-                  }}
-                  className="w-full bg-zinc-900 px-3 py-1.5 rounded border border-white/5 text-xs text-white"
-                />
-              </div>
-            ))}
           </div>
         </div>
 

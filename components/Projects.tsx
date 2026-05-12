@@ -114,7 +114,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
           y: isRevealed ? 0 : 40 
         }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 w-full px-6 md:px-12 flex flex-col items-center justify-center"
+        className="relative z-10 w-full px-6 md:px-12 flex flex-col items-center justify-center scale-[0.85]"
       >
         <div className="relative w-full max-w-5xl">
           {/* External Controls */}
@@ -154,9 +154,6 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
   
           {/* Protruding Content Box */}
           <div className="absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[10%] z-20 flex justify-center w-[90%] max-w-[420px]">
-            {/* White outer frame line */}
-            <div className="absolute -inset-4 border border-white/40 pointer-events-none" />
-
             <motion.div 
               key={current}
               initial={{ opacity: 0, y: 30 }}
@@ -164,6 +161,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
               transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
               className="relative bg-brand-gold/10 backdrop-blur-md p-6 md:p-8 border border-white/10 pointer-events-auto shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col justify-between w-full aspect-[420/321]"
             >
+              <div className="absolute -inset-1 border border-white/40 pointer-events-none" />
               <div className="absolute inset-0 bg-[#004d33]/90 -z-10" />
               <div>
                 <span className="text-[12px] font-bold tracking-[0.1em] text-white block mb-2 md:mb-3 uppercase">Sản Phẩm Mới</span>

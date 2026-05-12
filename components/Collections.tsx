@@ -102,7 +102,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
       >
         {/* Title */}
         <div className="mb-6 md:mb-12">
-          <h2 className="text-white text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight uppercase">
+          <h2 className="text-white text-[35px] font-sans font-bold tracking-tight uppercase">
             DỰ ÁN THÀNH CÔNG
           </h2>
         </div>

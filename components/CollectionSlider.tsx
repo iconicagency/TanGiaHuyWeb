@@ -90,22 +90,21 @@ const CollectionSlider: React.FC<AboutSectionProps> = ({ isActive }) => {
            initial={{ opacity: 0, scale: 0.9 }}
            animate={isActive ? { opacity: 1, scale: 1 } : {}}
            transition={{ duration: 1, ease: "easeOut" }}
-           className="text-center mb-6 md:mb-10"
+           className="text-center mb-2 md:mb-4"
         >
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-sans font-bold tracking-tight text-white uppercase leading-tight">
+          <h2 className="text-[35px] font-sans font-bold tracking-tight text-white uppercase leading-tight">
             {renderRichText(content.title)}
           </h2>
         </motion.div>
 
         <div className="relative mx-auto w-full max-w-5xl max-h-[60vh] overflow-y-auto hide-scrollbar md:overflow-visible">
-          <div className="absolute -inset-4 border border-white/20 pointer-events-none hidden md:block" />
-          
           <motion.div 
-            initial={{ opacity: 0, scale: 0.98, y: 40 }}
-            animate={isRevealed ? { opacity: 1, scale: 1, y: 0 } : {}}
+            initial={{ opacity: 0, scale: 0.85 * 0.98, y: 40 }}
+            animate={isRevealed ? { opacity: 1, scale: 0.85, y: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut" }}
             className="relative bg-brand-gold/10 backdrop-blur-md p-6 md:p-10 lg:p-14 border border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]"
           >
+            <div className="absolute -inset-[5px] border border-white/20 pointer-events-none hidden md:block" />
             <div className="absolute inset-0 bg-[#004d33]/90 -z-10" />
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16">

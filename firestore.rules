@@ -42,6 +42,7 @@ service cloud.firestore {
     function isValidSlide(data) {
       return (!('title' in data) || (data.title is string && data.title.size() <= 200)) &&
              (!('image' in data) || (data.image is string && data.image.size() <= 1000)) &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 1000)) &&
              (!('order' in data) || (data.order is number));
     }
 

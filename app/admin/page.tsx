@@ -1178,13 +1178,15 @@ const SlideManager = ({ items, collectionName, description = false }: any) => {
               ? "Quản lý Bộ sưu tập"
               : collectionName.replace("_", " ")}
         </h2>
-        <button
-          onClick={addSlide}
-          className="bg-white text-black px-4 py-2 rounded-lg flex items-center space-x-2 font-bold hover:scale-105 transition-all"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Thêm slide mới</span>
-        </button>
+        {collectionName !== "inspiration_slides" && (
+            <button
+            onClick={addSlide}
+            className="bg-white text-black px-4 py-2 rounded-lg flex items-center space-x-2 font-bold hover:scale-105 transition-all"
+            >
+            <Plus className="w-4 h-4" />
+            <span>Thêm slide mới</span>
+            </button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6">
@@ -1233,12 +1235,14 @@ const SlideManager = ({ items, collectionName, description = false }: any) => {
                 </div>
               )}
             </div>
-            <button
-              onClick={() => removeSlide(item.id)}
-              className="text-zinc-600 hover:text-red-500 self-start p-2 hover:bg-red-500/10 rounded-lg transition-all pt-6"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
+            {collectionName !== "inspiration_slides" && (
+                <button
+                onClick={() => removeSlide(item.id)}
+                className="text-zinc-600 hover:text-red-500 self-start p-2 hover:bg-red-500/10 rounded-lg transition-all pt-6"
+                >
+                <Trash2 className="w-5 h-5" />
+                </button>
+            )}
           </div>
         ))}
       </div>

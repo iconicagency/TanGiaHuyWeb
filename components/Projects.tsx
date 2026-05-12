@@ -98,14 +98,11 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
             <img
               src={bgImage || slides[current]?.image}
               alt=""
-              className={cn(
-                "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
-                isRevealed ? "scale-105 opacity-60" : "scale-100 opacity-100"
-              )}
+              className="w-full h-full object-cover blur-sm"
               referrerPolicy="no-referrer"
             />
-            {/* Dark overlay to match section 2 */}
-            <div className="absolute inset-0 bg-black/20" />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/40" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -117,7 +114,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
           y: isRevealed ? 0 : 40 
         }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 w-[900px] h-[506.25px] mx-auto"
+        className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12"
       >
         <div className="relative w-full h-full">
           {/* External Controls */}
@@ -135,7 +132,7 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
           </button>
 
           {/* Main Image Frame (The window) */}
-          <div className="relative w-full h-full overflow-hidden z-10 bg-zinc-900 border border-white/10 shadow-2xl">
+          <div className="relative w-full aspect-video overflow-hidden z-10 bg-zinc-900 border border-white/10 shadow-2xl">
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
@@ -165,8 +162,9 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
-              className="relative bg-gradient-to-b from-[#004d33]/95 via-[#004d33]/85 to-[#C5A059]/95 backdrop-blur-md p-6 md:p-8 border border-white/20 pointer-events-auto shadow-2xl flex flex-col justify-between w-full aspect-[420/321]"
+              className="relative bg-brand-gold/10 backdrop-blur-md p-6 md:p-8 border border-white/10 pointer-events-auto shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col justify-between w-full aspect-[420/321]"
             >
+              <div className="absolute inset-0 bg-[#004d33]/90 -z-10" />
               <div>
                 <span className="text-[12px] font-bold tracking-[0.1em] text-white block mb-2 md:mb-3 uppercase">Sản Phẩm Mới</span>
                 <h2 className="text-white text-xl md:text-2xl font-sans font-bold mb-4 md:mb-6 leading-tight tracking-tight uppercase">

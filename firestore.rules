@@ -89,6 +89,27 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Solution Slides
+    match /solution_slides/{slideId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSlide(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Space Slides
+    match /space_slides/{slideId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSlide(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Inspiration Slides
+    match /inspiration_slides/{slideId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidSlide(incoming());
+      allow delete: if isAdmin();
+    }
+
     // Project Slides
     match /project_slides/{slideId} {
       allow read: if true;

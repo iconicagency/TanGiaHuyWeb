@@ -68,7 +68,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
 
   return (
     <section className="relative h-full w-full bg-black overflow-hidden flex flex-col items-center justify-center">
-      {/* Dynamic Background matching Project style */}
+      {/* Background with blur effect */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div
@@ -82,14 +82,11 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
             <img
               src={bgImage || (currentPair[0]?.image)}
               alt=""
-              className={cn(
-                "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
-                isRevealed ? "scale-105 opacity-60" : "scale-100 opacity-100"
-              )}
+              className="w-full h-full object-cover blur-sm"
               referrerPolicy="no-referrer"
             />
-            {/* Dark overlay to match section 2 */}
-            <div className="absolute inset-0 bg-black/20" />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/40" />
           </motion.div>
         </AnimatePresence>
       </div>

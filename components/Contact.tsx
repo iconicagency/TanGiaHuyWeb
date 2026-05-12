@@ -61,19 +61,16 @@ const Contact: React.FC<ContactProps> = ({ isActive }) => {
 
   return (
     <section className="relative h-full w-full bg-black overflow-hidden flex items-center justify-center">
-      {/* Background with blurred reveal effect */}
+      {/* Background with blurred effect */}
       <div className="absolute inset-0 z-0">
         <img
           src={bgImage}
           alt="Vintage background"
-          className={cn(
-            "w-full h-full object-cover transition-all duration-[2000ms] ease-in-out",
-            isRevealed ? "scale-105 opacity-60 grayscale" : "scale-100 opacity-100 grayscale-0"
-          )}
+          className="w-full h-full object-cover blur-sm"
           referrerPolicy="no-referrer"
         />
-        {/* Dark overlay to match section 2 */}
-        <div className="absolute inset-0 bg-black/20" />
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Main Content Reveal */}

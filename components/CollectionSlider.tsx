@@ -74,17 +74,15 @@ const CollectionSlider: React.FC<AboutSectionProps> = ({ isActive }) => {
 
   return (
     <section className="relative h-full w-full bg-black overflow-hidden flex items-center justify-center">
+      {/* Background with blur effect */}
       <div className="absolute inset-0 z-0">
         <img
           src={bgImage}
           alt="Background"
-          className={cn(
-            "w-full h-full object-cover transition-all duration-[3000ms] ease-out",
-            isRevealed ? "scale-105 opacity-60" : "scale-100 opacity-100"
-          )}
+          className="w-full h-full object-cover blur-sm"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-24 flex flex-col items-center">

@@ -294,7 +294,7 @@ const CollectionsPage = () => {
           </div>
           <div className="flex gap-3 mt-8 md:mt-0">
             <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
-              Search Product <Search className="w-4 h-4 ml-1" />
+              Tìm sản phẩm <Search className="w-4 h-4 ml-1" />
             </button>
             <button className="px-5 py-2.5 bg-white border border-black rounded-md text-[14px] font-normal text-black flex items-center gap-2 hover:bg-black hover:text-white transition-all font-sans">
               {content.explore?.buttonText || "All the collections"} <ArrowRight className="w-4 h-4 ml-1" />

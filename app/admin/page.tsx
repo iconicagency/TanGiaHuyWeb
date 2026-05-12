@@ -608,6 +608,7 @@ const AdminPage = () => {
             type="collection"
             items={collectionSlides}
             collectionName="collection_slides"
+            description
           />
         )}
         {activeTab === "projects" && (

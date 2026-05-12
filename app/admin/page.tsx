@@ -1269,6 +1269,7 @@ const NewsManager = ({ items }: any) => {
           title: "News Title",
           description: "Summary text...",
           category: pos === "left" ? "TIN DỰ ÁN" : "",
+          date: new Date().toISOString(),
         });
       }
     });

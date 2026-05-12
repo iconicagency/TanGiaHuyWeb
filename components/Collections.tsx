@@ -123,7 +123,7 @@ const Collections: React.FC<CollectionsProps> = ({ isActive }) => {
           <ChevronRight className="w-12 h-12 md:w-16 md:h-16 stroke-[1px]" />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-1 gap-y-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-5xl">
           <AnimatePresence mode="wait">
             {currentPair.map((project, idx) => (
               <motion.div

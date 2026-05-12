@@ -2396,7 +2396,7 @@ const CollectionsPageManager = ({ data }: any) => {
         {/* Section: Inspiration */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
           <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
-            8. Giải pháp khơi nguồn cảm hứng (Inspiration)
+            8. Các công trình tiêu biểu (Inspiration)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
@@ -2439,11 +2439,11 @@ const CollectionsPageManager = ({ data }: any) => {
               </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-bold text-zinc-500 uppercase">
-                  4 Hình ảnh nhỏ cạnh Title
+                  4 Hình ảnh tiêu biểu
                 </label>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 gap-4">
                   {[0, 1, 2, 3].map((idx) => (
-                    <div key={idx} className="scale-75 origin-top-left -mb-10">
+                    <div key={idx} className="space-y-2">
                       <ImageUploader
                         value={data.inspiration?.topImages?.[idx]}
                         onUpload={(url) => {
@@ -2454,6 +2454,19 @@ const CollectionsPageManager = ({ data }: any) => {
                             topImages: imgs,
                           });
                         }}
+                      />
+                      <input
+                        placeholder="Hoặc dán URL ảnh"
+                        defaultValue={data.inspiration?.topImages?.[idx] || ""}
+                        onBlur={(e) => {
+                          const imgs = [...(data.inspiration?.topImages || [])];
+                          imgs[idx] = e.target.value;
+                          updateContent("inspiration", {
+                            ...data.inspiration,
+                            topImages: imgs,
+                          });
+                        }}
+                        className="w-full bg-zinc-800/50 px-2 py-1 rounded-lg border border-white/5 text-[10px]"
                       />
                     </div>
                   ))}

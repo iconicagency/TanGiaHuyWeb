@@ -2437,39 +2437,92 @@ const CollectionsPageManager = ({ data }: any) => {
                   className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase">
-                  4 Hình ảnh tiêu biểu
-                </label>
-                <div className="grid grid-cols-2 gap-4">
-                  {[0, 1, 2, 3].map((idx) => (
-                    <div key={idx} className="space-y-2">
-                      <ImageUploader
-                        value={data.inspiration?.topImages?.[idx]}
-                        onUpload={(url) => {
-                          const imgs = [...(data.inspiration?.topImages || [])];
-                          imgs[idx] = url;
-                          updateContent("inspiration", {
-                            ...data.inspiration,
-                            topImages: imgs,
-                          });
-                        }}
-                      />
-                      <input
-                        placeholder="Hoặc dán URL ảnh"
-                        defaultValue={data.inspiration?.topImages?.[idx] || ""}
-                        onBlur={(e) => {
-                          const imgs = [...(data.inspiration?.topImages || [])];
-                          imgs[idx] = e.target.value;
-                          updateContent("inspiration", {
-                            ...data.inspiration,
-                            topImages: imgs,
-                          });
-                        }}
-                        className="w-full bg-zinc-800/50 px-2 py-1 rounded-lg border border-white/5 text-[10px]"
-                      />
-                    </div>
-                  ))}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase">
+                    4 Hình ảnh tiêu biểu
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[0, 1, 2, 3].map((idx) => (
+                      <div key={idx} className="space-y-2">
+                        <ImageUploader
+                          value={data.inspiration?.topImages?.[idx]}
+                          onUpload={(url) => {
+                            const imgs = [...(data.inspiration?.topImages || [])];
+                            imgs[idx] = url;
+                            updateContent("inspiration", {
+                              ...data.inspiration,
+                              topImages: imgs,
+                            });
+                          }}
+                        />
+                        <input
+                          placeholder="Hoặc dán URL ảnh"
+                          defaultValue={data.inspiration?.topImages?.[idx] || ""}
+                          onBlur={(e) => {
+                            const imgs = [...(data.inspiration?.topImages || [])];
+                            imgs[idx] = e.target.value;
+                            updateContent("inspiration", {
+                              ...data.inspiration,
+                              topImages: imgs,
+                            });
+                          }}
+                          className="w-full bg-zinc-800/50 px-2 py-1 rounded-lg border border-white/5 text-[10px]"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2 mt-8">
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase">
+                    Chỉnh sửa Categories (Ảnh & Info)
+                  </label>
+                  <div className="grid grid-cols-1 gap-4">
+                    {data.inspiration?.categories?.map((cat: any, idx: number) => (
+                      <div key={idx} className="bg-zinc-800 p-4 rounded-lg flex items-center gap-4">
+                        <div className="w-20 flex-shrink-0">
+                          <ImageUploader
+                            value={cat.img}
+                            onUpload={(url) => {
+                              const cats = [...(data.inspiration?.categories || [])];
+                              cats[idx] = { ...cats[idx], img: url };
+                              updateContent("inspiration", {
+                                ...data.inspiration,
+                                categories: cats,
+                              });
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                          <input
+                            defaultValue={cat.title}
+                            onBlur={(e) => {
+                              const cats = [...(data.inspiration?.categories || [])];
+                              cats[idx] = { ...cats[idx], title: e.target.value };
+                              updateContent("inspiration", {
+                                ...data.inspiration,
+                                categories: cats,
+                              });
+                            }}
+                            className="w-full bg-zinc-700/50 px-2 py-1 rounded"
+                          />
+                          <textarea
+                            defaultValue={cat.desc}
+                            onBlur={(e) => {
+                              const cats = [...(data.inspiration?.categories || [])];
+                              cats[idx] = { ...cats[idx], desc: e.target.value };
+                              updateContent("inspiration", {
+                                ...data.inspiration,
+                                categories: cats,
+                              });
+                            }}
+                            className="w-full bg-zinc-700/50 px-2 py-1 rounded text-[10px]"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

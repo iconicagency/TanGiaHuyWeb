@@ -108,7 +108,13 @@ export default function Home() {
             key={Section.id} 
             className="h-screen w-full snap-start snap-always overflow-hidden relative force-snap"
           >
-            <Section.component isActive={currentSection === index} />
+            {index === 0 ? (
+              <Section.component isActive={currentSection === index} />
+            ) : (
+              <div className="h-full w-full pt-20 scale-90 md:scale-95 origin-top">
+                <Section.component isActive={currentSection === index} />
+              </div>
+            )}
           </div>
         ))}
       </div>

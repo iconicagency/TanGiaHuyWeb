@@ -1295,7 +1295,7 @@ const NewsManager = ({ items }: any) => {
                 <div className="w-64 flex-shrink-0">
                   <ImageUploader
                     value={item.image}
-                    onUpload={(url) => updateItem(item.id, { image: url })}
+                    onUpload={(url) => updateItem(item.id || `news-${pos}`, { image: url })}
                     folder="news"
                   />
                 </div>
@@ -1308,7 +1308,7 @@ const NewsManager = ({ items }: any) => {
                       <input
                         defaultValue={item.title}
                         onBlur={(e) =>
-                          updateItem(item.id, { title: e.target.value })
+                          updateItem(item.id || `news-${pos}`, { title: e.target.value })
                         }
                         placeholder="Title"
                         className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
@@ -1321,7 +1321,7 @@ const NewsManager = ({ items }: any) => {
                       <input
                         defaultValue={item.category}
                         onBlur={(e) =>
-                          updateItem(item.id, { category: e.target.value })
+                          updateItem(item.id || `news-${pos}`, { category: e.target.value })
                         }
                         placeholder="Category (e.g. TIN DỰ ÁN)"
                         className="w-full bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700 outline-none focus:border-white transition-all text-sm"
@@ -1336,7 +1336,7 @@ const NewsManager = ({ items }: any) => {
                       <textarea
                         defaultValue={item.description}
                         onBlur={(e) =>
-                          updateItem(item.id, { description: e.target.value })
+                          updateItem(item.id || `news-${pos}`, { description: e.target.value })
                         }
                         placeholder="Description"
                         rows={4}

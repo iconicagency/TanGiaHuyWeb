@@ -10,6 +10,10 @@
 }
 
 @layer base {
+  a, button {
+    cursor: pointer !important;
+  }
+
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;

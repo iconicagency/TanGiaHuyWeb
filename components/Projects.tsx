@@ -114,9 +114,9 @@ const Projects: React.FC<NewProductsProps> = ({ isActive }) => {
           y: isRevealed ? 0 : 40 
         }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12"
+        className="relative z-10 w-full px-6 md:px-12 flex flex-col items-center justify-center"
       >
-        <div className="relative w-full h-full">
+        <div className="relative w-full max-w-5xl">
           {/* External Controls */}
           <button
             onClick={prevSlide}

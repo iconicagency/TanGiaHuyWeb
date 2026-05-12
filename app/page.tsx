@@ -111,7 +111,7 @@ export default function Home() {
             {index === 0 ? (
               <Section.component isActive={currentSection === index} />
             ) : (
-              <div className="h-full w-full pt-20 origin-top">
+              <div className="h-full w-full origin-top">
                 <Section.component isActive={currentSection === index} />
               </div>
             )}

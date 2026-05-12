@@ -1902,6 +1902,12 @@ const CollectionsPageManager = ({ data }: any) => {
           buttonText: "MORE INFORMATION",
           image:
             "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
+          gridItems: [
+            { name: "Cảm hứng Cẩm thạch", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800" },
+            { name: "Cảm hứng Gỗ tự nhiên", img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=800" },
+            { name: "Cảm hứng Đá tự nhiên", img: "https://images.unsplash.com/photo-1616484173745-0d23bc0451ae?q=80&w=800" },
+            { name: "Bê tông & Kim loại", img: "https://images.unsplash.com/photo-1516550893923-42d28e5677af?q=80&w=800" }
+          ]
         },
         featured: {
           title: "Featured",
@@ -2274,126 +2280,44 @@ const CollectionsPageManager = ({ data }: any) => {
           </div>
         </div>
 
-        {/* Section: Inspiration */}
+        {/* Section: Explore 2.1 */}
         <div className="bg-zinc-900 p-8 rounded-3xl border border-white/5 space-y-6">
-          <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
-            8. Các công trình tiêu biểu (Inspiration)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase">
-                  Tiêu đề & Chữ chạy
-                </label>
-                <input
-                  defaultValue={data.inspiration?.title}
-                  onBlur={(e) =>
-                    updateContent("inspiration", {
-                      ...data.inspiration,
-                      title: e.target.value,
-                    })
-                  }
-                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+          <div className="flex flex-col">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-brand-gold">
+              2.1 - 2. Explore Our Collections (Grid 4 Items)
+            </h3>
+            <p className="text-[10px] text-zinc-500 mt-1 uppercase">
+              Chỉnh sửa 4 ảnh nhỏ & Tên danh mục tại mục &quot;Xem Trọn Bộ Sưu Tập&quot;
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[0, 1, 2, 3].map((idx) => (
+              <div key={idx} className="bg-zinc-800/50 p-4 rounded-xl border border-white/5 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-zinc-500">ITEM {idx + 1}</span>
+                </div>
+                <ImageUploader
+                  value={data.explore?.gridItems?.[idx]?.img}
+                  onUpload={(url) => {
+                    const items = [...(data.explore?.gridItems || [])];
+                    items[idx] = { ...(items[idx] || {}), img: url };
+                    updateContent("explore", { ...data.explore, gridItems: items });
+                  }}
+                  folder="collections"
                 />
                 <input
-                  placeholder="Subtitle"
-                  defaultValue={data.inspiration?.subtitle}
-                  onBlur={(e) =>
-                    updateContent("inspiration", {
-                      ...data.inspiration,
-                      subtitle: e.target.value,
-                    })
-                  }
-                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
-                />
-                <input
-                  placeholder="Nút chính"
-                  defaultValue={data.inspiration?.buttonText}
-                  onBlur={(e) =>
-                    updateContent("inspiration", {
-                      ...data.inspiration,
-                      buttonText: e.target.value,
-                    })
-                  }
-                  className="w-full bg-zinc-800/50 px-4 py-2 rounded-lg border border-white/5"
+                  placeholder="Tên danh mục"
+                  defaultValue={data.explore?.gridItems?.[idx]?.name}
+                  onBlur={(e) => {
+                    const items = [...(data.explore?.gridItems || [])];
+                    items[idx] = { ...(items[idx] || {}), name: e.target.value };
+                    updateContent("explore", { ...data.explore, gridItems: items });
+                  }}
+                  className="w-full bg-zinc-900 px-3 py-1.5 rounded border border-white/5 text-xs text-white"
                 />
               </div>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase">
-                    4 Hình ảnh tiêu biểu
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {[0, 1, 2, 3].map((idx) => (
-                      <div key={idx} className="space-y-2">
-                        <ImageUploader
-                          value={data.inspiration?.topImages?.[idx]}
-                          onUpload={(url) => {
-                            const imgs = [...(data.inspiration?.topImages || [])];
-                            imgs[idx] = url;
-                            updateContent("inspiration", {
-                              ...data.inspiration,
-                              topImages: imgs,
-                            });
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2 mt-8">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase">
-                    Chỉnh sửa Categories (Ảnh & Info)
-                  </label>
-                  <div className="grid grid-cols-1 gap-4">
-                    {data.inspiration?.categories?.map((cat: any, idx: number) => (
-                      <div key={idx} className="bg-zinc-800 p-4 rounded-lg flex items-center gap-4">
-                        <div className="w-20 flex-shrink-0">
-                          <ImageUploader
-                            value={cat.img}
-                            onUpload={(url) => {
-                              const cats = [...(data.inspiration?.categories || [])];
-                              cats[idx] = { ...cats[idx], img: url };
-                              updateContent("inspiration", {
-                                ...data.inspiration,
-                                categories: cats,
-                              });
-                            }}
-                          />
-                        </div>
-                        <div className="flex-1 space-y-2">
-                          <input
-                            defaultValue={cat.title}
-                            onBlur={(e) => {
-                              const cats = [...(data.inspiration?.categories || [])];
-                              cats[idx] = { ...cats[idx], title: e.target.value };
-                              updateContent("inspiration", {
-                                ...data.inspiration,
-                                categories: cats,
-                              });
-                            }}
-                            className="w-full bg-zinc-700/50 px-2 py-1 rounded"
-                          />
-                          <textarea
-                            defaultValue={cat.desc}
-                            onBlur={(e) => {
-                              const cats = [...(data.inspiration?.categories || [])];
-                              cats[idx] = { ...cats[idx], desc: e.target.value };
-                              updateContent("inspiration", {
-                                ...data.inspiration,
-                                categories: cats,
-                              });
-                            }}
-                            className="w-full bg-zinc-700/50 px-2 py-1 rounded text-[10px]"
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 

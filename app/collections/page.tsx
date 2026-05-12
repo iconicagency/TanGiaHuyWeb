@@ -313,11 +313,17 @@ const CollectionsPage = () => {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-             {categories.slice(0, 4).map((cat, idx) => (
+             {(content.explore?.gridItems || categories.slice(0, 4)).map((cat: any, idx: number) => (
                 <div key={idx} className="aspect-square relative rounded-2xl overflow-hidden group">
-                   <Image src={cat.img} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" referrerPolicy="no-referrer" />
+                   <Image 
+                     src={cat.img || categories[idx % categories.length].img} 
+                     alt={cat.name || "Category"} 
+                     fill 
+                     className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                     referrerPolicy="no-referrer" 
+                   />
                    <div className="absolute inset-0 bg-black/20 flex items-end p-4">
-                      <p className="text-white font-bold text-[10px] uppercase tracking-widest">{cat.name}</p>
+                      <p className="text-white font-bold text-[10px] uppercase tracking-widest">{cat.name || cat.title || "Category"}</p>
                    </div>
                 </div>
              ))}

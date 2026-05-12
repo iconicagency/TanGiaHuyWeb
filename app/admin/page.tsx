@@ -2456,19 +2456,6 @@ const CollectionsPageManager = ({ data }: any) => {
                             });
                           }}
                         />
-                        <input
-                          placeholder="Hoặc dán URL ảnh"
-                          defaultValue={data.inspiration?.topImages?.[idx] || ""}
-                          onBlur={(e) => {
-                            const imgs = [...(data.inspiration?.topImages || [])];
-                            imgs[idx] = e.target.value;
-                            updateContent("inspiration", {
-                              ...data.inspiration,
-                              topImages: imgs,
-                            });
-                          }}
-                          className="w-full bg-zinc-800/50 px-2 py-1 rounded-lg border border-white/5 text-[10px]"
-                        />
                       </div>
                     ))}
                   </div>
